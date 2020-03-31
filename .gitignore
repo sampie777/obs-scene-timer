@@ -1,0 +1,6 @@
+.idea/
+idea/
+*.iml
+__pycache__
+*.bak
+*.tmp
