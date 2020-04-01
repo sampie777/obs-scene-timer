@@ -3,8 +3,9 @@ package gui
 import GUI
 import objects.Globals
 import objects.OBSSceneTimer
-import objects.TScene
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Font
+import java.awt.GridLayout
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent

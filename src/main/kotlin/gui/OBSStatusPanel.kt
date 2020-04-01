@@ -1,5 +1,6 @@
 package gui
 
+import GUI
 import objects.Globals
 import java.awt.BorderLayout
 import java.awt.Font

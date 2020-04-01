@@ -1,9 +1,10 @@
 package gui
 
+import Config
+import GUI
 import objects.OBSSceneTimer
 import java.awt.BorderLayout
 import java.util.logging.Logger
-import javax.swing.BoxLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 
