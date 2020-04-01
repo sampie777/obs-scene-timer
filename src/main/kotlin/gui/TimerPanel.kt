@@ -53,6 +53,7 @@ class TimerPanel : JPanel(), Refreshable {
         timersPanel.add(Box.createRigidArea(Dimension(0, 20)))
         timersPanel.add(timerDownLabel)
         timersPanel.add(Box.createVerticalGlue())
+        timersPanel.add(TimerProgressBarPanel())
         add(timersPanel, BorderLayout.CENTER)
     }
 
