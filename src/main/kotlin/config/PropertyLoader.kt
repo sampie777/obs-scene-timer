@@ -124,8 +124,14 @@ object PropertyLoader {
             return Color(rgb[0].toInt(), rgb[1].toInt(), rgb[2].toInt())
         }
         if (type == HashMap::class.java) {
+            if (value.isEmpty()) {
+                return HashMap<String, Int>()
+            }
             return value.split(sceneValuesDelimiter)
-                .map { val v = it.split(sceneValuePairDelimiter); v[0] to v[1].toInt() }
+                .map {
+                    val v = it.split(sceneValuePairDelimiter);
+                    v[0] to v[1].toInt()
+                }
                 .toMap()
         }
         throw IllegalArgumentException("Unknown configuration value type: " + type.name)
