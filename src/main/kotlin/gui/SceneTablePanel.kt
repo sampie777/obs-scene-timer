@@ -1,6 +1,7 @@
 package gui
 
 import GUI
+import config.Config
 import objects.Globals
 import objects.OBSSceneTimer
 import java.awt.BorderLayout
@@ -19,6 +20,7 @@ class SceneInputChangeListener(private val panel: SceneTablePanel, private val s
 
         val newValue = (p0.source as JSpinner).value as Int
         panel.sceneValues[scene] = newValue
+        Config.sceneLimitValues[scene] = newValue
 
         if (scene == OBSSceneTimer.getCurrentSceneName()) {
             OBSSceneTimer.setMaxTimerValue(newValue.toLong())
@@ -34,6 +36,11 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     init {
         GUI.register(this)
+
+        for (scene in Config.sceneLimitValues.keys) {
+            sceneValues[scene] = Config.sceneLimitValues[scene] as Int
+        }
+
         initGUI()
     }
 

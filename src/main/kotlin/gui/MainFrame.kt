@@ -1,6 +1,6 @@
 package gui
 
-import Config
+import config.Config
 import GUI
 import objects.OBSSceneTimer
 import java.awt.BorderLayout

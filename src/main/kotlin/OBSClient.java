@@ -1,4 +1,5 @@
 import com.xuggle.xuggler.IContainer;
+import config.Config;
 import net.twasi.obsremotejava.OBSRemoteController;
 import net.twasi.obsremotejava.objects.Scene;
 import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse;
@@ -89,6 +90,8 @@ public class OBSClient {
                         getScenes();
                     }
                 });
+
+                Config.INSTANCE.save();
             }
         }, Config.INSTANCE.getObsConnectionDelay(), sceneListenerTimerInterval);
     }
