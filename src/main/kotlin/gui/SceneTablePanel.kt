@@ -44,8 +44,6 @@ class SceneTablePanel : JPanel(), Refreshable {
     private fun initGUI() {
         createSceneTable()
         add(container)
-
-//        preferredSize = Dimension(400, 300)
     }
 
     private fun createSceneTable() {
@@ -72,7 +70,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         container.removeAll()
         container.layout = GridLayout(sceneLabels.size + 1, 2)
         container.add(JLabel("Scene"))
-        container.add(JLabel("Duration"))
+        container.add(JLabel("Duration (sec.)"))
 
         for (scene in Globals.scenes.values) {
             container.add(sceneLabels[scene.name])

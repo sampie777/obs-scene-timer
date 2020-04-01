@@ -29,7 +29,7 @@ public class OBSClient {
     }
 
     public void initOBS() {
-        controller = new OBSRemoteController("ws://localhost:4444", false);
+        controller = new OBSRemoteController(Config.INSTANCE.getObsAddress(), false);
         Globals.INSTANCE.setObsController(controller);
 
         if (controller.isFailed()) { // Awaits response from OBS
@@ -76,7 +76,7 @@ public class OBSClient {
                     }
                 });
             }
-        }, 1000, sceneListenerTimerInterval);
+        }, Config.INSTANCE.getObsConnectionDelay(), sceneListenerTimerInterval);
     }
 
     private void getScenes() {
