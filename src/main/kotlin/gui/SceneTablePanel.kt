@@ -4,14 +4,9 @@ import GUI
 import objects.Globals
 import objects.OBSSceneTimer
 import objects.TScene
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.GridLayout
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JSpinner
-import javax.swing.SpinnerNumberModel
+import java.awt.*
+import javax.swing.*
+import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
@@ -42,12 +37,23 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     private fun initGUI() {
+        layout = BorderLayout(0, 0)
+        border = EmptyBorder(0, 10, 10, 10)
+
         createSceneTable()
-        add(container)
+
+        val scrollPanelInnerPanel = JPanel()
+        scrollPanelInnerPanel.add(container)
+        val scrollPanel = JScrollPane(scrollPanelInnerPanel)
+        scrollPanel.border = null
+        add(scrollPanel, BorderLayout.CENTER)
     }
 
     private fun createSceneTable() {
-        val labelFont = Font("Dialog", Font.PLAIN, 24)
+        val labelFont = Font("Dialog", Font.PLAIN, 16)
+        val currentSceneLabelFont = Font("Dialog", Font.BOLD, 16)
+        val inputFont = Font("Dialog", Font.PLAIN, 16)
+        val currentSceneInputFont = Font("Dialog", Font.BOLD, 16)
 
         sceneLabels.clear()
         sceneInputs.clear()
@@ -58,17 +64,26 @@ class SceneTablePanel : JPanel(), Refreshable {
             }
 
             val sceneLabel = JLabel(scene.name)
-            sceneLabel.font = labelFont
+            if (scene.name == OBSSceneTimer.getCurrentSceneName()) {
+                sceneLabel.font = currentSceneLabelFont
+            } else {
+                sceneLabel.font = labelFont
+            }
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
             sceneInput.model = SpinnerNumberModel(sceneValues[scene.name], 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
+            if (scene.name == OBSSceneTimer.getCurrentSceneName()) {
+                sceneInput.font = currentSceneInputFont
+            } else {
+                sceneInput.font = inputFont
+            }
             sceneInputs[scene.name] = sceneInput
         }
 
         container.removeAll()
-        container.layout = GridLayout(sceneLabels.size + 1, 2)
+        container.layout = GridLayout(sceneLabels.size + 1, 2, 10, 5)
         container.add(JLabel("Scene"))
         container.add(JLabel("Duration (sec.)"))
 
@@ -85,7 +100,8 @@ class SceneTablePanel : JPanel(), Refreshable {
     override fun switchedScenes() {
         OBSSceneTimer.setMaxTimerValue(
             getValueForScene(OBSSceneTimer.getCurrentSceneName())
-                .toLong())
+                .toLong()
+        )
     }
 
     fun getValueForScene(scene: String): Int {

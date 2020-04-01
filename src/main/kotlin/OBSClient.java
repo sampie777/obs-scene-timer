@@ -29,17 +29,30 @@ public class OBSClient {
     }
 
     public void initOBS() {
+        logger.info("Connecting to OBS on: " + Config.INSTANCE.getObsAddress());
+        Globals.INSTANCE.setOBSStatus("Connecting...");
+        GUI.INSTANCE.refreshOBSStatus();
+
         controller = new OBSRemoteController(Config.INSTANCE.getObsAddress(), false);
-        Globals.INSTANCE.setObsController(controller);
 
         if (controller.isFailed()) { // Awaits response from OBS
             // Here you can handle a failed connection request
-            System.err.println("Failed to create controller");
+            logger.severe("Failed to create controller");
+            Globals.INSTANCE.setOBSStatus("Connection failed!");
+            GUI.INSTANCE.refreshOBSStatus();
         }
 
-        controller.registerDisconnectCallback(response -> logger.info("Disconnected"));
+        controller.registerDisconnectCallback(response -> {
+            logger.info("Disconnected from OBS");
+            Globals.INSTANCE.setOBSStatus("Disconnected");
+            GUI.INSTANCE.refreshOBSStatus();
+        });
 
         controller.registerConnectCallback(connectResponse -> {
+            logger.info("Connected to OBS");
+            Globals.INSTANCE.setOBSStatus("Connected");
+            GUI.INSTANCE.refreshOBSStatus();
+
             getScenes();
 
             startSceneWatcherTimer();
@@ -59,6 +72,7 @@ public class OBSClient {
                 OBSSceneTimer.INSTANCE.increaseTimer();
                 GUI.INSTANCE.refreshTimer();
 
+                logger.fine("Retrieving current scene");
                 controller.getCurrentScene(res -> {
                     GetCurrentSceneResponse currentScene = (GetCurrentSceneResponse) res;
 
@@ -80,8 +94,13 @@ public class OBSClient {
     }
 
     private void getScenes() {
+        logger.info("Retrieving scenes");
+        Globals.INSTANCE.setOBSStatus("Retrieving scenes...");
+        GUI.INSTANCE.refreshOBSStatus();
+
         controller.getScenes((response) -> {
             GetSceneListResponse res = (GetSceneListResponse) response;
+            logger.info(res.getScenes().size() + " scenes retrieved");
 
             Globals.INSTANCE.getScenes().clear();
             for (Scene scene : res.getScenes()) {
@@ -103,6 +122,9 @@ public class OBSClient {
             }
 
             GUI.INSTANCE.refreshScenes();
+
+            Globals.INSTANCE.setOBSStatus("Connected");
+            GUI.INSTANCE.refreshOBSStatus();
         });
     }
 

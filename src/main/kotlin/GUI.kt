@@ -21,6 +21,13 @@ object GUI {
         }
     }
 
+    fun refreshOBSStatus() {
+        for (component in components) {
+            component.refreshOBSStatus()
+        }
+    }
+
+
     fun register(component: Refreshable) {
         components.add(component)
     }

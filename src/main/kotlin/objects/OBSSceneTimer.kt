@@ -1,15 +1,17 @@
 package objects
 
 import getTimeAsClock
+import java.util.logging.Logger
 
 object OBSSceneTimer {
+    private val logger = Logger.getLogger(OBSSceneTimer::class.java.name)
 
     private var timerValue = 0L
     private var maxTimerValue = 0L
     private var currentSceneName = "No scene selected"
 
     fun resetTimer() {
-        println("Resetting timer to 0")
+        logger.info("Resetting timer to 0")
         timerValue = 0L
     }
 

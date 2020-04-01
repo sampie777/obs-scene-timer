@@ -1,15 +1,15 @@
 package gui
 
 import objects.OBSSceneTimer
+import java.awt.BorderLayout
 import java.util.logging.Logger
 import javax.swing.BoxLayout
 import javax.swing.JFrame
 import javax.swing.JPanel
 
 class MainFrame : JFrame(), Refreshable {
-    val logger = Logger.getLogger("MainFrame")
+    private val logger = Logger.getLogger(MainFrame::class.java.name)
 
-    private var sceneTablePanel: SceneTablePanel? = null
     private var timerPanel: TimerPanel? = null
 
     init {
@@ -17,17 +17,25 @@ class MainFrame : JFrame(), Refreshable {
         initGUI()
     }
 
-    fun initGUI() {
+    private fun initGUI() {
         val mainPanel = JPanel()
-        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.Y_AXIS)
+        mainPanel.layout = BorderLayout(0, 0)
         add(mainPanel)
 
-        sceneTablePanel = SceneTablePanel()
-        timerPanel = TimerPanel()
-        mainPanel.add(sceneTablePanel)
-        mainPanel.add(timerPanel)
+        val leftPanel = JPanel()
+        leftPanel.layout = BorderLayout(0, 0)
+        mainPanel.add(leftPanel, BorderLayout.LINE_START)
 
-        setSize(700, 600)
+        val sceneTablePanel = SceneTablePanel()
+        leftPanel.add(sceneTablePanel, BorderLayout.CENTER)
+
+        val obsStatusPanel = OBSStatusPanel()
+        leftPanel.add(obsStatusPanel, BorderLayout.PAGE_END)
+
+        timerPanel = TimerPanel()
+        mainPanel.add(timerPanel, BorderLayout.CENTER)
+
+        setSize(900, 600)
         title = "Countdown Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
