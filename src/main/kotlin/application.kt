@@ -8,6 +8,7 @@ fun main(args: Array<String>) {
     logger.info("Starting application")
 
     Config.load()
+    Config.save()
 
     EventQueue.invokeLater {
         MainFrame()
