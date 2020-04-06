@@ -7,6 +7,7 @@ import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
+import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -32,7 +33,20 @@ class TimerPanel : JPanel(), Refreshable {
         sceneLabel.text = "Initializing..."
         sceneLabel.horizontalAlignment = SwingConstants.CENTER
         sceneLabel.font = Font("Dialog", Font.PLAIN, 24)
-        add(sceneLabel, BorderLayout.NORTH)
+
+        val resetTimerButton = JButton("Reset")
+        resetTimerButton.toolTipText = "Reset timer to 0"
+        resetTimerButton.background = null
+        resetTimerButton.addActionListener {
+            OBSSceneTimer.resetTimer()
+        }
+
+        val topPanel = JPanel()
+        topPanel.background = null
+        topPanel.layout = BorderLayout(10, 10)
+        topPanel.add(sceneLabel, BorderLayout.CENTER)
+        topPanel.add(resetTimerButton, BorderLayout.LINE_END)
+        add(topPanel, BorderLayout.PAGE_START)
 
         timerUpLabel.text = "Initializing..."
         timerUpLabel.horizontalAlignment = SwingConstants.CENTER
