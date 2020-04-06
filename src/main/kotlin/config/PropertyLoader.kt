@@ -1,5 +1,6 @@
 package config
 
+import getCurrentJarDirectory
 import java.awt.Color
 import java.io.File
 import java.io.FileInputStream
@@ -12,7 +13,7 @@ import kotlin.collections.HashMap
 object PropertyLoader {
     private val logger = Logger.getLogger(PropertyLoader.toString())
 
-    private val userPropertiesFile = File("user.properties")
+    private val userPropertiesFile = File(getCurrentJarDirectory(this).absolutePath + File.separatorChar + "user.properties")
     private var userProperties = Properties()
 
     private const val sceneValuePairDelimiter = "%=>"
@@ -22,8 +23,12 @@ object PropertyLoader {
         loadUserProperties()
     }
 
+    fun getPropertiesFile(): File {
+        return userPropertiesFile
+    }
+
     private fun loadUserProperties() {
-        logger.info("Loading user properties")
+        logger.info("Loading user properties from file: " + userPropertiesFile.absolutePath)
 
         if (!userPropertiesFile.exists()) {
             logger.info("Creating file: " + userPropertiesFile.absolutePath)

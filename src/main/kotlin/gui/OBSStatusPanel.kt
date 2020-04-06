@@ -1,6 +1,7 @@
 package gui
 
 import GUI
+import config.PropertyLoader
 import objects.Globals
 import java.awt.BorderLayout
 import java.awt.Font
@@ -23,6 +24,7 @@ class OBSStatusPanel : JPanel(), Refreshable {
         border = EmptyBorder(10, 10, 10, 10)
 
         messageLabel.font = Font("Dialog", Font.PLAIN, 14)
+        messageLabel.toolTipText = "Settings file: " + PropertyLoader.getPropertiesFile().absolutePath
         add(messageLabel)
     }
 
