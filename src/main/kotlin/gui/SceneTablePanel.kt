@@ -4,9 +4,7 @@ import GUI
 import config.Config
 import objects.Globals
 import objects.OBSSceneTimer
-import java.awt.BorderLayout
-import java.awt.Font
-import java.awt.GridLayout
+import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
@@ -72,32 +70,32 @@ class SceneTablePanel : JPanel(), Refreshable {
             }
 
             val sceneLabel = JLabel(scene.name)
-            if (scene.name == OBSSceneTimer.getCurrentSceneName()) {
-                sceneLabel.font = currentSceneLabelFont
-            } else {
-                sceneLabel.font = labelFont
-            }
+            sceneLabel.font = if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneLabelFont else labelFont
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
+            sceneInput.preferredSize = Dimension(100, 20)
             sceneInput.model = SpinnerNumberModel(sceneValues[scene.name], 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
-            if (scene.name == OBSSceneTimer.getCurrentSceneName()) {
-                sceneInput.font = currentSceneInputFont
-            } else {
-                sceneInput.font = inputFont
-            }
+            sceneInput.font = if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneInputFont else inputFont
             sceneInputs[scene.name] = sceneInput
         }
 
         container.removeAll()
-        container.layout = GridLayout(sceneLabels.size + 1, 2, 10, 5)
-        container.add(JLabel("Scene"))
-        container.add(JLabel("Duration (sec.)"))
+        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
+
+        val tableHeaderRow = JPanel()
+        tableHeaderRow.layout = BorderLayout(10, 10)
+        tableHeaderRow.add(JLabel("Scene"), BorderLayout.CENTER)
+        tableHeaderRow.add(JLabel("Duration (sec.)"), BorderLayout.LINE_END)
+        container.add(tableHeaderRow)
 
         for (scene in Globals.scenes.values) {
-            container.add(sceneLabels[scene.name])
-            container.add(sceneInputs[scene.name])
+            val sceneInputRow = JPanel()
+            sceneInputRow.layout = BorderLayout(10, 10)
+            sceneInputRow.add(sceneLabels[scene.name] ?: JLabel("unregistered scene"), BorderLayout.CENTER)
+            sceneInputRow.add(sceneInputs[scene.name] ?: JSpinner(), BorderLayout.LINE_END)
+            container.add(sceneInputRow)
         }
     }
 
