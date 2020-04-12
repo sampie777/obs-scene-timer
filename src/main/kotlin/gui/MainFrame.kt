@@ -1,7 +1,7 @@
 package gui
 
-import config.Config
 import GUI
+import config.Config
 import objects.OBSSceneTimer
 import java.awt.BorderLayout
 import java.util.logging.Logger
@@ -37,7 +37,7 @@ class MainFrame : JFrame(), Refreshable {
         mainPanel.add(timerPanel, BorderLayout.CENTER)
 
         setSize(900, 600)
-        title = "Countdown Timer"
+        title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
     }

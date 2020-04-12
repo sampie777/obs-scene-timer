@@ -14,7 +14,7 @@ fun getTimeAsClock(value: Long): String {
 
     val timerHours = positiveValue / 3600
     val timerMinutes = (positiveValue - timerHours * 3600) / 60
-    val timerSeconds = positiveValue - timerMinutes * 60
+    val timerSeconds = positiveValue - timerHours * 3600 - timerMinutes * 60
     return String.format("%s%d:%02d:%02d", signString, timerHours, timerMinutes, timerSeconds)
 }
 

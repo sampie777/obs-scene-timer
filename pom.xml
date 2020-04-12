@@ -5,17 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nl.sajansen</groupId>
-    <artifactId>obs-websocket-client</artifactId>
+    <artifactId>obs-scene-timer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>OBS Websocket Client</name>
+    <name>OBS Scene Timer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.70</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>4.12</junit.version>
+        <twasi.version>1.0.1</twasi.version>
+        <xuggle.version>5.4</xuggle.version>
+        <slf4j.version>1.7.30</slf4j.version>
     </properties>
 
     <repositories>
@@ -41,17 +44,17 @@
         <dependency>
             <groupId>net.twasi</groupId>
             <artifactId>obs-websocket-java</artifactId>
-            <version>1.0.1</version>
+            <version>${twasi.version}</version>
         </dependency>
         <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
-            <version>5.4</version>
+            <version>${xuggle.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.30</version>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 

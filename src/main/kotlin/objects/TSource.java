@@ -8,7 +8,7 @@ public class TSource {
     private String type = "unknown";
     private Map<String, Object> settings = new HashMap<>();
     private String fileName = "";
-    private long videoLength = 0L;
+    private int videoLength = 0;
 
     public String getName() {
         return name;
@@ -34,11 +34,11 @@ public class TSource {
         this.fileName = fileName;
     }
 
-    public long getVideoLength() {
+    public int getVideoLength() {
         return videoLength;
     }
 
-    public void setVideoLength(long videoLength) {
+    public void setVideoLength(int videoLength) {
         this.videoLength = videoLength;
     }
 

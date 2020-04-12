@@ -4,7 +4,10 @@ import GUI
 import config.Config
 import objects.Globals
 import objects.OBSSceneTimer
-import java.awt.*
+import java.awt.BorderLayout
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
@@ -65,8 +68,8 @@ class SceneTablePanel : JPanel(), Refreshable {
         sceneInputs.clear()
 
         for (scene in Globals.scenes.values) {
-            if (!sceneValues.containsKey(scene.name)) {
-                sceneValues[scene.name] = 0
+            if (!sceneValues.containsKey(scene.name) && !Config.sceneLimitValues.containsKey(scene.name)) {
+                sceneValues[scene.name] = scene.maxVideoLength
             }
 
             val sceneLabel = JLabel(scene.name)

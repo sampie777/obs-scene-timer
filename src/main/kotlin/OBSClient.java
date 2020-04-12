@@ -5,13 +5,9 @@ import net.twasi.obsremotejava.objects.Scene;
 import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse;
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse;
 import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse;
-import objects.Globals;
-import objects.OBSSceneTimer;
-import objects.TScene;
-import objects.TSource;
+import objects.*;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -33,7 +29,7 @@ public class OBSClient {
 
     public void initOBS() {
         logger.info("Connecting to OBS on: " + Config.INSTANCE.getObsAddress());
-        Globals.INSTANCE.setOBSStatus("Connecting...");
+        Globals.INSTANCE.setOBSConnectionStatus(OBSStatus.CONNECTING);
         GUI.INSTANCE.refreshOBSStatus();
 
         controller = new OBSRemoteController(Config.INSTANCE.getObsAddress(), false);
@@ -41,19 +37,19 @@ public class OBSClient {
         if (controller.isFailed()) { // Awaits response from OBS
             // Here you can handle a failed connection request
             logger.severe("Failed to create controller");
-            Globals.INSTANCE.setOBSStatus("Connection failed!");
+            Globals.INSTANCE.setOBSConnectionStatus(OBSStatus.CONNECTION_FAILED);
             GUI.INSTANCE.refreshOBSStatus();
         }
 
         controller.registerDisconnectCallback(response -> {
             logger.info("Disconnected from OBS");
-            Globals.INSTANCE.setOBSStatus("Disconnected");
+            Globals.INSTANCE.setOBSConnectionStatus(OBSStatus.DISCONNECTED);
             GUI.INSTANCE.refreshOBSStatus();
         });
 
         controller.registerConnectCallback(connectResponse -> {
             logger.info("Connected to OBS");
-            Globals.INSTANCE.setOBSStatus("Connected");
+            Globals.INSTANCE.setOBSConnectionStatus(OBSStatus.CONNECTED);
             GUI.INSTANCE.refreshOBSStatus();
 
             getScenes();
@@ -100,7 +96,7 @@ public class OBSClient {
 
     private void getScenes() {
         logger.info("Retrieving scenes");
-        Globals.INSTANCE.setOBSStatus("Retrieving scenes...");
+        Globals.INSTANCE.setOBSStatus(OBSStatus.LOADING_SCENES);
         GUI.INSTANCE.refreshOBSStatus();
 
         controller.getScenes((response) -> {
@@ -109,7 +105,7 @@ public class OBSClient {
 
             setOBSScenes(res.getScenes());
 
-            Globals.INSTANCE.setOBSStatus("Connected");
+            Globals.INSTANCE.setOBSStatus(null);
             GUI.INSTANCE.refreshOBSStatus();
         });
     }
@@ -137,31 +133,75 @@ public class OBSClient {
             Globals.INSTANCE.getScenes().put(tScene.getName(), tScene);
         }
 
-        GUI.INSTANCE.refreshScenes();
-    }
-
-    private void loadSourceSettings() {
-        for (TScene scene : Globals.INSTANCE.getScenes().values()) {
-            for (TSource source : scene.getSources()) {
-                controller.getSourceSettings(source.getName(), response -> {
-                    GetSourceSettingsResponse res = (GetSourceSettingsResponse) response;
-                    logger.info(res.getSourceName());
-                    logger.info(res.getSourceType());
-
-                    source.setSettings(res.getSourceSettings());
-                    source.setType(res.getSourceType());
-
-                    if ("ffmpeg_source".equals(source.getType())) {
-                        source.setFileName((String) source.getSettings().get("local_file"));
-                        source.setVideoLength(getVideoLength(source.getFileName()));
-                    }
-                });
-            }
+        if (!loadSourceSettings()) {
+            GUI.INSTANCE.refreshScenes();
+            Globals.INSTANCE.setOBSStatus(null);
+            GUI.INSTANCE.refreshOBSStatus();
         }
     }
 
     /**
+     * Loads the scene sources. If there are no sources, or if it can't load the sources, it will return false.
+     * Otherwise it will return true and will eventually call GUI.INSTANCE.refreshScenes();
+     * @return
+     */
+    private boolean loadSourceSettings() {
+        if (!(Config.INSTANCE.getObsAddress().contains("localhost")
+                || Config.INSTANCE.getObsAddress().contains("127.0.0.1"))) {
+            logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer");
+            return false;
+        }
+
+        Globals.INSTANCE.setOBSStatus(OBSStatus.LOADING_SCENE_SOURCES);
+        GUI.INSTANCE.refreshOBSStatus();
+
+        List<TSource> sources = Globals.INSTANCE.getScenes().values().stream()
+                .flatMap((TScene tScene) -> tScene.getSources().stream())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (sources.size() > 0) {
+            loadSourceSettings(sources);
+            return true;
+        }
+        return false;
+    }
+
+    private void loadSourceSettings(List<TSource> sources) {
+        TSource source = sources.remove(0);
+
+        logger.info("Loading source settings for source: " + source.getName());
+
+        controller.getSourceSettings(source.getName(), response -> {
+            GetSourceSettingsResponse res = (GetSourceSettingsResponse) response;
+
+            source.setSettings(res.getSourceSettings());
+            source.setType(res.getSourceType());
+
+            if ("ffmpeg_source".equals(source.getType())) {
+                source.setFileName((String) source.getSettings().get("local_file"));
+
+                int videoLength = 0;
+                try {
+                    videoLength = (int) getVideoLength(source.getFileName());
+                } catch (Exception e) {
+                    logger.severe("Failed to get video length: " + e.toString());
+                }
+                source.setVideoLength(videoLength);
+            }
+
+            if (sources.size() == 0) {
+                GUI.INSTANCE.refreshScenes();
+                Globals.INSTANCE.setOBSStatus(null);
+                GUI.INSTANCE.refreshOBSStatus();
+            } else {
+                loadSourceSettings(sources);
+            }
+        });
+    }
+
+    /**
      * Returns video length in seconds, or 0 if file not found
+     *
      * @param filename
      * @return
      */
