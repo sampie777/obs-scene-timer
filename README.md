@@ -10,6 +10,11 @@ Use cases:
 
 * Playing a media file in OBS but not sure when it ends? This timer will keep track of time!
 
+
+## Build
+
+You can build this application with Maven or just use the prebuild jar in [out/](out/).
+
 ## Setup
 
 1. Download and install [obs-websocket](https://github.com/Palakis/obs-websocket) for your OBS application.
