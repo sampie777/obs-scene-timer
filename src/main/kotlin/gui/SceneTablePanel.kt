@@ -70,33 +70,43 @@ class SceneTablePanel : JPanel(), Refreshable {
             }
 
             val sceneLabel = JLabel(scene.name)
-            sceneLabel.font = if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneLabelFont else labelFont
+            sceneLabel.font =
+                if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneLabelFont else labelFont
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
             sceneInput.preferredSize = Dimension(100, 20)
             sceneInput.model = SpinnerNumberModel(sceneValues[scene.name], 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
-            sceneInput.font = if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneInputFont else inputFont
+            sceneInput.font =
+                if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneInputFont else inputFont
             sceneInputs[scene.name] = sceneInput
         }
 
         container.removeAll()
         container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
 
-        val tableHeaderRow = JPanel()
-        tableHeaderRow.layout = BorderLayout(10, 10)
-        tableHeaderRow.add(JLabel("Scene"), BorderLayout.CENTER)
-        tableHeaderRow.add(JLabel("Duration (sec.)"), BorderLayout.LINE_END)
-        container.add(tableHeaderRow)
+        addSceneTableRow(
+            JLabel("Scene"),
+            JLabel("Duration (sec.)")
+        )
 
-        for (scene in Globals.scenes.values) {
-            val sceneInputRow = JPanel()
-            sceneInputRow.layout = BorderLayout(10, 10)
-            sceneInputRow.add(sceneLabels[scene.name] ?: JLabel("unregistered scene"), BorderLayout.CENTER)
-            sceneInputRow.add(sceneInputs[scene.name] ?: JSpinner(), BorderLayout.LINE_END)
-            container.add(sceneInputRow)
-        }
+        Globals.scenes.values.stream()
+            .sorted { tScene, tScene2 -> tScene.name.compareTo(tScene2.name) }
+            .forEach {
+                addSceneTableRow(
+                    sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
+                    sceneInputs[it.name] ?: JSpinner()
+                )
+            }
+    }
+
+    private fun addSceneTableRow(sceneColumn: Component, inputColumn: Component) {
+        val tableRow = JPanel()
+        tableRow.layout = BorderLayout(10, 10)
+        tableRow.add(sceneColumn, BorderLayout.CENTER)
+        tableRow.add(inputColumn, BorderLayout.LINE_END)
+        container.add(tableRow)
     }
 
     override fun refreshScenes() {

@@ -11,7 +11,9 @@ import objects.TScene;
 import objects.TSource;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -105,11 +107,20 @@ public class OBSClient {
             GetSceneListResponse res = (GetSceneListResponse) response;
             logger.info(res.getScenes().size() + " scenes retrieved");
 
-            Globals.INSTANCE.getScenes().clear();
-            for (Scene scene : res.getScenes()) {
-                TScene tScene = new TScene();
-                tScene.setName(scene.getName());
+            setOBSScenes(res.getScenes());
 
+            Globals.INSTANCE.setOBSStatus("Connected");
+            GUI.INSTANCE.refreshOBSStatus();
+        });
+    }
+
+    private void setOBSScenes(List<Scene> scenes) {
+        Globals.INSTANCE.getScenes().clear();
+        for (Scene scene : scenes) {
+            TScene tScene = new TScene();
+            tScene.setName(scene.getName());
+
+            if (scene.getSources() != null) {
                 ArrayList<TSource> tSources = scene.getSources()
                         .stream()
                         .map(source -> {
@@ -121,14 +132,12 @@ public class OBSClient {
                         .collect(Collectors.toCollection(ArrayList::new));
 
                 tScene.setSources(tSources);
-                Globals.INSTANCE.getScenes().put(tScene.getName(), tScene);
             }
 
-            GUI.INSTANCE.refreshScenes();
+            Globals.INSTANCE.getScenes().put(tScene.getName(), tScene);
+        }
 
-            Globals.INSTANCE.setOBSStatus("Connected");
-            GUI.INSTANCE.refreshOBSStatus();
-        });
+        GUI.INSTANCE.refreshScenes();
     }
 
     private void loadSourceSettings() {
