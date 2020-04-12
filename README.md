@@ -4,11 +4,13 @@ _Author: Samuel-Anton Jansen_
 
 ![Screenshot 1](img/screenshot1.png)
 
-_Screenshot with 18 seconds left on the countdown_
+_Screenshot with 28 seconds left on the countdown_
 
 Use cases:
 
 * Playing a media file in OBS but not sure when it ends? This timer will keep track of time!
+* Need a timer that starts directly when you switch scenes? This timer will start immediately!
+* Want to limit scene durations to a specific time? This timer will help you keep track of time!
 
 
 ## Build
