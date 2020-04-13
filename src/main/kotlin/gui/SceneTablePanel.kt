@@ -69,7 +69,7 @@ class SceneTablePanel : JPanel(), Refreshable {
 
         for (scene in Globals.scenes.values) {
             if (!sceneValues.containsKey(scene.name) && !Config.sceneLimitValues.containsKey(scene.name)) {
-                sceneValues[scene.name] = scene.maxVideoLength
+                sceneValues[scene.name] = scene.maxVideoLength()
             }
 
             val sceneLabel = JLabel(scene.name)

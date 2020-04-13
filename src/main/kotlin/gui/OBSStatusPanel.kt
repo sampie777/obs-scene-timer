@@ -31,7 +31,7 @@ class OBSStatusPanel : JPanel(), Refreshable {
     }
 
     override fun refreshOBSStatus() {
-        val obsDisplayStatus = if (Globals.OBSStatus != null) Globals.OBSStatus else Globals.OBSConnectionStatus
+        val obsDisplayStatus = if (Globals.OBSActivityStatus != null) Globals.OBSActivityStatus else Globals.OBSConnectionStatus
 
         var obsDisplayStatusString = obsDisplayStatus!!.status
         if (obsDisplayStatus == OBSStatus.CONNECTING) {

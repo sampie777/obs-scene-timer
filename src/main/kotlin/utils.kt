@@ -24,3 +24,7 @@ fun getCurrentJarDirectory(caller: Any): File {
     val jarPath = URLDecoder.decode(url.file, "UTF-8")
     return File(jarPath).parentFile
 }
+
+fun isAddressLocalhost(address: String): Boolean {
+    return address.contains("localhost") || address.contains("127.0.0.1")
+}

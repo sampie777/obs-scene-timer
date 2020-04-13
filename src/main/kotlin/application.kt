@@ -1,5 +1,6 @@
 import config.Config
 import gui.MainFrame
+import objects.OBSClient
 import java.awt.EventQueue
 import java.util.logging.Logger
 
@@ -15,5 +16,6 @@ fun main(args: Array<String>) {
         MainFrame()
     }
 
-    OBSClient()
+    val obsClient = OBSClient()
+    obsClient.start()
 }
