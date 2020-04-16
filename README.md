@@ -15,20 +15,20 @@ Use cases:
 
 ## Build
 
-You can build this application with Maven or just use the prebuild jar in [out/](out/).
+You can build this application with Maven or just use the prebuild executable jar in [out/](out/).
 
 ## Setup
 
 1. Download and install [obs-websocket](https://github.com/Palakis/obs-websocket) for your OBS application.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
-1. Launch this application and enjoy.
+1. Launch this application (by running the executable JAR file) and enjoy.
 1. Edit the settings in the _user.properties_ file if needed. This file will be created after first launch of the application. Don't run the application when editing these settings.
 
 ## How it works
 
-1. The application will connect on startup with a already running OBS websocket server, as specified in the properties.
-1. All available OBS scenes are loaded, and the time limit for each scene can be adjusted. If you are running OBS on the same computer as this application, the changes.
-1. When the current scene changes, the timer will reset and start counting again from 0 seconds. You can also reset the timer to 0 by clicking the reset button. (Also, the list of scenes will be reloaded.)
+1. The application will connect on startup with an already running OBS websocket server, as specified in the properties.
+1. All available OBS scenes are loaded, and the time limit for each scene can be adjusted. If you are running OBS on the same computer as this application, the application will try to automatically set the time limit for each scene with a video file as source.
+1. When the current scene changes, the timer will reset and start counting again from 0 seconds. You can also reset the timer to 0 by clicking the reset button. Also, the list of scenes will be reloaded.
 1. When a time limit greater than 0 is set for the current scene, a countdown will also be displayed including a track/progress bar.
 1. When the countdown approaches the time limit, the screen will turn yellow. 
 1. When the countdown has reached 0, the screen will turn red, and the countdown will continue to count the elapsed time since the time limit has passed (negative number).
