@@ -33,6 +33,7 @@ You can build this application with Maven or just use the prebuild executable ja
 1. When the countdown approaches the time limit, the screen will turn yellow. 
 1. When the countdown has reached 0, the screen will turn red, and the countdown will continue to count the elapsed time since the time limit has passed (negative number).
 
+More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
 
 ### Properties
 
