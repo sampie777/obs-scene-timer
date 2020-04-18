@@ -123,8 +123,6 @@ class OBSClient {
 
         GUI.switchedScenes()
         GUI.refreshTimer()
-
-        getScenes()
     }
 
     private fun getScenes() {
