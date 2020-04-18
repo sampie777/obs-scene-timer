@@ -30,7 +30,9 @@ class OBSClient {
         OBSState.connectionStatus = if (!reconnecting) OBSClientStatus.CONNECTING else OBSClientStatus.RECONNECTING
         GUI.refreshOBSStatus()
 
-        controller = OBSRemoteController(Config.obsAddress, false)
+        val obsPassword: String? = if (Config.obsPassword.isEmpty()) null else Config.obsPassword
+
+        controller = OBSRemoteController(Config.obsAddress, false, obsPassword)
 
         if (controller!!.isFailed) { // Awaits response from OBS
             logger.severe("Failed to create controller")
@@ -103,6 +105,22 @@ class OBSClient {
             t.printStackTrace()
             Notifications.add(
                 "Failed to register connect callback: scenes cannot be loaded at startup",
+                "OBS"
+            )
+        }
+
+        try {
+            controller!!.registerConnectionFailedCallback { message: String ->
+                logger.severe("Failed to connect to OBS: $message")
+                Globals.OBSConnectionFailedMessage = message
+                Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
+                GUI.refreshOBSStatus()
+            }
+        } catch (t: Throwable) {
+            logger.severe("Failed to create OBS callback: registerConnectionFailedCallback")
+            t.printStackTrace()
+            Notifications.add(
+                "Failed to register connectionFailed callback: failures during connection won't be shown",
                 "OBS"
             )
         }
