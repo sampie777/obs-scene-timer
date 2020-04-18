@@ -32,7 +32,15 @@ object GUI {
         components.add(component)
     }
 
+    fun isRegistered(component: Refreshable): Boolean {
+        return components.contains(component)
+    }
+
     fun unregister(component: Refreshable) {
         components.remove(component)
+    }
+
+    fun unregisterAll() {
+        components.clear()
     }
 }

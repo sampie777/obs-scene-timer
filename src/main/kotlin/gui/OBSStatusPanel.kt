@@ -30,14 +30,12 @@ class OBSStatusPanel : JPanel(), Refreshable {
         add(messageLabel)
     }
 
-    override fun refreshOBSStatus() {
-        val obsDisplayStatus = if (Globals.OBSActivityStatus != null) Globals.OBSActivityStatus else Globals.OBSConnectionStatus
+    fun getMessageLabel(): JLabel {
+        return messageLabel
+    }
 
-        var obsDisplayStatusString = obsDisplayStatus!!.status
-        if (obsDisplayStatus == OBSStatus.CONNECTING) {
-            obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
-        }
-        messageLabel.text = "OBS: $obsDisplayStatusString"
+    override fun refreshOBSStatus() {
+        messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
 
         if (Globals.OBSConnectionStatus == OBSStatus.CONNECTED) {
             messageLabel.toolTipText = "Connected to ${Config.obsAddress}. ${settingsFileString()}"
@@ -45,6 +43,20 @@ class OBSStatusPanel : JPanel(), Refreshable {
             messageLabel.toolTipText = settingsFileString()
         }
         repaint()
+    }
+
+    fun getOBSStatusRepresentation(): String {
+        val obsDisplayStatus = if (Globals.OBSActivityStatus != null)
+            Globals.OBSActivityStatus else Globals.OBSConnectionStatus
+
+        var obsDisplayStatusString = obsDisplayStatus!!.status
+        if (obsDisplayStatus == OBSStatus.CONNECTING) {
+            obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
+        } else if (obsDisplayStatus == OBSStatus.CONNECTION_FAILED && Globals.OBSConnectionFailedMessage.isNotEmpty()) {
+            obsDisplayStatusString = "Connection failed: " + Globals.OBSConnectionFailedMessage
+        }
+
+        return obsDisplayStatusString
     }
 
     private fun settingsFileString(): String {

@@ -8,6 +8,7 @@ import net.twasi.obsremotejava.OBSRemoteController
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse
 import net.twasi.obsremotejava.objects.Scene
 import net.twasi.obsremotejava.objects.Source
+import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse
 import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse
 import net.twasi.obsremotejava.requests.ResponseBase
@@ -31,52 +32,56 @@ class OBSClient {
         controller = OBSRemoteController(Config.obsAddress, false)
 
         if (controller!!.isFailed) { // Awaits response from OBS
-            // Here you can handle a failed connection request
             logger.severe("Failed to create controller")
+            Globals.OBSConnectionFailedMessage = ""
             Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
             GUI.refreshOBSStatus()
         }
 
+        registerCallbacks()
+
+        try {
+            controller!!.await()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun registerCallbacks() {
         controller!!.registerDisconnectCallback {
             logger.info("Disconnected from OBS")
+            Globals.OBSConnectionFailedMessage = ""
             Globals.OBSConnectionStatus = OBSStatus.DISCONNECTED
             GUI.refreshOBSStatus()
         }
 
         controller!!.registerConnectCallback {
             logger.info("Connected to OBS")
+            Globals.OBSConnectionFailedMessage = ""
             Globals.OBSConnectionStatus = OBSStatus.CONNECTED
             GUI.refreshOBSStatus()
 
             getScenes()
 
+            getCurrentSceneFromOBS()
+
             startSceneWatcherTimer()
         }
 
         controller!!.registerScenesChangedCallback {
+            logger.fine("Processing scenes changed event")
             getScenes()
         }
 
         controller!!.registerSwitchScenesCallback { responseBase: ResponseBase ->
+            logger.fine("Processing scene switch event")
             val response = responseBase as SwitchScenesResponse
 
             if (OBSSceneTimer.getCurrentSceneName() == response.sceneName) {
                 return@registerSwitchScenesCallback
             }
 
-            OBSSceneTimer.setCurrentSceneName(response.sceneName)
-
-            logger.info("New scene: " + OBSSceneTimer.getCurrentSceneName())
-            OBSSceneTimer.resetTimer()
-
-            GUI.switchedScenes()
-            GUI.refreshTimer()
-        }
-
-        try {
-            controller!!.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+            processNewScene(response.sceneName)
         }
     }
 
@@ -89,6 +94,37 @@ class OBSClient {
                 Config.save()
             }
         }, Config.obsConnectionDelay, sceneListenerTimerInterval.toLong())
+    }
+
+    /**
+     * Actively request the current scene from BOS
+     */
+    private fun getCurrentSceneFromOBS() {
+        logger.fine("Retrieving current scene")
+        controller!!.getCurrentScene { res: ResponseBase ->
+            val currentScene = res as GetCurrentSceneResponse
+
+            if (OBSSceneTimer.getCurrentSceneName() == currentScene.name) {
+                return@getCurrentScene
+            }
+
+            processNewScene(currentScene.name)
+        }
+    }
+
+    /**
+     * Set the new scene name as new current scene and notify everyone of this change
+     */
+    private fun processNewScene(sceneName: String) {
+        OBSSceneTimer.setCurrentSceneName(sceneName)
+
+        logger.info("New scene: " + OBSSceneTimer.getCurrentSceneName())
+        OBSSceneTimer.resetTimer()
+
+        GUI.switchedScenes()
+        GUI.refreshTimer()
+
+        getScenes()
     }
 
     private fun getScenes() {

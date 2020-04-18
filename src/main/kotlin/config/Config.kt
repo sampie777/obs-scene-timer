@@ -5,8 +5,9 @@ import java.awt.Color
 object Config {
     var obsAddress: String = "ws://localhost:4444"
     var obsConnectionDelay: Long = 1000
+    var obsPassword: String = ""
 
-    var timerBackgroundColor: Color = Color.LIGHT_GRAY
+    var timerBackgroundColor: Color = Color(230,230,230)
     var approachingLimitColor: Color = Color.ORANGE
     var exceededLimitColor: Color = Color.RED
 

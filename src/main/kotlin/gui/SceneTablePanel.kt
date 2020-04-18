@@ -123,7 +123,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         )
     }
 
-    fun getValueForScene(scene: String): Int {
+    private fun getValueForScene(scene: String): Int {
         if (!sceneInputs.containsKey(scene)) {
             return 0
         }

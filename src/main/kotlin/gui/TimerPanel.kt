@@ -1,17 +1,20 @@
 package gui
 
 import GUI
+import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
+import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 
 class TimerPanel : JPanel(), Refreshable {
+    private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
     private val sceneLabel: JLabel = JLabel()
     private val timerUpLabel: JLabel = JLabel()
@@ -71,6 +74,12 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     override fun refreshTimer() {
+        updateLabelsForTimer()
+        updateBackgroundColorForTimer()
+        repaint()
+    }
+
+    private fun updateLabelsForTimer() {
         sceneLabel.text = OBSSceneTimer.getCurrentSceneName()
 
         timerUpLabel.text = OBSSceneTimer.getTimerAsClock()
@@ -81,8 +90,36 @@ class TimerPanel : JPanel(), Refreshable {
         } else {
             timerDownLabel.text = ""
         }
+    }
 
-        repaint()
+    private fun updateBackgroundColorForTimer() {
+        val sceneMaxDuration = OBSSceneTimer.getMaxTimerValue()
+
+        if (sceneMaxDuration == 0L) {
+            background = Config.timerBackgroundColor
+            return
+        }
+
+        if (OBSSceneTimer.getTimerValue() >= sceneMaxDuration) {
+            logger.severe("Timer exceeded!")
+            background = Config.exceededLimitColor
+
+        } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
+            && OBSSceneTimer.getTimerValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
+        ) {
+            logger.severe("Timer almost exceeded!")
+            background = Config.approachingLimitColor
+
+        } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
+            && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
+            && OBSSceneTimer.getTimerValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
+        ) {
+            logger.severe("Timer almost exceeded!")
+            background = Config.approachingLimitColor
+
+        } else {
+            background = Config.timerBackgroundColor
+        }
     }
 
 }

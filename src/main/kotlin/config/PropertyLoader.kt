@@ -27,6 +27,10 @@ object PropertyLoader {
         return userPropertiesFile
     }
 
+    fun getUserProperties(): Properties {
+        return userProperties
+    }
+
     private fun loadUserProperties() {
         logger.info("Loading user properties from file: " + userPropertiesFile.absolutePath)
 
