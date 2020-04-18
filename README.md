@@ -15,13 +15,13 @@ Use cases:
 
 ## Build
 
-You can build this application with Maven or just use the prebuild executable jar in [out/](out/).
+You can build this application with Maven, use the prebuild executable jar in [out/](out/), or just download a custom version from [downloads](https://bitbucket.org/sajansen/obs-scene-timer/downloads/).
 
 ## Setup
 
 1. Download and install [obs-websocket](https://github.com/Palakis/obs-websocket) for your OBS application.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
-1. Launch this application (by running the executable JAR file) and enjoy.
+1. Launch this application (by running the executable JAR file) with Java and enjoy.
 1. Edit the settings in the _user.properties_ file if needed. This file will be created after first launch of the application. Don't run the application when editing these settings.
 
 ## How it works

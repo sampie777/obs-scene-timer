@@ -176,46 +176,57 @@ class OBSClient {
         Globals.OBSActivityStatus = OBSStatus.LOADING_SCENE_SOURCES
         GUI.refreshOBSStatus()
 
-        val sources: MutableList<TSource> = Globals.scenes.values
+        val sources: List<TSource> = Globals.scenes.values
             .flatMap { tScene: TScene -> tScene.sources }
+
+        val sourceNames: MutableList<String> = sources
+            .map { it.name }
+            .distinct()
             .toMutableList()
 
-        if (sources.size > 0) {
-            loadSourceSettings(sources)
+        if (sources.isNotEmpty()) {
+            loadSourceSettings(sources, sourceNames)
             return true
         }
         return false
     }
 
-    private fun loadSourceSettings(sources: MutableList<TSource>) {
-        val source: TSource = sources.removeAt(0)
-        logger.info("Loading source settings for source: " + source.name)
+    private fun loadSourceSettings(sources: List<TSource>, sourceNames: MutableList<String>) {
+        val sourceName: String = sourceNames.removeAt(0)
+        logger.info("Loading source settings for source: $sourceName")
 
-        controller!!.getSourceSettings(source.name) { response: ResponseBase ->
+        controller!!.getSourceSettings(sourceName) { response: ResponseBase ->
             val res = response as GetSourceSettingsResponse
+            logger.info("Processing received source settings for source: ${res.sourceName}")
 
-            source.settings = res.sourceSettings
-            source.type = res.sourceType
+            // Apply response to all matching sources
+            sources.filter { it.name == res.sourceName }
+                .forEach { assignSourceSettingsFromOBSResponse(it, res) }
 
-            if ("ffmpeg_source" == source.type) {
-                source.fileName = source.settings["local_file"] as String
-
-                var videoLength = 0
-                try {
-                    videoLength = getVideoLength(source.fileName).toInt()
-                } catch (e: Exception) {
-                    logger.severe("Failed to get video length: $e")
-                }
-                source.videoLength = videoLength
-            }
-
-            if (sources.isEmpty()) {
+            if (sourceNames.isEmpty()) {
                 GUI.refreshScenes()
                 Globals.OBSActivityStatus = null
                 GUI.refreshOBSStatus()
             } else {
-                loadSourceSettings(sources)
+                loadSourceSettings(sources, sourceNames)
             }
+        }
+    }
+
+    private fun assignSourceSettingsFromOBSResponse(source: TSource, response: GetSourceSettingsResponse) {
+        source.settings = response.sourceSettings
+        source.type = response.sourceType
+
+        if ("ffmpeg_source" == source.type && source.settings.containsKey("local_file")) {
+            source.fileName = source.settings["local_file"] as String
+
+            var videoLength = 0
+            try {
+                videoLength = getVideoLength(source.fileName).toInt()
+            } catch (e: Exception) {
+                logger.severe("Failed to get video length: $e")
+            }
+            source.videoLength = videoLength
         }
     }
 
