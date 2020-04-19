@@ -12,6 +12,8 @@ import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse
 import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse
 import net.twasi.obsremotejava.requests.ResponseBase
+import objects.notifications.Notification
+import objects.notifications.Notifications
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -33,9 +35,10 @@ class OBSClient {
 
         if (controller!!.isFailed) { // Awaits response from OBS
             logger.severe("Failed to create controller")
-            Globals.OBSConnectionFailedMessage = ""
             Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
             GUI.refreshOBSStatus()
+
+            Notifications.add("Could not connect to OBS", "OBS")
         }
 
         registerCallbacks()
@@ -48,40 +51,76 @@ class OBSClient {
     }
 
     private fun registerCallbacks() {
-        controller!!.registerDisconnectCallback {
-            logger.info("Disconnected from OBS")
-            Globals.OBSConnectionFailedMessage = ""
-            Globals.OBSConnectionStatus = OBSStatus.DISCONNECTED
-            GUI.refreshOBSStatus()
-        }
+        try {
+            controller!!.registerDisconnectCallback {
+                logger.info("Disconnected from OBS")
+                Globals.OBSConnectionStatus = OBSStatus.DISCONNECTED
+                GUI.refreshOBSStatus()
 
-        controller!!.registerConnectCallback {
-            logger.info("Connected to OBS")
-            Globals.OBSConnectionFailedMessage = ""
-            Globals.OBSConnectionStatus = OBSStatus.CONNECTED
-            GUI.refreshOBSStatus()
-
-            getScenes()
-
-            getCurrentSceneFromOBS()
-
-            startSceneWatcherTimer()
-        }
-
-        controller!!.registerScenesChangedCallback {
-            logger.fine("Processing scenes changed event")
-            getScenes()
-        }
-
-        controller!!.registerSwitchScenesCallback { responseBase: ResponseBase ->
-            logger.fine("Processing scene switch event")
-            val response = responseBase as SwitchScenesResponse
-
-            if (OBSSceneTimer.getCurrentSceneName() == response.sceneName) {
-                return@registerSwitchScenesCallback
+                Notifications.add(Notification("Disconnected from OBS", "OBS"))
             }
+        } catch (e: Error) {
+            logger.severe("Failed to create OBS callback: registerDisconnectCallback")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to register disconnect callback: cannot notify when connection is lost",
+                "OBS"
+            )
+        }
 
-            processNewScene(response.sceneName)
+        try {
+            controller!!.registerConnectCallback {
+                logger.info("Connected to OBS")
+                Globals.OBSConnectionStatus = OBSStatus.CONNECTED
+                GUI.refreshOBSStatus()
+
+                getScenes()
+
+                getCurrentSceneFromOBS()
+
+                startSceneWatcherTimer()
+            }
+        } catch (e: Error) {
+            logger.severe("Failed to create OBS callback: registerConnectCallback")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to register connect callback: scenes cannot be loaded at startup",
+                "OBS"
+            )
+        }
+
+        try {
+            controller!!.registerScenesChangedCallback {
+                logger.fine("Processing scenes changed event")
+                getScenes()
+            }
+        } catch (e: Error) {
+            logger.severe("Failed to create OBS callback: registerScenesChangedCallback")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to register scenesChanged callback: new scenes cannot be loaded",
+                "OBS"
+            )
+        }
+
+        try {
+            controller!!.registerSwitchScenesCallback { responseBase: ResponseBase ->
+                logger.fine("Processing scene switch event")
+                val response = responseBase as SwitchScenesResponse
+
+                if (OBSSceneTimer.getCurrentSceneName() == response.sceneName) {
+                    return@registerSwitchScenesCallback
+                }
+
+                processNewScene(response.sceneName)
+            }
+        } catch (e: Error) {
+            logger.severe("Failed to create OBS callback: registerSwitchScenesCallback")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to register switchScenes callback: cannot detect scene changes",
+                "OBS"
+            )
         }
     }
 
@@ -93,7 +132,7 @@ class OBSClient {
 
                 Config.save()
             }
-        }, Config.obsConnectionDelay, sceneListenerTimerInterval.toLong())
+        }, 0, sceneListenerTimerInterval.toLong())
     }
 
     /**
@@ -123,6 +162,8 @@ class OBSClient {
 
         GUI.switchedScenes()
         GUI.refreshTimer()
+
+        SceneLogger.log(OBSSceneTimer.getCurrentSceneName())
     }
 
     private fun getScenes() {
@@ -193,21 +234,30 @@ class OBSClient {
         val sourceName: String = sourceNames.removeAt(0)
         logger.info("Loading source settings for source: $sourceName")
 
-        controller!!.getSourceSettings(sourceName) { response: ResponseBase ->
-            val res = response as GetSourceSettingsResponse
-            logger.info("Processing received source settings for source: ${res.sourceName}")
+        try {
+            controller!!.getSourceSettings(sourceName) { response: ResponseBase ->
+                val res = response as GetSourceSettingsResponse
+                logger.info("Processing received source settings for source: ${res.sourceName}")
 
-            // Apply response to all matching sources
-            sources.filter { it.name == res.sourceName }
-                .forEach { assignSourceSettingsFromOBSResponse(it, res) }
+                // Apply response to all matching sources
+                sources.filter { it.name == res.sourceName }
+                    .forEach { assignSourceSettingsFromOBSResponse(it, res) }
 
-            if (sourceNames.isEmpty()) {
-                GUI.refreshScenes()
-                Globals.OBSActivityStatus = null
-                GUI.refreshOBSStatus()
-            } else {
-                loadSourceSettings(sources, sourceNames)
+                if (sourceNames.isEmpty()) {
+                    GUI.refreshScenes()
+                    Globals.OBSActivityStatus = null
+                    GUI.refreshOBSStatus()
+                } else {
+                    loadSourceSettings(sources, sourceNames)
+                }
             }
+        } catch (e: Error) {
+            logger.severe("Failed to load source settings for source: $sourceName")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to load sources information",
+                "OBS"
+            )
         }
     }
 

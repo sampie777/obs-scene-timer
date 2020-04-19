@@ -6,4 +6,6 @@ interface Refreshable {
     fun refreshScenes() {}
 
     fun refreshOBSStatus() {}
+
+    fun refreshNotifications() {}
 }

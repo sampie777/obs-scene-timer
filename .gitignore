@@ -7,3 +7,4 @@ __pycache__
 target/
 user.properties
 dependency-reduced-pom.xml
+out/

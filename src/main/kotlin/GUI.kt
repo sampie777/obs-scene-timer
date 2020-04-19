@@ -27,6 +27,12 @@ object GUI {
         }
     }
 
+    fun refreshNotifications() {
+        for (component in components) {
+            component.refreshNotifications()
+        }
+    }
+
 
     fun register(component: Refreshable) {
         components.add(component)

@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder
 class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
-    private val sceneLabel: JLabel = JLabel()
+    private val sceneLabel: JLabel = JLabel("Initializing...")
     private val timerUpLabel: JLabel = JLabel()
     private val timerDownLabel: JLabel = JLabel()
 
@@ -32,7 +32,6 @@ class TimerPanel : JPanel(), Refreshable {
         layout = BorderLayout(10, 10)
         border = EmptyBorder(10, 10, 10, 10)
 
-        sceneLabel.text = "Initializing..."
         sceneLabel.horizontalAlignment = SwingConstants.CENTER
         sceneLabel.font = Font("Dialog", Font.PLAIN, 24)
 
@@ -50,13 +49,13 @@ class TimerPanel : JPanel(), Refreshable {
         topPanel.add(resetTimerButton, BorderLayout.LINE_END)
         add(topPanel, BorderLayout.PAGE_START)
 
-        timerUpLabel.text = "Initializing..."
+        timerUpLabel.toolTipText = "Time elapsed"
         timerUpLabel.horizontalAlignment = SwingConstants.CENTER
         timerUpLabel.alignmentX = Component.CENTER_ALIGNMENT
         timerUpLabel.alignmentY = Component.CENTER_ALIGNMENT
         timerUpLabel.font = Font("Dialog", Font.PLAIN, 80)
 
-        timerDownLabel.text = "Initializing..."
+        timerDownLabel.toolTipText = "Time remaining"
         timerDownLabel.horizontalAlignment = SwingConstants.CENTER
         timerDownLabel.alignmentX = Component.CENTER_ALIGNMENT
         timerDownLabel.font = Font("Dialog", Font.PLAIN, 100)

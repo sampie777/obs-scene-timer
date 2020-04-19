@@ -121,6 +121,8 @@ class SceneTablePanel : JPanel(), Refreshable {
             getValueForScene(OBSSceneTimer.getCurrentSceneName())
                 .toLong()
         )
+
+        createSceneTable()
     }
 
     private fun getValueForScene(scene: String): Int {

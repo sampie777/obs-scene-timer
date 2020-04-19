@@ -1,10 +1,13 @@
 package config
 
+import objects.notifications.Notifications
 import java.awt.Color
+import java.util.logging.Logger
 
 object Config {
+    private val logger = Logger.getLogger(Config.toString())
+
     var obsAddress: String = "ws://localhost:4444"
-    var obsConnectionDelay: Long = 1000
     var obsPassword: String = ""
 
     var timerBackgroundColor: Color = Color(230,230,230)
@@ -18,13 +21,27 @@ object Config {
 
     var sceneLimitValues: HashMap<String, Int> = HashMap()
 
+    var enableSceneTimestampLogger: Boolean = false
+
     fun load() {
-        PropertyLoader.load()
-        PropertyLoader.loadConfig(this::class.java)
+        try {
+            PropertyLoader.load()
+            PropertyLoader.loadConfig(this::class.java)
+        } catch (e: Error) {
+            logger.severe("Failed to load Config")
+            e.printStackTrace()
+            Notifications.add("Failed to load configuration from file", "Configuration")
+        }
     }
 
     fun save() {
-        PropertyLoader.saveConfig(this::class.java)
-        PropertyLoader.save()
+        try {
+            PropertyLoader.saveConfig(this::class.java)
+            PropertyLoader.save()
+        } catch (e: Error) {
+            logger.severe("Failed to save Config")
+            e.printStackTrace()
+            Notifications.add("Failed to save configuration to file", "Configuration")
+        }
     }
 }

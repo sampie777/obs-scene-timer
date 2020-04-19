@@ -52,8 +52,6 @@ class OBSStatusPanel : JPanel(), Refreshable {
         var obsDisplayStatusString = obsDisplayStatus!!.status
         if (obsDisplayStatus == OBSStatus.CONNECTING) {
             obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
-        } else if (obsDisplayStatus == OBSStatus.CONNECTION_FAILED && Globals.OBSConnectionFailedMessage.isNotEmpty()) {
-            obsDisplayStatusString = "Connection failed: " + Globals.OBSConnectionFailedMessage
         }
 
         return obsDisplayStatusString

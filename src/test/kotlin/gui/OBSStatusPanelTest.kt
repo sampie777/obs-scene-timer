@@ -12,7 +12,6 @@ class OBSStatusPanelTest {
         Config.obsAddress = "ws://localhost:4444"
         Globals.OBSActivityStatus = null
         Globals.OBSConnectionStatus = OBSStatus.UNKNOWN
-        Globals.OBSConnectionFailedMessage = ""
     }
 
     @Test
@@ -56,19 +55,8 @@ class OBSStatusPanelTest {
         val panel = OBSStatusPanel()
 
         Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
-        Globals.OBSConnectionFailedMessage = ""
 
         assertEquals("Connection failed!", panel.getOBSStatusRepresentation())
-    }
-
-    @Test
-    fun testGetOBSStatusRepresentationWithConnectionFailedStatusAndFailedMessage() {
-        val panel = OBSStatusPanel()
-
-        Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
-        Globals.OBSConnectionFailedMessage = "failed message"
-
-        assertEquals("Connection failed: failed message", panel.getOBSStatusRepresentation())
     }
 
     @Test

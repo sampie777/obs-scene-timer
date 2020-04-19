@@ -104,6 +104,10 @@ object PropertyLoader {
                         continue
                     }
 
+                    if (field.name == "logger") {
+                        continue
+                    }
+
                     field.isAccessible = true
                     val configValue = field.get(Config)
 
