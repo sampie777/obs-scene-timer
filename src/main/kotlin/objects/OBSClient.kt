@@ -23,12 +23,13 @@ class OBSClient {
     private var logger = Logger.getLogger(OBSClient::class.java.name)
 
     private var controller: OBSRemoteController? = null
-    private val sceneListenerTimer = Timer()
+    private var timerCounter = Timer()
     private val sceneListenerTimerInterval = 1000
+    private var reconnecting: Boolean = false
 
     fun start() {
         logger.info("Connecting to OBS on: ${Config.obsAddress}")
-        Globals.OBSConnectionStatus = OBSStatus.CONNECTING
+        Globals.OBSConnectionStatus = if (!reconnecting) OBSStatus.CONNECTING else OBSStatus.RECONNECTING
         GUI.refreshOBSStatus()
 
         controller = OBSRemoteController(Config.obsAddress, false)
@@ -38,7 +39,11 @@ class OBSClient {
             Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
             GUI.refreshOBSStatus()
 
-            Notifications.add("Could not connect to OBS", "OBS")
+            if (!reconnecting) {
+                Notifications.add("Could not connect to OBS", "OBS")
+            }
+
+            startReconnectingTimeout()
         }
 
         registerCallbacks()
@@ -50,6 +55,16 @@ class OBSClient {
         }
     }
 
+    private fun startReconnectingTimeout() {
+        val connectionRetryTimer = Timer()
+        connectionRetryTimer.schedule(object : TimerTask() {
+            override fun run() {
+                reconnecting = true
+                start()
+            }
+        }, Config.obsReconnectionTimeout)
+    }
+
     private fun registerCallbacks() {
         try {
             controller!!.registerDisconnectCallback {
@@ -58,8 +73,10 @@ class OBSClient {
                 GUI.refreshOBSStatus()
 
                 Notifications.add(Notification("Disconnected from OBS", "OBS"))
+
+                startReconnectingTimeout()
             }
-        } catch (e: Error) {
+        } catch (e: Throwable) {
             logger.severe("Failed to create OBS callback: registerDisconnectCallback")
             e.printStackTrace()
             Notifications.add(
@@ -74,13 +91,18 @@ class OBSClient {
                 Globals.OBSConnectionStatus = OBSStatus.CONNECTED
                 GUI.refreshOBSStatus()
 
+                if (reconnecting) {
+                    Notifications.add("Connection re-established", "OBS")
+                }
+                reconnecting = false
+
                 getScenes()
 
                 getCurrentSceneFromOBS()
 
                 startSceneWatcherTimer()
             }
-        } catch (e: Error) {
+        } catch (e: Throwable) {
             logger.severe("Failed to create OBS callback: registerConnectCallback")
             e.printStackTrace()
             Notifications.add(
@@ -94,7 +116,7 @@ class OBSClient {
                 logger.fine("Processing scenes changed event")
                 getScenes()
             }
-        } catch (e: Error) {
+        } catch (e: Throwable) {
             logger.severe("Failed to create OBS callback: registerScenesChangedCallback")
             e.printStackTrace()
             Notifications.add(
@@ -114,7 +136,7 @@ class OBSClient {
 
                 processNewScene(response.sceneName)
             }
-        } catch (e: Error) {
+        } catch (e: Throwable) {
             logger.severe("Failed to create OBS callback: registerSwitchScenesCallback")
             e.printStackTrace()
             Notifications.add(
@@ -125,7 +147,16 @@ class OBSClient {
     }
 
     private fun startSceneWatcherTimer() {
-        sceneListenerTimer.scheduleAtFixedRate(object : TimerTask() {
+        try {
+            logger.info("Trying to cancel timer")
+            timerCounter.cancel()
+            timerCounter = Timer()
+            logger.info("Timer cancled")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+
+        timerCounter.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 OBSSceneTimer.increaseTimer()
                 GUI.refreshTimer()
@@ -251,7 +282,7 @@ class OBSClient {
                     loadSourceSettings(sources, sourceNames)
                 }
             }
-        } catch (e: Error) {
+        } catch (e: Throwable) {
             logger.severe("Failed to load source settings for source: $sourceName")
             e.printStackTrace()
             Notifications.add(

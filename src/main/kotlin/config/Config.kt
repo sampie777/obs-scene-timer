@@ -9,6 +9,7 @@ object Config {
 
     var obsAddress: String = "ws://localhost:4444"
     var obsPassword: String = ""
+    var obsReconnectionTimeout: Long = 3000
 
     var timerBackgroundColor: Color = Color(230,230,230)
     var approachingLimitColor: Color = Color.ORANGE

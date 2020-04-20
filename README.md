@@ -45,6 +45,12 @@ When an error or something else interesting occurs, a notification of this event
 
 A built in logging mechanism can be enabled (see Properties chapter) to log the timestamp and scene name every time the active scene changes. The output is a `;` separated .csv file which name starts with `sceneLogger_`. When the application starts, it will create a new file in the same directory with a timestamp, e.g.: `sceneLogger_2020-04-19_11-27-41.csv`.
 
+#### Auto reconnect
+
+When connection to OBS is lost, OBS Scene Timer will continue keeping track of time, no matter what. Even after connection with OBS is re-established, the time for the same scene is still correct. Of course, the application cannot detect any scene changes while disconnected with OBS. 
+
+OBS Scene Timer will not attempt to reconnect immediately, but during a continuous interval of 3 seconds (as specified in the properties).
+
 ### Properties
 
 In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. Edit this file in your favorite editor. 
@@ -57,6 +63,7 @@ _Connection settings_
 
 * `obsAddress` (string) (default: `ws://localhost:4444`): holds the full address of the OBS websocket server. This server can be on any computer in the same network of even over internet, as long as it can be reached by the obs-scene-timer application.
 * `obsPassword` (string) (default: `<empty>`): the password needed to connect to the OBS websocket. **Note**: this isn't yet implemented, as we wait for the next release of `obs-websocket-java`.
+* `obsReconnectionTimeout` (milliseconds) (default: `3000`): if connection with OBS failed or is lost, OBS Scene Timer will try to reconnect to OBS after this time in milliseconds.
 
 _Application color settings_
 
