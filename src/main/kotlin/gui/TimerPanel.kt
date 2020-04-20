@@ -53,12 +53,12 @@ class TimerPanel : JPanel(), Refreshable {
         timerUpLabel.horizontalAlignment = SwingConstants.CENTER
         timerUpLabel.alignmentX = Component.CENTER_ALIGNMENT
         timerUpLabel.alignmentY = Component.CENTER_ALIGNMENT
-        timerUpLabel.font = Font("Dialog", Font.PLAIN, 80)
+        timerUpLabel.font = Font("Dialog", Font.PLAIN, Config.timerCountUpFontSize)
 
         timerDownLabel.toolTipText = "Time remaining"
         timerDownLabel.horizontalAlignment = SwingConstants.CENTER
         timerDownLabel.alignmentX = Component.CENTER_ALIGNMENT
-        timerDownLabel.font = Font("Dialog", Font.PLAIN, 100)
+        timerDownLabel.font = Font("Dialog", Font.PLAIN, Config.timerCountDownFontSize)
 
         val timersPanel = JPanel()
         timersPanel.background = null

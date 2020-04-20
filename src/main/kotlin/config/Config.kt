@@ -14,6 +14,8 @@ object Config {
     var timerBackgroundColor: Color = Color(230,230,230)
     var approachingLimitColor: Color = Color.ORANGE
     var exceededLimitColor: Color = Color.RED
+    var timerCountUpFontSize: Int = 80
+    var timerCountDownFontSize: Int = 100
 
     var largeMinLimitForLimitApproaching: Long = 60
     var largeTimeDifferenceForLimitApproaching: Long = 30
