@@ -27,7 +27,7 @@ class NotificationFrame : JFrame(), Refreshable {
         mainPanel.add(scrollPanel)
 
         title = "Notifications"
-        setSize(420, 500)
+        setSize(423, 500)
         isVisible = true
     }
 }
