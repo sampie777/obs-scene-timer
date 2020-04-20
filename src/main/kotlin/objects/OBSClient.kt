@@ -1,8 +1,8 @@
 package objects
 
 import GUI
-import com.xuggle.xuggler.IContainer
 import config.Config
+import io.humble.video.Demuxer
 import isAddressLocalhost
 import net.twasi.obsremotejava.OBSRemoteController
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse
@@ -211,6 +211,7 @@ class OBSClient {
     }
 
     private fun setOBSScenes(scenes: List<Scene>) {
+        logger.info("Set the OBS Scenes")
         Globals.scenes.clear()
         for (scene in scenes) {
             val tScene = TScene()
@@ -226,6 +227,7 @@ class OBSClient {
         }
 
         if (!loadSourceSettings()) {
+            logger.info("Refreshing scenes info")
             GUI.refreshScenes()
             Globals.OBSActivityStatus = null
             GUI.refreshOBSStatus()
@@ -301,6 +303,7 @@ class OBSClient {
 
             var videoLength = 0
             try {
+                logger.info("Trying to get video length for: ${source.fileName}")
                 videoLength = getVideoLength(source.fileName).toInt()
             } catch (e: Exception) {
                 logger.severe("Failed to get video length: $e")
@@ -324,9 +327,10 @@ class OBSClient {
 
         logger.info("Getting duration of: $filename")
 
-        val container = IContainer.make()
-        container.open(filename, IContainer.Type.READ, null)
-        val duration = container.duration
+        val demuxer = Demuxer.make()
+        demuxer.open(filename, null, false, true, null, null)
+        val duration = demuxer.duration
+        logger.info("Duration is: ${TimeUnit.MICROSECONDS.toSeconds(duration)}")
 
         return TimeUnit.MICROSECONDS.toSeconds(duration)
     }
