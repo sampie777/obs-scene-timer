@@ -67,7 +67,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         sceneLabels.clear()
         sceneInputs.clear()
 
-        for (scene in Globals.scenes.values) {
+        for (scene in Globals.scenes) {
             if (!sceneValues.containsKey(scene.name) && !Config.sceneLimitValues.containsKey(scene.name)) {
                 sceneValues[scene.name] = scene.maxVideoLength()
             }
@@ -94,14 +94,12 @@ class SceneTablePanel : JPanel(), Refreshable {
             JLabel("Duration (sec.)")
         )
 
-        Globals.scenes.values.stream()
-            .sorted { tScene, tScene2 -> tScene.name.compareTo(tScene2.name) }
-            .forEach {
-                addSceneTableRow(
-                    sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
-                    sceneInputs[it.name] ?: JSpinner()
-                )
-            }
+        Globals.scenes.forEach {
+            addSceneTableRow(
+                sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
+                sceneInputs[it.name] ?: JSpinner()
+            )
+        }
     }
 
     private fun addSceneTableRow(sceneColumn: Component, inputColumn: Component) {

@@ -191,7 +191,7 @@ class OBSClient {
                 tScene.sources = tSources
             }
 
-            Globals.scenes[tScene.name] = tScene
+            Globals.scenes.add(tScene)
         }
 
         if (!loadSourceSettings()) {
@@ -215,7 +215,7 @@ class OBSClient {
         Globals.OBSActivityStatus = OBSStatus.LOADING_SCENE_SOURCES
         GUI.refreshOBSStatus()
 
-        val sources: List<TSource> = Globals.scenes.values
+        val sources: List<TSource> = Globals.scenes
             .flatMap { tScene: TScene -> tScene.sources }
 
         val sourceNames: MutableList<String> = sources
