@@ -1,7 +1,12 @@
+import gui.MainFrame
 import java.io.File
 import java.io.UnsupportedEncodingException
+import java.net.URL
 import java.net.URLDecoder
+import java.util.logging.Logger
+import javax.swing.ImageIcon
 
+private val logger: Logger = Logger.getLogger("utils")
 
 fun getTimeAsClock(value: Long): String {
     var positiveValue = value
@@ -27,4 +32,14 @@ fun getCurrentJarDirectory(caller: Any): File {
 
 fun isAddressLocalhost(address: String): Boolean {
     return address.contains("localhost") || address.contains("127.0.0.1")
+}
+
+fun createImageIcon(path: String): ImageIcon? {
+    val imgURL: URL? = MainFrame::class.java.getResource(path)
+    if (imgURL != null) {
+        return ImageIcon(imgURL)
+    }
+
+    logger.severe("Couldn't find imageIcon: $path")
+    return null
 }

@@ -23,7 +23,6 @@ class OBSStatusPanel : JPanel(), Refreshable {
 
     private fun initGUI() {
         layout = BorderLayout(15, 15)
-        border = EmptyBorder(10, 10, 10, 10)
 
         messageLabel.font = Font("Dialog", Font.PLAIN, 14)
         messageLabel.toolTipText = settingsFileString()

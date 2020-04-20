@@ -4,10 +4,7 @@ import GUI
 import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.Font
+import java.awt.*
 import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -38,6 +35,9 @@ class TimerPanel : JPanel(), Refreshable {
         val resetTimerButton = JButton("Reset")
         resetTimerButton.toolTipText = "Reset timer to 0"
         resetTimerButton.background = null
+        resetTimerButton.requestFocus()
+        resetTimerButton.cursor = Cursor(Cursor.HAND_CURSOR)
+        resetTimerButton.isContentAreaFilled = false
         resetTimerButton.addActionListener {
             OBSSceneTimer.resetTimer()
         }

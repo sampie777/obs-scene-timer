@@ -1,12 +1,16 @@
 package gui
 
 import GUI
+import createImageIcon
 import gui.notifications.NotificationFrame
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
 import java.awt.BorderLayout
+import java.awt.Cursor
+import java.awt.Dimension
 import java.awt.Toolkit
 import java.util.logging.Logger
+import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -15,7 +19,7 @@ import javax.swing.border.EmptyBorder
 class MainFrame : JFrame(), Refreshable {
     private val logger = Logger.getLogger(MainFrame::class.java.name)
 
-    private val notificationsButton = JButton("Notifications")
+    private val notificationsButton = JButton(createImageIcon("/notification-bell-24.png"))
 
     init {
         GUI.register(this)
@@ -25,6 +29,12 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     private fun initGUI() {
+        notificationsButton.border = BorderFactory.createEmptyBorder()
+        notificationsButton.isBorderPainted = false
+        notificationsButton.isContentAreaFilled = false
+        notificationsButton.isFocusPainted = false
+        notificationsButton.cursor = Cursor(Cursor.HAND_CURSOR)
+        notificationsButton.toolTipText = "Notifications"
         notificationsButton.addActionListener {
             NotificationFrame()
         }
@@ -55,11 +65,11 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     override fun refreshNotifications() {
-        var notificationsAmount = ""
         if (Notifications.unreadNotifications > 0) {
-            notificationsAmount = "(${Notifications.unreadNotifications})"
+            notificationsButton.text = "(${Notifications.unreadNotifications})"
+            return
         }
 
-        notificationsButton.text = "Notifications $notificationsAmount"
+        notificationsButton.text = ""
     }
 }

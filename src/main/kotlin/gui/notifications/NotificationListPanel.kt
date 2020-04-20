@@ -2,8 +2,11 @@ package gui.notifications
 
 import gui.Refreshable
 import objects.notifications.Notifications
+import java.awt.Dimension
 import java.util.logging.Logger
+import javax.swing.Box
 import javax.swing.BoxLayout
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 class NotificationListPanel : JPanel(), Refreshable {
@@ -28,11 +31,16 @@ class NotificationListPanel : JPanel(), Refreshable {
     private fun addNotificationPanels() {
         mainPanel.removeAll()
 
-        Notifications.list.stream()
-            .sorted { notification, notification2 -> notification2.timestamp.compareTo(notification.timestamp) }
-            .forEach {
-                mainPanel.add(NotificationPanel(it))
-            }
+        if (Notifications.list.size == 0) {
+            mainPanel.add(Box.createRigidArea(Dimension(0, 70)))
+            mainPanel.add(JLabel("No notifications"))
+        } else {
+            Notifications.list.stream()
+                .sorted { notification, notification2 -> notification2.timestamp.compareTo(notification.timestamp) }
+                .forEach {
+                    mainPanel.add(NotificationPanel(it))
+                }
+        }
 
         repaint()
         revalidate()
