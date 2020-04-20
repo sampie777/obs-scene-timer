@@ -5,10 +5,8 @@ import createImageIcon
 import gui.notifications.NotificationFrame
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
-import java.awt.BorderLayout
-import java.awt.Cursor
-import java.awt.Dimension
-import java.awt.Toolkit
+import java.awt.*
+import java.net.URL
 import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JButton
@@ -21,8 +19,15 @@ class MainFrame : JFrame(), Refreshable {
 
     private val notificationsButton = JButton(createImageIcon("/notification-bell-24.png"))
 
+    private val applicationIconDefault: Image?
+    private val applicationIconRed: Image?
+
     init {
         GUI.register(this)
+
+        applicationIconDefault = loadApplicationIcon("/icon-512.png")
+        applicationIconRed = loadApplicationIcon("/icon-red-512.png")
+
         initGUI()
 
         refreshNotifications()
@@ -57,11 +62,18 @@ class MainFrame : JFrame(), Refreshable {
         title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
-        iconImage = Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/icon.png"))
+        iconImage = applicationIconDefault
     }
 
     override fun refreshTimer() {
         title = "${OBSSceneTimer.getCurrentSceneName()}: ${OBSSceneTimer.getTimerAsClock()}"
+
+        if (OBSSceneTimer.getMaxTimerValue() > 0
+            && OBSSceneTimer.getTimerValue() >= OBSSceneTimer.getMaxTimerValue()) {
+            iconImage = applicationIconRed
+        } else {
+            iconImage = applicationIconDefault
+        }
     }
 
     override fun refreshNotifications() {
@@ -71,5 +83,15 @@ class MainFrame : JFrame(), Refreshable {
         }
 
         notificationsButton.text = ""
+    }
+
+    private fun loadApplicationIcon(iconPath: String): Image? {
+        val resource: URL? = javaClass.getResource(iconPath)
+        if (resource == null) {
+            logger.warning("Could not find icon: $iconPath")
+            return null
+        }
+
+        return Toolkit.getDefaultToolkit().getImage(resource)
     }
 }

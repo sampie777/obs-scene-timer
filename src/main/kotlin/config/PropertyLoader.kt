@@ -51,7 +51,7 @@ object PropertyLoader {
     }
 
     private fun saveUserPropertiesToFIle() {
-        logger.info("Saving user properties")
+        logger.fine("Saving user properties")
 
         if (!userPropertiesFile.exists()) {
             logger.info("Creating file: " + userPropertiesFile.absolutePath)
@@ -111,7 +111,7 @@ object PropertyLoader {
                     field.isAccessible = true
                     val configValue = field.get(Config)
 
-                    logger.fine("Saving config field: ${field.name} with value: $configValue")
+                    logger.finer("Saving config field: ${field.name} with value: $configValue")
                     setPropertyValue(userProperties, field.name, field.type, configValue)
 
                 } catch (e: IllegalArgumentException) {
