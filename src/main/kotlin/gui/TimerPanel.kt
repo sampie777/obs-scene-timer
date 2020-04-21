@@ -64,7 +64,7 @@ class TimerPanel : JPanel(), Refreshable {
 
         val timersPanel = JPanel()
         timersPanel.background = null
-        timersPanel.layout = BoxLayout(timersPanel, BoxLayout.Y_AXIS)
+        timersPanel.layout = BoxLayout(timersPanel, BoxLayout.PAGE_AXIS)
         timersPanel.add(Box.createVerticalGlue())
         timersPanel.add(timerUpLabel)
         timersPanel.add(Box.createRigidArea(Dimension(0, 20)))

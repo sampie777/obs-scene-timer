@@ -1,4 +1,4 @@
-package gui
+package gui.menu
 
 import gui.utils.ClickableLinkComponent
 import java.awt.Component
@@ -7,7 +7,7 @@ import java.awt.Font
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class InfoFrame(private val parentComponent: Component?) : JFrame() {
+class InfoFrame(private val parentFrame: Component?) : JFrame() {
 
     init {
         createGui()
@@ -15,7 +15,7 @@ class InfoFrame(private val parentComponent: Component?) : JFrame() {
 
     private fun createGui() {
         val mainPanel = JPanel()
-        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.Y_AXIS)
+        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)
         mainPanel.border = EmptyBorder(0, 20, 10, 20)
         add(mainPanel)
 
@@ -33,7 +33,7 @@ class InfoFrame(private val parentComponent: Component?) : JFrame() {
 
         title = "Information"
         setSize(400, 160)
-        setLocationRelativeTo(parentComponent)
+        setLocationRelativeTo(parentFrame)
         isResizable = false
         isVisible = true
     }

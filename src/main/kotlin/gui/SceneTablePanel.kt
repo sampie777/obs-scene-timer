@@ -54,7 +54,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         layout = BorderLayout(0, 0)
 
         container.border = EmptyBorder(0, 10, 0, 10)
-        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
+        container.layout = BoxLayout(container, BoxLayout.PAGE_AXIS)
 
         createSceneTable()
 

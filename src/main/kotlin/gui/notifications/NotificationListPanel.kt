@@ -25,7 +25,7 @@ class NotificationListPanel : JPanel(), Refreshable {
     }
 
     private fun createGui() {
-        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.Y_AXIS)
+        mainPanel.layout = BoxLayout(mainPanel, BoxLayout.PAGE_AXIS)
         add(mainPanel)
     }
 

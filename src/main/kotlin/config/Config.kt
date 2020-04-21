@@ -47,4 +47,25 @@ object Config {
             Notifications.add("Failed to save configuration to file", "Configuration")
         }
     }
+
+    fun get(key: String): Any? {
+        try {
+            return javaClass.getDeclaredField(key).get(this)
+        } catch (t: Throwable) {
+            logger.severe("Could not get config key $key")
+            t.printStackTrace()
+            Notifications.add("Could not get configuration setting: $key", "Configuration")
+        }
+        return null
+    }
+
+    fun set(key: String, value: Any?) {
+        try {
+            javaClass.getDeclaredField(key).set(this, value)
+        } catch (t: Throwable) {
+            logger.severe("Could not set config key $key")
+            t.printStackTrace()
+            Notifications.add("Could not set configuration setting: $key", "Configuration")
+        }
+    }
 }
