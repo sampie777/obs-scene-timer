@@ -13,9 +13,9 @@ import javax.swing.border.EmptyBorder
 class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
-    private val sceneLabel: JLabel = JLabel("Initializing...")
-    private val timerUpLabel: JLabel = JLabel()
-    private val timerDownLabel: JLabel = JLabel()
+    val sceneLabel: JLabel = JLabel("Initializing...")
+    val timerUpLabel: JLabel = JLabel()
+    val timerDownLabel: JLabel = JLabel()
 
     init {
         GUI.register(this)
@@ -25,6 +25,7 @@ class TimerPanel : JPanel(), Refreshable {
 
     private fun initGUI() {
         setSize(800, 200)
+        minimumSize = Dimension(0, 0)
 
         layout = BorderLayout(10, 10)
         border = EmptyBorder(10, 10, 10, 10)
@@ -59,6 +60,7 @@ class TimerPanel : JPanel(), Refreshable {
         timerDownLabel.horizontalAlignment = SwingConstants.CENTER
         timerDownLabel.alignmentX = Component.CENTER_ALIGNMENT
         timerDownLabel.font = Font("Dialog", Font.PLAIN, Config.timerCountDownFontSize)
+        timerDownLabel.isVisible = false
 
         val timersPanel = JPanel()
         timersPanel.background = null
@@ -80,16 +82,19 @@ class TimerPanel : JPanel(), Refreshable {
         repaint()
     }
 
-    private fun updateLabelsForTimer() {
+    override fun switchedScenes() {
         sceneLabel.text = OBSSceneTimer.getCurrentSceneName()
+    }
 
+    private fun updateLabelsForTimer() {
         timerUpLabel.text = OBSSceneTimer.getTimerAsClock()
 
         if (OBSSceneTimer.getMaxTimerValue() > 0L) {
             val timeDifference = OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getTimerValue()
             timerDownLabel.text = getTimeAsClock(timeDifference)
+            timerDownLabel.isVisible = true
         } else {
-            timerDownLabel.text = ""
+            timerDownLabel.isVisible = false
         }
     }
 

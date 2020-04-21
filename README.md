@@ -1,6 +1,6 @@
 # OBS Scene Timer
 
-_Friendly application to keep track of time during your live streams_
+_Friendly basic application to keep track of time during your live streams_
 
 _Author: Samuel-Anton Jansen_
 
@@ -23,7 +23,7 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 
 1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** for your OBS application.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
-1. **Launch this application** (by running the executable JAR file) with Java and enjoy.
+1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
 1. **Edit the settings** in the _user.properties_ file if needed. This file will be created after first launch of the application. Don't run the application when editing these settings.
 
 ## How it works

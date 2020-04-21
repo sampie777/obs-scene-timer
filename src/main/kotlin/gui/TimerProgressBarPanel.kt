@@ -1,5 +1,8 @@
 package gui
 
+import gui.utils.createGraphics
+import gui.utils.drawImageInYCenter
+import gui.utils.setDefaultRenderingHints
 import objects.OBSSceneTimer
 import java.awt.*
 import java.awt.geom.Ellipse2D
@@ -39,11 +42,19 @@ class TimerProgressBarPanel : JPanel() {
         val cursorPositionX = cursorPositionPrecentage * (width - 2.0 * paintMargin)
 
         val progressCursor = drawProgressCursor()
-        drawImageInYCenter(g2, height, (paintMargin + cursorPositionX + -1 * progressCursor.width / 2.0).toInt(), progressCursor)
+        drawImageInYCenter(
+            g2,
+            height,
+            (paintMargin + cursorPositionX + -1 * progressCursor.width / 2.0).toInt(),
+            progressCursor
+        )
     }
 
     private fun drawProgressCursor(): BufferedImage {
-        val (bufferedImage, g2: Graphics2D) = createGraphics(cursorHeight + 2 * paintMargin, cursorHeight + 2 * paintMargin)
+        val (bufferedImage, g2: Graphics2D) = createGraphics(
+            cursorHeight + 2 * paintMargin,
+            cursorHeight + 2 * paintMargin
+        )
         g2.stroke = BasicStroke(3F)
 
         val progressBal = Ellipse2D.Double(paintMargin.toDouble(), paintMargin.toDouble(), cursorHeight.toDouble(), cursorHeight.toDouble())

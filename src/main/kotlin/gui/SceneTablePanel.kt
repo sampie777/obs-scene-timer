@@ -30,10 +30,15 @@ class SceneInputChangeListener(private val panel: SceneTablePanel, private val s
 }
 
 class SceneTablePanel : JPanel(), Refreshable {
-    private val sceneLabels = HashMap<String, JLabel>()
-    private val sceneInputs = HashMap<String, JSpinner>()
+    val sceneLabels = HashMap<String, JLabel>()
+    val sceneInputs = HashMap<String, JSpinner>()
     val sceneValues = HashMap<String, Int>()
-    private val container = JPanel()
+    val container = JPanel()
+
+    private val labelFont = Font("Dialog", Font.PLAIN, 16)
+    private val currentSceneLabelFont = Font("Dialog", Font.BOLD, 16)
+    private val inputFont = Font("Dialog", Font.PLAIN, 16)
+    private val currentSceneInputFont = Font("Dialog", Font.BOLD, 16)
 
     init {
         GUI.register(this)
@@ -47,7 +52,9 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun initGUI() {
         layout = BorderLayout(0, 0)
-        border = EmptyBorder(0, 10, 10, 10)
+
+        container.border = EmptyBorder(0, 10, 0, 10)
+        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
 
         createSceneTable()
 
@@ -59,55 +66,71 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     private fun createSceneTable() {
-        val labelFont = Font("Dialog", Font.PLAIN, 16)
-        val currentSceneLabelFont = Font("Dialog", Font.BOLD, 16)
-        val inputFont = Font("Dialog", Font.PLAIN, 16)
-        val currentSceneInputFont = Font("Dialog", Font.BOLD, 16)
-
         sceneLabels.clear()
         sceneInputs.clear()
 
+        createSceneRowComponents()
+
+        container.removeAll()
+
+        container.add(
+            createSceneTableRow(
+                JLabel("Scene"),
+                JLabel("Max duration (sec.)")
+            )
+        )
+
+        if (Globals.scenes.size == 0) {
+            addNoScenesAvailableLabel(labelFont)
+        } else {
+            Globals.scenes.forEach {
+                container.add(
+                    createSceneTableRow(
+                        sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
+                        sceneInputs[it.name] ?: JSpinner()
+                    )
+                )
+            }
+        }
+    }
+
+    private fun createSceneRowComponents() {
         for (scene in Globals.scenes) {
             if (!sceneValues.containsKey(scene.name) && !Config.sceneLimitValues.containsKey(scene.name)) {
                 sceneValues[scene.name] = scene.maxVideoLength()
             }
 
             val sceneLabel = JLabel(scene.name)
-            sceneLabel.font =
-                if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneLabelFont else labelFont
+            sceneLabel.font = if (scene.name == OBSSceneTimer.getCurrentSceneName())
+                currentSceneLabelFont else labelFont
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
             sceneInput.preferredSize = Dimension(100, 20)
             sceneInput.model = SpinnerNumberModel(sceneValues[scene.name], 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
-            sceneInput.font =
-                if (scene.name == OBSSceneTimer.getCurrentSceneName()) currentSceneInputFont else inputFont
+            sceneInput.font = if (scene.name == OBSSceneTimer.getCurrentSceneName())
+                currentSceneInputFont else inputFont
             sceneInputs[scene.name] = sceneInput
-        }
-
-        container.removeAll()
-        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
-
-        addSceneTableRow(
-            JLabel("Scene"),
-            JLabel("Duration (sec.)")
-        )
-
-        Globals.scenes.forEach {
-            addSceneTableRow(
-                sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
-                sceneInputs[it.name] ?: JSpinner()
-            )
         }
     }
 
-    private fun addSceneTableRow(sceneColumn: Component, inputColumn: Component) {
+    private fun addNoScenesAvailableLabel(labelFont: Font) {
+        val noScenesAvailableLabel = JLabel("No scenes available")
+        noScenesAvailableLabel.font = labelFont
+        noScenesAvailableLabel.horizontalAlignment = SwingConstants.CENTER
+        noScenesAvailableLabel.alignmentX = Component.CENTER_ALIGNMENT
+
+        container.add(Box.createRigidArea(Dimension(0, 30)))
+        container.add(noScenesAvailableLabel)
+    }
+
+    private fun createSceneTableRow(sceneColumn: Component, inputColumn: Component): JPanel {
         val tableRow = JPanel()
         tableRow.layout = BorderLayout(10, 10)
         tableRow.add(sceneColumn, BorderLayout.CENTER)
         tableRow.add(inputColumn, BorderLayout.LINE_END)
-        container.add(tableRow)
+        return tableRow
     }
 
     override fun refreshScenes() {

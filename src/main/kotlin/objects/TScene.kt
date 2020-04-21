@@ -21,4 +21,11 @@ class TScene {
 
     private fun longestVideoLengthSource(): Optional<TSource> =
         sources.stream().max(Comparator.comparingInt(TSource::videoLength))
+
+
+    constructor()
+
+    constructor(name: String?) {
+        this.name = name ?: ""
+    }
 }

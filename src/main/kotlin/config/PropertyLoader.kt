@@ -69,7 +69,7 @@ object PropertyLoader {
     fun loadConfig(configClass: Class<*>) {
         try {
             for (field in configClass.declaredFields) {
-                if (field.name == "INSTANCE") {
+                if (field.name == "INSTANCE" || field.name == "logger") {
                     continue
                 }
 
