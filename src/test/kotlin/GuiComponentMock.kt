@@ -1,5 +1,3 @@
-package main
-
 import gui.Refreshable
 
 class GuiComponentMock : Refreshable {

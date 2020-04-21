@@ -1,0 +1,85 @@
+package objects
+
+import GuiComponentMock
+import config.Config
+import net.twasi.obsremotejava.objects.Scene
+import java.io.File
+import kotlin.test.*
+
+class OBSClientTest {
+
+    @BeforeTest
+    fun before() {
+        OBSSceneTimer.setCurrentSceneName("")
+        OBSSceneTimer.resetTimer()
+        Globals.scenes.clear()
+    }
+
+    @Test
+    fun testProcessNewScene() {
+        val obsClient = OBSClient()
+        val panelMock = GuiComponentMock()
+        GUI.register(panelMock)
+        OBSSceneTimer.increaseTimer()   // 1
+
+        assertFalse(panelMock.refreshScenesCalled)
+        assertFalse(panelMock.switchedScenesCalled)
+        assertFalse(panelMock.refreshTimerCalled)
+        assertEquals(1, OBSSceneTimer.getTimerValue())
+
+        // When
+        obsClient.processNewScene("scene1")
+
+        assertFalse(panelMock.refreshScenesCalled)
+        assertTrue(panelMock.switchedScenesCalled)
+        assertTrue(panelMock.refreshTimerCalled)
+        assertEquals("scene1", OBSSceneTimer.getCurrentSceneName())
+        assertEquals(0, OBSSceneTimer.getTimerValue())
+    }
+
+    @Test
+    fun testSetOBSScenes() {
+        val obsClient = OBSClient()
+        Globals.OBSActivityStatus = OBSStatus.LOADING_SCENES
+        val panelMock = GuiComponentMock()
+        GUI.register(panelMock)
+
+        Config.obsAddress = "ws://somewhereNotLocalhost"
+
+        assertFalse(panelMock.refreshScenesCalled)
+        assertFalse(panelMock.switchedScenesCalled)
+        assertFalse(panelMock.refreshTimerCalled)
+        assertFalse(panelMock.refreshOBSStatusCalled)
+
+        val scenes = ArrayList<Scene>()
+        scenes.add(Scene())
+        scenes.add(Scene())
+        scenes.add(Scene())
+
+        // When
+        obsClient.setOBSScenes(scenes)
+
+        assertTrue(panelMock.refreshScenesCalled)
+        assertFalse(panelMock.switchedScenesCalled)
+        assertFalse(panelMock.refreshTimerCalled)
+        assertTrue(panelMock.refreshOBSStatusCalled)
+        assertEquals(3, Globals.scenes.size)
+        assertNull(Globals.OBSActivityStatus)
+    }
+
+    @Test
+    fun testGetVideoLength() {
+        val obsClient = OBSClient()
+        val filename = javaClass.classLoader.getResource("video2seconds.mkv")!!.file
+
+        assertEquals(2, obsClient.getVideoLength(filename))
+    }
+
+    @Test
+    fun testGetVideoLengthForNonExistingVideo() {
+        val obsClient = OBSClient()
+        val filename = "nonexistingfile"
+
+        assertEquals(0, obsClient.getVideoLength(filename))
+    }
+}

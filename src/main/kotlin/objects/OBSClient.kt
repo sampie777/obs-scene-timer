@@ -185,7 +185,7 @@ class OBSClient {
     /**
      * Set the new scene name as new current scene and notify everyone of this change
      */
-    private fun processNewScene(sceneName: String) {
+    fun processNewScene(sceneName: String) {
         OBSSceneTimer.setCurrentSceneName(sceneName)
 
         logger.info("New scene: " + OBSSceneTimer.getCurrentSceneName())
@@ -210,11 +210,10 @@ class OBSClient {
         }
     }
 
-    private fun setOBSScenes(scenes: List<Scene>) {
+    fun setOBSScenes(scenes: List<Scene>) {
         Globals.scenes.clear()
         for (scene in scenes) {
-            val tScene = TScene()
-            tScene.name = scene.name
+            val tScene = TScene(scene.name)
 
             if (scene.sources != null) {
                 val tSources = scene.sources.map { source: Source -> TSource(source.name, source.type) }
@@ -315,7 +314,7 @@ class OBSClient {
      * @param filename
      * @return
      */
-    private fun getVideoLength(filename: String): Long {
+    fun getVideoLength(filename: String): Long {
         val file = File(filename)
         if (!file.exists()) {
             logger.warning("File does not exists: $filename")
