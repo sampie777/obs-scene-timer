@@ -70,7 +70,7 @@ class OBSClientTest {
     @Test
     fun testGetVideoLength() {
         val obsClient = OBSClient()
-        val filename = javaClass.classLoader.getResource("video2seconds.mkv")!!.file
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
 
         assertEquals(2, obsClient.getVideoLength(filename))
     }
