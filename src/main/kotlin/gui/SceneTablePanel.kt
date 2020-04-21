@@ -47,7 +47,9 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun initGUI() {
         layout = BorderLayout(0, 0)
-        border = EmptyBorder(0, 10, 10, 10)
+
+        container.border = EmptyBorder(0, 10, 0, 10)
+        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
 
         createSceneTable()
 
@@ -87,7 +89,6 @@ class SceneTablePanel : JPanel(), Refreshable {
         }
 
         container.removeAll()
-        container.layout = BoxLayout(container, BoxLayout.Y_AXIS)
 
         addSceneTableRow(
             JLabel("Scene"),

@@ -25,6 +25,7 @@ class TimerPanel : JPanel(), Refreshable {
 
     private fun initGUI() {
         setSize(800, 200)
+        minimumSize = Dimension(0, 0)
 
         layout = BorderLayout(10, 10)
         border = EmptyBorder(10, 10, 10, 10)
