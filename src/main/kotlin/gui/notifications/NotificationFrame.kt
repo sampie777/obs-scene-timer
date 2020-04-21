@@ -2,14 +2,13 @@ package gui.notifications
 
 import GUI
 import gui.Refreshable
-import objects.notifications.Notifications
 import java.awt.BorderLayout
 import java.awt.Component
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 
-class NotificationFrame(private val parentComponent: Component?) : JFrame(), Refreshable {
+class NotificationFrame(private val parentFrame: Component?) : JFrame(), Refreshable {
 
     init {
         GUI.register(this)
@@ -28,7 +27,7 @@ class NotificationFrame(private val parentComponent: Component?) : JFrame(), Ref
 
         title = "Notifications"
         setSize(423, 500)
-        setLocationRelativeTo(parentComponent)
+        setLocationRelativeTo(parentFrame)
         isVisible = true
     }
 }
