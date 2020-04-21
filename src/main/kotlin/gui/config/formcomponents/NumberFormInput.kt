@@ -19,6 +19,7 @@ class NumberFormInput<T : Number>(
 
     private val input = JSpinner()
 
+    @Suppress("UNCHECKED_CAST")
     override fun component(): Component {
         val configValue: T? = Config.get(key) as? T
 
@@ -52,6 +53,7 @@ class NumberFormInput<T : Number>(
         Config.set(key, value())
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun value(): T {
         return input.value as T
     }

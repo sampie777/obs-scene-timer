@@ -15,7 +15,8 @@ class NumberFormInputTest {
         input.component()
 
         assertEquals(5, input.value())
-        assertTrue(input.value() is Int)
+        val value: Any = input.value()
+        assertTrue(value is Int)
         assertTrue(input.validate().isEmpty())
 
         Config.timerCountUpFontSize = 7
@@ -30,7 +31,8 @@ class NumberFormInputTest {
         input.component()
 
         assertEquals(5, input.value())
-        assertTrue(input.value() is Long)
+        val value: Any = input.value()
+        assertTrue(value is Long)
         assertTrue(input.validate().isEmpty())
 
         Config.obsReconnectionTimeout = 7
