@@ -96,7 +96,7 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun createSceneRowComponents() {
         for (scene in Globals.scenes) {
-            if (!sceneValues.containsKey(scene.name) && !Config.sceneLimitValues.containsKey(scene.name)) {
+            if (!Config.sceneLimitValues.containsKey(scene.name)) {
                 sceneValues[scene.name] = scene.maxVideoLength()
             }
 

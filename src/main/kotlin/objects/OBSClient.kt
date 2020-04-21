@@ -151,7 +151,7 @@ class OBSClient {
             logger.info("Trying to cancel timer")
             timerCounter.cancel()
             timerCounter = Timer()
-            logger.info("Timer cancled")
+            logger.info("Timer canceled")
         } catch (t: Throwable) {
             t.printStackTrace()
         }
