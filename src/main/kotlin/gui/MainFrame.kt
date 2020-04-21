@@ -2,6 +2,7 @@ package gui
 
 import GUI
 import createImageIcon
+import gui.menu.MenuBar
 import gui.notifications.NotificationFrame
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
@@ -31,14 +32,13 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     private fun initGUI() {
-        notificationsButton.border = BorderFactory.createEmptyBorder()
         notificationsButton.isBorderPainted = false
         notificationsButton.isContentAreaFilled = false
         notificationsButton.isFocusPainted = false
         notificationsButton.cursor = Cursor(Cursor.HAND_CURSOR)
         notificationsButton.toolTipText = "Notifications"
         notificationsButton.addActionListener {
-            NotificationFrame()
+            NotificationFrame(this)
         }
 
         val leftBottomPanel = JPanel(BorderLayout(10, 10))
@@ -56,6 +56,7 @@ class MainFrame : JFrame(), Refreshable {
         mainPanel.rightComponent = TimerPanel()
         add(mainPanel)
 
+        jMenuBar = MenuBar()
         setSize(900, 600)
         title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
