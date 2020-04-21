@@ -72,8 +72,6 @@ class TimerPanel : JPanel(), Refreshable {
         timersPanel.add(Box.createVerticalGlue())
         timersPanel.add(TimerProgressBarPanel())
         add(timersPanel, BorderLayout.CENTER)
-
-        add(CopyRightPanel(), BorderLayout.PAGE_END)
     }
 
     override fun refreshTimer() {
