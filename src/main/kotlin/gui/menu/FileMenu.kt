@@ -1,14 +1,16 @@
 package gui.menu
 
-import config.Config
+import exitApplication
 import gui.InfoFrame
-import gui.utils.getMainFrameComponent
 import gui.notifications.NotificationFrame
+import gui.utils.getMainFrameComponent
+import java.util.logging.Logger
 import javax.swing.JMenu
 import javax.swing.JMenuItem
-import kotlin.system.exitProcess
 
 class FileMenu : JMenu("File") {
+    private val logger = Logger.getLogger(FileMenu::class.java.name)
+
     init {
         initGui()
     }
@@ -20,10 +22,7 @@ class FileMenu : JMenu("File") {
 
         notificationsItem.addActionListener { NotificationFrame(getMainFrameComponent(this)) }
         infoItem.addActionListener { InfoFrame(getMainFrameComponent(this)) }
-        quitItem.addActionListener {
-            Config.save()
-            exitProcess(0)
-        }
+        quitItem.addActionListener { exitApplication() }
 
         add(notificationsItem)
         add(infoItem)

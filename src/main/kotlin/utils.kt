@@ -1,10 +1,13 @@
+import config.Config
 import gui.MainFrame
+import objects.SceneLogger
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URL
 import java.net.URLDecoder
 import java.util.logging.Logger
 import javax.swing.ImageIcon
+import kotlin.system.exitProcess
 
 private val logger: Logger = Logger.getLogger("utils")
 
@@ -42,4 +45,16 @@ fun createImageIcon(path: String): ImageIcon? {
 
     logger.severe("Couldn't find imageIcon: $path")
     return null
+}
+
+fun exitApplication() {
+    logger.info("Shutting down application...")
+    try {
+        Config.save()
+        SceneLogger.log("")
+    } catch (t: Throwable) {
+        logger.warning("Failed to properly shut down the application")
+        t.printStackTrace()
+    }
+    exitProcess(0)
 }

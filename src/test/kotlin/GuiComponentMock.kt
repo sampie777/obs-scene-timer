@@ -5,6 +5,7 @@ class GuiComponentMock : Refreshable {
     var switchedScenesCalled: Boolean = false
     var refreshScenesCalled: Boolean = false
     var refreshOBSStatusCalled: Boolean = false
+    var refreshNotificationsCalled: Boolean = false
 
     override fun refreshTimer() {
         refreshTimerCalled = true
@@ -22,10 +23,15 @@ class GuiComponentMock : Refreshable {
         refreshOBSStatusCalled = true
     }
 
+    override fun refreshNotifications() {
+        refreshNotificationsCalled = true
+    }
+
     fun resetCalleds() {
         refreshTimerCalled = false
         switchedScenesCalled = false
         refreshScenesCalled = false
         refreshOBSStatusCalled = false
+        refreshNotificationsCalled = false
     }
 }

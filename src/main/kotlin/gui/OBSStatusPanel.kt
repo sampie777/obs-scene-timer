@@ -9,7 +9,6 @@ import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.border.EmptyBorder
 
 class OBSStatusPanel : JPanel(), Refreshable {
 

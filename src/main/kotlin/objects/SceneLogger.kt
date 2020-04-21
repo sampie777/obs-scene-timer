@@ -5,7 +5,6 @@ import getCurrentJarDirectory
 import objects.notifications.Notifications
 import java.io.File
 import java.io.FileWriter
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Logger

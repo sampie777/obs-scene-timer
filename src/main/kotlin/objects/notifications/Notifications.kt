@@ -1,5 +1,6 @@
 package objects.notifications
 
+import GUI
 import java.util.logging.Logger
 
 object Notifications {

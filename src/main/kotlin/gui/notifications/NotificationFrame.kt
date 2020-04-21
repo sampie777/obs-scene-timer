@@ -1,5 +1,6 @@
 package gui.notifications
 
+import GUI
 import gui.Refreshable
 import objects.notifications.Notifications
 import java.awt.BorderLayout
@@ -14,8 +15,6 @@ class NotificationFrame(private val parentComponent: Component?) : JFrame(), Ref
         GUI.register(this)
 
         createGui()
-
-        Notifications.markAllAsRead()
     }
 
     private fun createGui() {

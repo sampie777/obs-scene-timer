@@ -1,5 +1,6 @@
 package gui.notifications
 
+import GUI
 import gui.Refreshable
 import objects.notifications.Notifications
 import java.awt.Dimension
@@ -20,7 +21,7 @@ class NotificationListPanel : JPanel(), Refreshable {
 
         createGui()
 
-        refreshNotifications()
+        Notifications.markAllAsRead()
     }
 
     private fun createGui() {
