@@ -1,7 +1,6 @@
 package objects
 
 import GUI
-import com.xuggle.xuggler.IContainer
 import config.Config
 import io.humble.video.Demuxer
 import isAddressLocalhost
@@ -329,9 +328,9 @@ class OBSClient {
 
         val demuxer = Demuxer.make()
         demuxer.open(filename, null, false, true, null, null)
-        val duration = demuxer.duration
-        logger.info("Duration is: ${TimeUnit.MICROSECONDS.toSeconds(duration)}")
+        val duration = TimeUnit.MICROSECONDS.toSeconds(demuxer.duration)
+        logger.info("Duration is: $duration")
 
-        return TimeUnit.MICROSECONDS.toSeconds(duration)
+        return duration
     }
 }
