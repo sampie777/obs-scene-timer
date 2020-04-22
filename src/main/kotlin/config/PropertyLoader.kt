@@ -13,7 +13,8 @@ import kotlin.collections.HashMap
 object PropertyLoader {
     private val logger = Logger.getLogger(PropertyLoader.toString())
 
-    private val userPropertiesFile = File(getCurrentJarDirectory(this).absolutePath + File.separatorChar + "user.properties")
+    private val userPropertiesFile =
+        File(getCurrentJarDirectory(this).absolutePath + File.separatorChar + "user.properties")
     private var userProperties = Properties()
 
     private const val sceneValuePairDelimiter = "%=>"
@@ -88,6 +89,7 @@ object PropertyLoader {
                 }
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             throw RuntimeException("Error loading configuration: $e", e)
         }
     }
@@ -119,6 +121,7 @@ object PropertyLoader {
                 }
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             throw RuntimeException("Error saving configuration: $e", e)
         }
     }
@@ -142,10 +145,15 @@ object PropertyLoader {
             }
             return value.split(sceneValuesDelimiter)
                 .map {
-                    val v = it.split(sceneValuePairDelimiter);
-                    v[0] to v[1].toInt()
+                    val pair: List<String> = it.split(sceneValuePairDelimiter)
+                    if (pair.size != 2) {
+                        logger.warning("Invalid property pair: $it")
+                    }
+                    pair
                 }
-                .toMap()
+                .filter { it.size == 2 }
+                .map { it[0] to it[1].toInt() }
+                .toMap(HashMap())
         }
         throw IllegalArgumentException("Unknown configuration value type: " + type.name)
     }

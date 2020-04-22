@@ -76,9 +76,9 @@ class OBSClient {
 
                 startReconnectingTimeout()
             }
-        } catch (e: Throwable) {
+        } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerDisconnectCallback")
-            e.printStackTrace()
+            t.printStackTrace()
             Notifications.add(
                 "Failed to register disconnect callback: cannot notify when connection is lost",
                 "OBS"
@@ -102,9 +102,9 @@ class OBSClient {
 
                 startSceneWatcherTimer()
             }
-        } catch (e: Throwable) {
+        } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerConnectCallback")
-            e.printStackTrace()
+            t.printStackTrace()
             Notifications.add(
                 "Failed to register connect callback: scenes cannot be loaded at startup",
                 "OBS"
@@ -116,9 +116,9 @@ class OBSClient {
                 logger.fine("Processing scenes changed event")
                 getScenes()
             }
-        } catch (e: Throwable) {
+        } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerScenesChangedCallback")
-            e.printStackTrace()
+            t.printStackTrace()
             Notifications.add(
                 "Failed to register scenesChanged callback: new scenes cannot be loaded",
                 "OBS"
@@ -136,9 +136,9 @@ class OBSClient {
 
                 processNewScene(response.sceneName)
             }
-        } catch (e: Throwable) {
+        } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerSwitchScenesCallback")
-            e.printStackTrace()
+            t.printStackTrace()
             Notifications.add(
                 "Failed to register switchScenes callback: cannot detect scene changes",
                 "OBS"
@@ -152,8 +152,8 @@ class OBSClient {
             timerCounter.cancel()
             timerCounter = Timer()
             logger.info("Timer cancled")
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        } catch (t: Throwable) {
+            t.printStackTrace()
         }
 
         timerCounter.scheduleAtFixedRate(object : TimerTask() {
@@ -283,9 +283,9 @@ class OBSClient {
                     loadSourceSettings(sources, sourceNames)
                 }
             }
-        } catch (e: Throwable) {
+        } catch (t: Throwable) {
             logger.severe("Failed to load source settings for source: $sourceName")
-            e.printStackTrace()
+            t.printStackTrace()
             Notifications.add(
                 "Failed to load sources information",
                 "OBS"
@@ -304,8 +304,9 @@ class OBSClient {
             try {
                 logger.info("Trying to get video length for: ${source.fileName}")
                 videoLength = getVideoLength(source.fileName).toInt()
-            } catch (e: Exception) {
-                logger.severe("Failed to get video length: $e")
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                logger.severe("Failed to get video length: $t")
             }
             source.videoLength = videoLength
         }

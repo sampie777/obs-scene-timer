@@ -30,7 +30,7 @@ object Config {
         try {
             PropertyLoader.load()
             PropertyLoader.loadConfig(this::class.java)
-        } catch (e: Error) {
+        } catch (e: Exception) {
             logger.severe("Failed to load Config")
             e.printStackTrace()
             Notifications.add("Failed to load configuration from file", "Configuration")
@@ -41,7 +41,7 @@ object Config {
         try {
             PropertyLoader.saveConfig(this::class.java)
             PropertyLoader.save()
-        } catch (e: Error) {
+        } catch (e: Exception) {
             logger.severe("Failed to save Config")
             e.printStackTrace()
             Notifications.add("Failed to save configuration to file", "Configuration")
@@ -51,9 +51,9 @@ object Config {
     fun get(key: String): Any? {
         try {
             return javaClass.getDeclaredField(key).get(this)
-        } catch (t: Throwable) {
+        } catch (e: Exception) {
             logger.severe("Could not get config key $key")
-            t.printStackTrace()
+            e.printStackTrace()
             Notifications.add("Could not get configuration setting: $key", "Configuration")
         }
         return null
@@ -62,9 +62,9 @@ object Config {
     fun set(key: String, value: Any?) {
         try {
             javaClass.getDeclaredField(key).set(this, value)
-        } catch (t: Throwable) {
+        } catch (e: Exception) {
             logger.severe("Could not set config key $key")
-            t.printStackTrace()
+            e.printStackTrace()
             Notifications.add("Could not set configuration setting: $key", "Configuration")
         }
     }
