@@ -20,7 +20,6 @@ class SceneInputChangeListener(private val panel: SceneTablePanel, private val s
         }
 
         val newValue = (p0.source as JSpinner).value as Int
-        panel.sceneValues[scene] = newValue
         Config.sceneLimitValues[scene] = newValue
 
         if (scene == OBSSceneTimer.getCurrentSceneName()) {
@@ -32,7 +31,6 @@ class SceneInputChangeListener(private val panel: SceneTablePanel, private val s
 class SceneTablePanel : JPanel(), Refreshable {
     val sceneLabels = HashMap<String, JLabel>()
     val sceneInputs = HashMap<String, JSpinner>()
-    val sceneValues = HashMap<String, Int>()
     val container = JPanel()
 
     private val labelFont = Font("Dialog", Font.PLAIN, 16)
@@ -42,10 +40,6 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     init {
         GUI.register(this)
-
-        for (scene in Config.sceneLimitValues.keys) {
-            sceneValues[scene] = Config.sceneLimitValues[scene] as Int
-        }
 
         initGUI()
     }
@@ -96,9 +90,8 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun createSceneRowComponents() {
         for (scene in Globals.scenes) {
-            if (!Config.sceneLimitValues.containsKey(scene.name)) {
-                sceneValues[scene.name] = scene.maxVideoLength()
-            }
+            val sceneValue = if (!Config.sceneLimitValues.containsKey(scene.name))
+                scene.maxVideoLength() else Config.sceneLimitValues[scene.name] as Int
 
             val sceneLabel = JLabel(scene.name)
             sceneLabel.font = if (scene.name == OBSSceneTimer.getCurrentSceneName())
@@ -107,7 +100,7 @@ class SceneTablePanel : JPanel(), Refreshable {
 
             val sceneInput = JSpinner()
             sceneInput.preferredSize = Dimension(100, 20)
-            sceneInput.model = SpinnerNumberModel(sceneValues[scene.name], 0, null, 1)
+            sceneInput.model = SpinnerNumberModel(sceneValue, 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
             sceneInput.font = if (scene.name == OBSSceneTimer.getCurrentSceneName())
                 currentSceneInputFont else inputFont
