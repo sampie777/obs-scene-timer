@@ -17,9 +17,9 @@ Use cases:
 
 ## Build
 
-You can download all versions from [BitBucket](https://bitbucket.org/sajansen/obs-scene-timer/downloads/), or build this application yourself using Maven.
+You can download all versions from [BitBucket](https://bitbucket.org/sajansen/obs-scene-timer/downloads/), or build this application yourself using Maven. [Launch4j](http://launch4j.sourceforge.net/) is used to generate .exe files from the compiled JARs.
 
-## Setup
+## OBS Scene Timer application setup
 
 1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** for your OBS application.
 1. Make sure you have at least Java 8 installed.
@@ -88,4 +88,8 @@ _Application color settings_
  
  ---
  
- Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
+ ## Contribution
+ 
+Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
+
+Please try to add/edit tests for the code you've worked on. Also build the application with `mvn clean install` and run the compiled jar with `java -jar obs-scene-timer-X.X.X-SNAPSHOT.jar`.
