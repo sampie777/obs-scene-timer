@@ -2,13 +2,13 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>D:\Documents\workspace\obs-scene-timer\target\obs-scene-timer-1.0.3.jar</jar>
-  <outfile>D:\Documents\workspace\obs-scene-timer\target\obs-scene-timer-1.0.3.exe</outfile>
+  <jar>D:\Documents\workspace\obs-scene-timer\target\obs-scene-timer-1.2.0.jar</jar>
+  <outfile>D:\Documents\workspace\obs-scene-timer\target\obs-scene-timer-1.2.0.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
   <priority>normal</priority>
-  <downloadUrl>http://java.com/download</downloadUrl>
+  <downloadUrl>https://bitbucket.org/sajansen/obs-scene-timer/downloads/</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
@@ -26,15 +26,15 @@
     <maxHeapSize>800</maxHeapSize>
   </jre>
   <versionInfo>
-    <fileVersion>1.0.3.0</fileVersion>
+    <fileVersion>1.2.0.0</fileVersion>
     <txtFileVersion>-</txtFileVersion>
     <fileDescription>OBS Scene Timer</fileDescription>
     <copyright>Samuel-Anton Jansen</copyright>
-    <productVersion>1.0.3.0</productVersion>
+    <productVersion>1.2.0.0</productVersion>
     <txtProductVersion>-</txtProductVersion>
     <productName>OBS Scene Timer</productName>
     <companyName>SAJansen</companyName>
-    <internalName>obs-scene-timer-1.0.3.jar</internalName>
+    <internalName>obs-scene-timer-1.2.0.jar</internalName>
     <originalFilename>obs-scene-timer.exe</originalFilename>
     <trademarks></trademarks>
     <language>ENGLISH_US</language>
