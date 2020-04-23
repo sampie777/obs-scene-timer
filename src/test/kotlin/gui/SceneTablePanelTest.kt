@@ -15,6 +15,8 @@ class SceneTablePanelTest {
     fun before() {
         Config.sceneLimitValues.clear()
         Globals.scenes.clear()
+        OBSSceneTimer.setCurrentSceneName("")
+        OBSSceneTimer.setMaxTimerValue(0)
     }
 
     @Test
@@ -150,6 +152,36 @@ class SceneTablePanelTest {
 
         assertEquals(10, panel.sceneInputs["scene2"]!!.value)
         assertEquals(10, Config.sceneLimitValues["scene2"])
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
+    }
+
+    @Test
+    fun testSceneTimeLimitIsSetOnRefreshScenes() {
+        Config.sceneLimitValues["scene1"] = 10
+        Globals.scenes.add(TScene("scene1"))
+        Globals.scenes.add(TScene("scene2"))
+        OBSSceneTimer.setCurrentSceneName("scene1")
+
+        val panel = SceneTablePanel()
+        panel.refreshScenes()
+
+        assertEquals(10, panel.sceneInputs["scene1"]!!.value)
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
+    }
+
+    @Test
+    fun testSceneTimeLimitIsSetAfterLoadingSceneTableWithNewConfigValues() {
+        Globals.scenes.add(TScene("scene1"))
+        Globals.scenes.add(TScene("scene2"))
+        val panel = SceneTablePanel()
+
+        assertNotEquals(10, panel.sceneInputs["scene1"]!!.value)
+        assertEquals(0, OBSSceneTimer.getMaxTimerValue())
+
+        Config.sceneLimitValues["scene1"] = 10
+        OBSSceneTimer.setCurrentSceneName("scene1")
+        panel.switchedScenes()
+
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 }

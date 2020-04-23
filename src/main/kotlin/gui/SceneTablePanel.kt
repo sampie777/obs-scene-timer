@@ -128,15 +128,20 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     override fun refreshScenes() {
         createSceneTable()
-    }
 
-    override fun switchedScenes() {
         OBSSceneTimer.setMaxTimerValue(
             getValueForScene(OBSSceneTimer.getCurrentSceneName())
                 .toLong()
         )
+    }
 
+    override fun switchedScenes() {
         createSceneTable()
+
+        OBSSceneTimer.setMaxTimerValue(
+            getValueForScene(OBSSceneTimer.getCurrentSceneName())
+                .toLong()
+        )
     }
 
     private fun getValueForScene(scene: String): Int {
