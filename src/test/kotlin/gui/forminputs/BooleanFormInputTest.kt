@@ -2,11 +2,17 @@ package gui.forminputs
 
 import config.Config
 import gui.config.formcomponents.BooleanFormInput
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class BooleanFormInputTest {
+
+    @AfterTest
+    fun after() {
+        Config.enableSceneTimestampLogger = false
+    }
 
     @Test
     fun testBooleanFormInputWithTrueValue() {
