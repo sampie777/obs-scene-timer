@@ -2,7 +2,7 @@ package gui.utils
 
 import gui.MainFrame
 import java.awt.Component
-import java.awt.Container
+import java.awt.Frame
 import java.awt.Graphics2D
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
@@ -48,6 +48,6 @@ fun drawImageInYCenter(mainGraphics2D: Graphics2D, mainHeight: Int, x: Int, buff
     mainGraphics2D.drawImage(bufferedImage, null, x, (mainHeight - bufferedImage.height) / 2)
 }
 
-fun getMainFrameComponent(childComponent: Component): Container? {
-    return SwingUtilities.getAncestorOfClass(MainFrame::class.java, childComponent)
+fun getMainFrameComponent(childComponent: Component): Frame? {
+    return SwingUtilities.getAncestorOfClass(MainFrame::class.java, childComponent) as Frame
 }

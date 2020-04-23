@@ -1,13 +1,13 @@
 package gui.menu
 
 import gui.utils.ClickableLinkComponent
-import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
+import java.awt.Frame
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class InfoFrame(private val parentFrame: Component?) : JFrame() {
+class InfoFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
 
     init {
         createGui()
@@ -34,6 +34,7 @@ class InfoFrame(private val parentFrame: Component?) : JFrame() {
         title = "Information"
         setSize(400, 160)
         setLocationRelativeTo(parentFrame)
+        modalityType = ModalityType.APPLICATION_MODAL
         isResizable = false
         isVisible = true
     }

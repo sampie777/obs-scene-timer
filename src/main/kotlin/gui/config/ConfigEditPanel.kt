@@ -23,20 +23,20 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(HeaderFormComponent("OBS"))
         formComponents.add(StringFormInput("obsAddress", "OBS websocket address", false))
         formComponents.add(StringFormInput("obsPassword", "OBS websocket password", true))
-        formComponents.add(NumberFormInput<Long>("obsReconnectionTimeout", "Connection retry interval", 0, null))
+        formComponents.add(NumberFormInput<Long>("obsReconnectionTimeout", "Connection retry interval (millisec.)", 0, null))
 
         formComponents.add(HeaderFormComponent("Timer styling"))
         formComponents.add(ColorFormInput("timerBackgroundColor", "Default background color"))
         formComponents.add(ColorFormInput("approachingLimitColor", "Time limit approaching background color"))
         formComponents.add(ColorFormInput("exceededLimitColor", "Time limit exceeded background color"))
-        formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size", 0, null))
-        formComponents.add(NumberFormInput<Int>("timerCountDownFontSize", "Remaining time timer font size", 0, null))
+        formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size (pt.)", 0, null))
+        formComponents.add(NumberFormInput<Int>("timerCountDownFontSize", "Remaining time timer font size (pt.)", 0, null))
 
         formComponents.add(HeaderFormComponent("Timer settings"))
         formComponents.add(
             NumberFormInput<Long>(
                 "smallTimeDifferenceForLimitApproaching",
-                "1: Show warnings if remaining time becomes less than",
+                "1: Show warnings if remaining time becomes less than (sec.)",
                 0,
                 null
             )
@@ -44,7 +44,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(
             NumberFormInput<Long>(
                 "smallMinLimitForLimitApproaching",
-                "1: Only show above warning colors for time limits greater than",
+                "1: Only show above warning colors for time limits greater than (sec.)",
                 0,
                 null
             )
@@ -52,7 +52,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(
             NumberFormInput<Long>(
                 "largeTimeDifferenceForLimitApproaching",
-                "2: Show warning if remaining time becomes less than",
+                "2: Show warning if remaining time becomes less than (sec.)",
                 0,
                 null
             )
@@ -60,7 +60,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(
             NumberFormInput<Long>(
                 "largeMinLimitForLimitApproaching",
-                "2: Only show above warning colors for time limits greater than",
+                "2: Only show above warning colors for time limits greater than (sec.)",
                 0,
                 null
             )
@@ -75,12 +75,12 @@ class ConfigEditPanel : JPanel() {
 
         val mainPanel = JPanel()
         mainPanel.layout = GridLayout(0, 1)
-        mainPanel.border = EmptyBorder(10, 10, 10, 0)
+        mainPanel.border = EmptyBorder(10, 10, 10, 10)
 
         addConfigItems(mainPanel)
 
-        val scrollPanelInnerPanel = JPanel()
-        scrollPanelInnerPanel.add(mainPanel)
+        val scrollPanelInnerPanel = JPanel(BorderLayout())
+        scrollPanelInnerPanel.add(mainPanel, BorderLayout.PAGE_START)
         val scrollPanel = JScrollPane(scrollPanelInnerPanel)
         scrollPanel.border = null
         add(scrollPanel, BorderLayout.CENTER)
