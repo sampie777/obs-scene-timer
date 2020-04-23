@@ -88,4 +88,4 @@ _Application color settings_
  
  ---
  
- Feel free to contribute by opening a pull request or leaving a comment somewhere.
+ Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
