@@ -1,5 +1,6 @@
 package objects
 
+import GUI
 import GuiComponentMock
 import config.Config
 import net.twasi.obsremotejava.objects.Scene

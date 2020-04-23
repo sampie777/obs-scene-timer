@@ -1,8 +1,8 @@
 package objects
 
 import GUI
-import config.Config
 import com.xuggle.xuggler.IContainer
+import config.Config
 import isAddressLocalhost
 import net.twasi.obsremotejava.OBSRemoteController
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse
