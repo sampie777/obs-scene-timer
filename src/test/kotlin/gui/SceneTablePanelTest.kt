@@ -18,10 +18,10 @@ class SceneTablePanelTest {
     }
 
     @Test
-    fun testCreatingSceneValuesHashMapWithEmptyConfig() {
+    fun testCreatingSceneInputsHashMapWithEmptyConfig() {
         val panel = SceneTablePanel()
 
-        assertEquals(0, panel.sceneValues.size)
+        assertEquals(0, panel.sceneInputs.size)
         assertEquals(0, panel.sceneLabels.size)
 
         // When
@@ -30,42 +30,44 @@ class SceneTablePanelTest {
 
         panel.refreshScenes()
 
-        assertEquals(2, panel.sceneValues.size)
+        assertEquals(2, panel.sceneInputs.size)
         assertEquals(2, panel.sceneLabels.size)
     }
 
     @Test
-    fun testCreatingSceneValuesHashMapWithFilledConfig() {
+    fun testCreatingSceneInputsHashMapWithFilledConfig() {
         Config.sceneLimitValues["scene1"] = 10
+        Globals.scenes.add(TScene("scene1"))
         val panel = SceneTablePanel()
 
-        assertEquals(1, panel.sceneValues.size)
-        assertTrue(panel.sceneValues.containsKey("scene1"), "SceneValues doesn't contain key 'scene1'")
-        assertEquals(10, panel.sceneValues["scene1"])
-        assertEquals(0, panel.sceneLabels.size)
+        assertEquals(1, panel.sceneInputs.size)
+        assertTrue(panel.sceneInputs.containsKey("scene1"), "SceneValues doesn't contain key 'scene1'")
+        assertEquals(10, panel.sceneInputs["scene1"]!!.value)
+        assertEquals(1, panel.sceneLabels.size)
 
         // When
-        Globals.scenes.add(TScene("scene1"))
         Globals.scenes.add(TScene("scene2"))
 
         panel.refreshScenes()
 
-        assertEquals(2, panel.sceneValues.size)
+        assertEquals(2, panel.sceneInputs.size)
         assertEquals(2, panel.sceneLabels.size)
     }
 
     @Test
-    fun testCreatingCorrectSceneValuesHashMapWithFilledConfigAndMaxVideoSizeAvailable() {
+    fun testCreatingCorrectSceneInputsHashMapWithFilledConfigAndMaxVideoSizeAvailable() {
         Config.sceneLimitValues["scene1_value_set_in_config"] = 10
         Config.sceneLimitValues["scene4_with_maxvideo_but_value_set_in_config"] = 40
+        Globals.scenes.add(TScene("scene1_value_set_in_config"))
+        Globals.scenes.add(TScene("scene4_with_maxvideo_but_value_set_in_config"))
         val panel = SceneTablePanel()
 
-        assertEquals(2, panel.sceneValues.size)
-        assertTrue(panel.sceneValues.containsKey("scene1_value_set_in_config"), "Missing key in SceneValues")
-        assertEquals(10, panel.sceneValues["scene1_value_set_in_config"])
-        assertTrue(panel.sceneValues.containsKey("scene4_with_maxvideo_but_value_set_in_config"), "Missing key in SceneValues")
-        assertEquals(40, panel.sceneValues["scene4_with_maxvideo_but_value_set_in_config"])
-        assertEquals(0, panel.sceneLabels.size)
+        assertEquals(2, panel.sceneInputs.size)
+        assertTrue(panel.sceneInputs.containsKey("scene1_value_set_in_config"), "Missing key in SceneInputs")
+        assertEquals(10, panel.sceneInputs["scene1_value_set_in_config"]!!.value)
+        assertTrue(panel.sceneInputs.containsKey("scene4_with_maxvideo_but_value_set_in_config"), "Missing key in SceneValues")
+        assertEquals(40, panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.value)
+        assertEquals(2, panel.sceneLabels.size)
 
         // When
         val sources2s1 = TSource()
@@ -89,11 +91,11 @@ class SceneTablePanelTest {
 
         panel.refreshScenes()
 
-        assertEquals(4, panel.sceneValues.size)
-        assertEquals(10, panel.sceneValues["scene1_value_set_in_config"])
-        assertEquals(20, panel.sceneValues["scene2_with_maxvideo"])
-        assertEquals(0, panel.sceneValues["scene3"])
-        assertEquals(40, panel.sceneValues["scene4_with_maxvideo_but_value_set_in_config"])
+        assertEquals(4, panel.sceneInputs.size)
+        assertEquals(10, panel.sceneInputs["scene1_value_set_in_config"]!!.value)
+        assertEquals(20, panel.sceneInputs["scene2_with_maxvideo"]!!.value)
+        assertEquals(0, panel.sceneInputs["scene3"]!!.value)
+        assertEquals(40, panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.value)
         assertEquals(4, panel.sceneLabels.size)
     }
 
@@ -116,19 +118,17 @@ class SceneTablePanelTest {
     }
 
     @Test
-    fun testInputChangePassesThroughToSceneValuesAndConfig() {
+    fun testInputChangePassesThroughToSceneInputsAndConfig() {
         Globals.scenes.add(TScene("scene1"))
         val panel = SceneTablePanel()
 
         assertEquals(0, panel.sceneInputs["scene1"]!!.value)
-        assertEquals(0, panel.sceneValues["scene1"])
         assertNull(Config.sceneLimitValues["scene1"])
 
         // When
         panel.sceneInputs["scene1"]!!.value = 10
 
         assertEquals(10, panel.sceneInputs["scene1"]!!.value)
-        assertEquals(10, panel.sceneValues["scene1"])
         assertEquals(10, Config.sceneLimitValues["scene1"])
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
     }
@@ -142,7 +142,6 @@ class SceneTablePanelTest {
         panel.switchedScenes()
 
         assertEquals(0, panel.sceneInputs["scene2"]!!.value)
-        assertEquals(0, panel.sceneValues["scene2"])
         assertNull(Config.sceneLimitValues["scene2"])
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
@@ -150,7 +149,6 @@ class SceneTablePanelTest {
         panel.sceneInputs["scene2"]!!.value = 10
 
         assertEquals(10, panel.sceneInputs["scene2"]!!.value)
-        assertEquals(10, panel.sceneValues["scene2"])
         assertEquals(10, Config.sceneLimitValues["scene2"])
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
