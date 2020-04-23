@@ -2,7 +2,7 @@ package objects
 
 import GUI
 import config.Config
-import io.humble.video.Demuxer
+import com.xuggle.xuggler.IContainer
 import isAddressLocalhost
 import net.twasi.obsremotejava.OBSRemoteController
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse
@@ -327,9 +327,9 @@ class OBSClient {
 
         logger.info("Getting duration of: $filename")
 
-        val demuxer = Demuxer.make()
-        demuxer.open(filename, null, false, true, null, null)
-        val duration = TimeUnit.MICROSECONDS.toSeconds(demuxer.duration)
+        val container = IContainer.make()
+        container.open(filename, IContainer.Type.READ, null)
+        val duration = TimeUnit.MICROSECONDS.toSeconds(container.duration)
         logger.info("Duration is: $duration")
 
         return duration
