@@ -22,13 +22,14 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 ## Setup
 
 1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** for your OBS application.
+1. Make sure you have at least Java 8 installed.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
 1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
-1. **Edit the settings** in the _user.properties_ file if needed. This file will be created after first launch of the application. Don't run the application when editing these settings.
+1. **Edit the settings** if needed. This can be done using the menu File -> Settings or editing the _user.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after chaning the settings.
 
 ## How it works
 
-1. The **application will connect** on startup with an already running OBS websocket server, as specified in the properties.
+1. The **application will connect** on startup with an (already) running OBS websocket server, as specified in the properties.
 1. All available OBS **scenes will be loaded**, and the time limit for each scene can be adjusted. If you are running OBS on the same computer as this application, the application will try to automatically set the maximum time limit for each scene with a video file(s) as source. Note that it might not be able to do this magic for all video sources.
 1. When the current **scene changes, the timer will reset** and start counting again from 0 seconds. You can also reset the timer to 0 by clicking the reset button. Also, the list of scenes will be reloaded.
 1. When a time limit greater than 0 is set for the current scene, a **countdown** will also be displayed including a track/progress bar.
@@ -53,9 +54,9 @@ OBS Scene Timer will not attempt to reconnect immediately, but during a continuo
 
 ### Properties
 
-In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. Edit this file in your favorite editor. 
+In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via File -> Settings, the new values will also be saved to this _user.properties_ file. By deleting this file, all properties are reset to default. 
 
-Don't run the application while editing these settings (and before saving the settings), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. 
+Don't run the application while editing the _user.properties_ file (and before saving your changes), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. If you need to edit the properties during application execution, use the GUI: File -> Settings. Note that some settings still require application restart.
 
 #### Explanation
 
