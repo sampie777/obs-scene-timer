@@ -9,6 +9,10 @@ object Theme {
 
     lateinit var get: DefaultTheme
 
+    init {
+        set(Config.theme)
+    }
+
     fun init() {
         set(Config.theme)
         apply()
