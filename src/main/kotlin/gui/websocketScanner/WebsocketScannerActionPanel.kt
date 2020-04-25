@@ -37,7 +37,7 @@ class WebsocketScannerActionPanel(private val frame: WebsocketScannerFrame) : JP
 
     private fun cancelWindow() {
         logger.info("Exiting websocket scanner window")
-        frame.dispose()
+        frame.close()
     }
 
     private fun saveConfigAndClose() {
@@ -47,6 +47,6 @@ class WebsocketScannerActionPanel(private val frame: WebsocketScannerFrame) : JP
         }
 
         Config.save()
-        frame.dispose()
+        frame.close()
     }
 }

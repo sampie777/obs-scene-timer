@@ -2,6 +2,7 @@ package gui.websocketScanner
 
 import config.Config
 import objects.websocketScanner.ScanResult
+import objects.websocketScanner.WebsocketScannerSwingWorker
 import java.awt.BorderLayout
 import java.awt.Frame
 import java.util.logging.Logger
@@ -10,11 +11,12 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
-class WebsocketScannerFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
+open class WebsocketScannerFrame(private val parentFrame: Frame?, private val visible: Boolean = true) : JDialog(parentFrame) {
     private val logger = Logger.getLogger(WebsocketScannerFrame::class.java.name)
 
-    private val websocketScannerTable = WebsocketScannerTable(this)
+    val websocketScannerTable = WebsocketScannerTable()
     private val websocketScannerStatusPanel = WebsocketScannerStatusPanel()
+    private var worker: WebsocketScannerSwingWorker? = null
 
     init {
         createGui()
@@ -37,14 +39,17 @@ class WebsocketScannerFrame(private val parentFrame: Frame?) : JDialog(parentFra
         setSize(600, 520)
         setLocationRelativeTo(parentFrame)
         modalityType = ModalityType.APPLICATION_MODAL
-        isVisible = true
+        isVisible = visible
     }
 
     fun scan() {
-        websocketScannerTable.scan()
+        websocketScannerTable.clearTable()
+
+        worker = WebsocketScannerSwingWorker(this)
+        worker!!.execute()
     }
 
-    fun processScanStatus(status: String) {
+    open fun processScanStatus(status: String) {
         websocketScannerStatusPanel.updateStatus(status)
     }
 
@@ -52,22 +57,36 @@ class WebsocketScannerFrame(private val parentFrame: Frame?) : JDialog(parentFra
         websocketScannerTable.setScanResults(scanResults)
     }
 
-    fun addScanResult(scanResult: ScanResult) {
+    open fun addScanResult(scanResult: ScanResult) {
         websocketScannerTable.addScanResult(scanResult)
+    }
+
+    fun close() {
+        if (worker != null && !worker!!.isDone) {
+            worker!!.cancel(true)   // Although canceling doesn't do very much because it is not handled in WebsocketScanner
+        }
+
+        dispose()
     }
 
     fun save(): Boolean {
         val newAddress = websocketScannerTable.getSelectedValueAsAddress()
-        if (newAddress == null) {
+        if (newAddress.isNullOrEmpty()) {
             logger.info("No valid value selected")
-            JOptionPane.showMessageDialog(this, "No value selected to save. Please select a table row and try\n" +
-                    "Save again, or use Cancel to exit this window.", "No selection", JOptionPane.WARNING_MESSAGE)
+            if (parentFrame != null) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "No value selected to save. Please select a table row and try\n" +
+                            "Save again, or use Cancel to exit this window.",
+                    "No selection",
+                    JOptionPane.WARNING_MESSAGE
+                )
+            }
             return false
         }
 
         logger.info("Saving new obsAddress: $newAddress")
         Config.obsAddress = newAddress
-        Config.save()
         return true
     }
 }

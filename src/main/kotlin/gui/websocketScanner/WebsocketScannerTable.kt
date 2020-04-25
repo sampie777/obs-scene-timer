@@ -1,7 +1,6 @@
 package gui.websocketScanner
 
 import objects.websocketScanner.ScanResult
-import objects.websocketScanner.WebsocketScannerSwingWorker
 import java.awt.BorderLayout
 import java.util.*
 import javax.swing.JPanel
@@ -9,10 +8,10 @@ import javax.swing.JScrollPane
 import javax.swing.JTable
 import javax.swing.table.DefaultTableModel
 
-class WebsocketScannerTable(private val frame: WebsocketScannerFrame) : JPanel() {
+class WebsocketScannerTable : JPanel() {
 
     private val tableHeader = arrayOf("Name", "Address", "Port")
-    private val table = JTable(ReadOnlyTableModel(tableHeader, 0))
+    val table = JTable(ReadOnlyTableModel(tableHeader, 0))
 
     init {
         createGui()
@@ -24,16 +23,11 @@ class WebsocketScannerTable(private val frame: WebsocketScannerFrame) : JPanel()
         add(JScrollPane(table), BorderLayout.CENTER)
     }
 
-    private fun clearTable() {
-        (table.model as DefaultTableModel).rowCount = 0
+    fun clearTable() {
+        model().rowCount = 0
     }
 
-    fun scan() {
-        clearTable()
-
-        val worker = WebsocketScannerSwingWorker(frame)
-        worker.execute()
-    }
+    fun model(): DefaultTableModel = table.model as DefaultTableModel
 
     fun setScanResults(scanResults: List<ScanResult>) {
         clearTable()
@@ -44,13 +38,13 @@ class WebsocketScannerTable(private val frame: WebsocketScannerFrame) : JPanel()
     }
 
     fun addScanResult(scanResult: ScanResult) {
-        (table.model as DefaultTableModel).addRow(arrayOf(scanResult.hostName, scanResult.ip, scanResult.port))
+        model().addRow(arrayOf(scanResult.hostName, scanResult.ip, scanResult.port))
     }
 
     fun getSelectedValueAsAddress(): String? {
         val row: Vector<Any>?
         try {
-            row = (table.model as DefaultTableModel).dataVector[table.selectedRow] as? Vector<Any>
+            row = model().dataVector[table.selectedRow] as? Vector<Any>
         } catch (e: ArrayIndexOutOfBoundsException) {
             return null
         }
