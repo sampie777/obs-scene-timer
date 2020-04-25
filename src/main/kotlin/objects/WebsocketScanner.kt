@@ -9,7 +9,10 @@ import java.util.concurrent.Future
 import java.util.logging.Logger
 
 
-class ScanResult(val ip: String, val port: Int, val open: Boolean)
+class ScanResult(val ip: String,
+                 val port: Int,
+                 val open: Boolean,
+                 val hostName: String? = null)
 
 
 class WebsocketScanner {
@@ -33,7 +36,7 @@ class WebsocketScanner {
             return
         }
 
-        addressesFound.forEach { logger.info("Found websocket on: ${it.ip}:${it.port}") }
+        addressesFound.forEach { logger.info("Found websocket on: ${it.ip}:${it.port} (${it.hostName})") }
 
     }
 
@@ -73,9 +76,10 @@ class WebsocketScanner {
             try {
                 logger.fine("Probing: $ip:$port")
                 val socket = Socket()
-                socket.connect(InetSocketAddress(ip, port), timeout)
+                val inetSocketAddress = InetSocketAddress(ip, port)
+                socket.connect(inetSocketAddress, timeout)
                 socket.close()
-                return@Callable ScanResult(ip, port, true)
+                return@Callable ScanResult(ip, port, true, inetSocketAddress.hostName)
             } catch (ex: Exception) {
                 return@Callable ScanResult(ip, port, false)
             }
