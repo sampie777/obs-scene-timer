@@ -1,9 +1,6 @@
 package config
 
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class PropertyLoaderTest {
 
@@ -71,5 +68,27 @@ class PropertyLoaderTest {
         assertTrue(ConfigMock.hashMapProperty1.containsKey("Scene 2"))
         assertEquals(10, ConfigMock.hashMapProperty1["Scene 1"])
         assertEquals(20, ConfigMock.hashMapProperty1["Scene 2"])
+    }
+
+    @Test
+    fun testSaveConfigReturnsTrueForNewChanges() {
+        PropertyLoader.saveConfig(ConfigMock::class.java)
+
+        ConfigMock.stringProperty1 = "newValue"
+
+        assertTrue(PropertyLoader.saveConfig(ConfigMock::class.java))
+        assertEquals("newValue", PropertyLoader.getUserProperties().getProperty("stringProperty1"))
+        assertEquals("stringValue2", PropertyLoader.getUserProperties().getProperty("stringProperty2"))
+        assertEquals("100", PropertyLoader.getUserProperties().getProperty("longProperty1"))
+    }
+
+    @Test
+    fun testSaveConfigReturnsFalseForNoChanges() {
+        PropertyLoader.saveConfig(ConfigMock::class.java)
+
+        assertFalse(PropertyLoader.saveConfig(ConfigMock::class.java))
+        assertEquals("stringValue1", PropertyLoader.getUserProperties().getProperty("stringProperty1"))
+        assertEquals("stringValue2", PropertyLoader.getUserProperties().getProperty("stringProperty2"))
+        assertEquals("100", PropertyLoader.getUserProperties().getProperty("longProperty1"))
     }
 }
