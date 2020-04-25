@@ -5,6 +5,7 @@ import config.Config
 import config.PropertyLoader
 import objects.Globals
 import objects.OBSStatus
+import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.JLabel
@@ -23,7 +24,7 @@ class OBSStatusPanel : JPanel(), Refreshable {
     private fun initGUI() {
         layout = BorderLayout(15, 15)
 
-        messageLabel.font = Font("Dialog", Font.PLAIN, 14)
+        messageLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
         messageLabel.toolTipText = settingsFileString()
         add(messageLabel)
     }

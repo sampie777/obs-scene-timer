@@ -2,6 +2,7 @@ package gui
 
 import config.Config
 import objects.OBSSceneTimer
+import themes.Theme
 import kotlin.test.*
 
 class TimerPanelTest {
@@ -14,6 +15,7 @@ class TimerPanelTest {
 
     @Test
     fun testChangingBackgroundColorForTimer() {
+        Theme.init()
         val panel = TimerPanel()
         Config.smallMinLimitForLimitApproaching = 0
         Config.smallTimeDifferenceForLimitApproaching = 1
@@ -23,17 +25,17 @@ class TimerPanelTest {
         OBSSceneTimer.increaseTimer()   // 1
         panel.refreshTimer()
 
-        assertEquals(Config.timerBackgroundColor, panel.background)
+        assertEquals(Theme.get.BACKGROUND_COLOR, panel.background)
 
         OBSSceneTimer.increaseTimer()   // 2
         panel.refreshTimer()
 
-        assertEquals(Config.approachingLimitColor, panel.background)
+        assertEquals(Theme.get.TIMER_APPROACHING_BACKGROUND_COLOR, panel.background)
 
         OBSSceneTimer.increaseTimer()   // 3
         panel.refreshTimer()
 
-        assertEquals(Config.exceededLimitColor, panel.background)
+        assertEquals(Theme.get.TIMER_EXCEEDED_BACKGROUND_COLOR, panel.background)
     }
 
     @Test

@@ -1,6 +1,7 @@
 package gui.menu
 
 import gui.utils.ClickableLinkComponent
+import themes.Theme
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Frame
@@ -21,12 +22,12 @@ class InfoFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
 
         val currentRelease = "1.2.0"
         val versionLabel = JLabel("<html><h1>OBS Scene Timer</h1><p>By Samuel-Anton Jansen</p><p>Version: $currentRelease</p></html>")
-        versionLabel.font = Font("Dialog", Font.PLAIN, 14)
+        versionLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
         val sourceCodeLabel = ClickableLinkComponent(
             "OBS Scene Timer on BitBucket",
             "https://bitbucket.org/sajansen/obs-scene-timer/src/master/README.md"
         )
-        sourceCodeLabel.font = Font("Dialog", Font.PLAIN, 14)
+        sourceCodeLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
         mainPanel.add(versionLabel)
         mainPanel.add(Box.createRigidArea(Dimension(0, 10)))

@@ -1,7 +1,6 @@
 package config
 
 import objects.notifications.Notifications
-import java.awt.Color
 import java.util.logging.Logger
 
 object Config {
@@ -11,9 +10,6 @@ object Config {
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
 
-    var timerBackgroundColor: Color = Color(230,230,230)
-    var approachingLimitColor: Color = Color.ORANGE
-    var exceededLimitColor: Color = Color.RED
     var timerCountUpFontSize: Int = 80
     var timerCountDownFontSize: Int = 100
 
@@ -25,6 +21,8 @@ object Config {
     var sceneLimitValues: HashMap<String, Int> = HashMap()
 
     var enableSceneTimestampLogger: Boolean = false
+
+    var theme: String = "Default"
 
     fun load() {
         try {

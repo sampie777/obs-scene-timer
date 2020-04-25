@@ -1,6 +1,7 @@
 package gui.config
 
 import gui.config.formcomponents.*
+import themes.Theme
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.util.logging.Logger
@@ -25,10 +26,10 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(StringFormInput("obsPassword", "OBS websocket password", true))
         formComponents.add(NumberFormInput<Long>("obsReconnectionTimeout", "Connection retry interval (millisec.)", 0, null))
 
+        formComponents.add(HeaderFormComponent("Theme"))
+        formComponents.add(SelectFormInput("theme", "Theme", Theme.availableThemes()))
+
         formComponents.add(HeaderFormComponent("Timer styling"))
-        formComponents.add(ColorFormInput("timerBackgroundColor", "Default background color"))
-        formComponents.add(ColorFormInput("approachingLimitColor", "Time limit approaching background color"))
-        formComponents.add(ColorFormInput("exceededLimitColor", "Time limit exceeded background color"))
         formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size (pt.)", 0, null))
         formComponents.add(NumberFormInput<Int>("timerCountDownFontSize", "Remaining time timer font size (pt.)", 0, null))
 
