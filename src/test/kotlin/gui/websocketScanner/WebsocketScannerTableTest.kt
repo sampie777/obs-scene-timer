@@ -33,8 +33,8 @@ class WebsocketScannerTableTest {
 
         assertEquals(2, panel.model().rowCount)
         assertEquals(2, panel.model().dataVector.size)
-        assertEquals("1", (panel.model().dataVector[0] as Vector<Any>)[1])
-        assertEquals("2", (panel.model().dataVector[1] as Vector<Any>)[1])
+        assertEquals("1", (panel.model().dataVector[0] as Vector<*>)[1])
+        assertEquals("2", (panel.model().dataVector[1] as Vector<*>)[1])
     }
 
     @Test
@@ -53,8 +53,8 @@ class WebsocketScannerTableTest {
 
         assertEquals(2, panel.model().rowCount)
         assertEquals(2, panel.model().dataVector.size)
-        assertEquals("1", (panel.model().dataVector[0] as Vector<Any>)[1])
-        assertEquals("2", (panel.model().dataVector[1] as Vector<Any>)[1])
+        assertEquals("1", (panel.model().dataVector[0] as Vector<*>)[1])
+        assertEquals("2", (panel.model().dataVector[1] as Vector<*>)[1])
     }
 
     @Test
@@ -99,9 +99,9 @@ class WebsocketScannerTableTest {
         panel.addScanResult(ScanResult("address2", 234, true, "Result 2"))
         panel.table.setRowSelectionInterval(0, 0)
 
-        (panel.model().dataVector[0] as Vector<Any>).clear()
+        (panel.model().dataVector[0] as Vector<*>).clear()
 
-        assertEquals(0, (panel.model().dataVector[0] as Vector<Any>).size)
+        assertEquals(0, (panel.model().dataVector[0] as Vector<*>).size)
         assertNull(panel.getSelectedValueAsAddress())
     }
 }

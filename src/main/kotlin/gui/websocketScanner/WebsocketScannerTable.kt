@@ -42,9 +42,9 @@ class WebsocketScannerTable : JPanel() {
     }
 
     fun getSelectedValueAsAddress(): String? {
-        val row: Vector<Any>?
+        val row: Vector<*>?
         try {
-            row = model().dataVector[table.selectedRow] as? Vector<Any>
+            row = model().dataVector[table.selectedRow] as? Vector<*>
         } catch (e: ArrayIndexOutOfBoundsException) {
             return null
         }

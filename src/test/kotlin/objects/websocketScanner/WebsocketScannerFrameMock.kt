@@ -8,9 +8,9 @@ class WebsocketScannerFrameMock : WebsocketScannerFrame(null, visible = false) {
     var isAddScanResultCalled = false
     var addScanResultValue: ScanResult? = null
 
-    override fun processScanStatus(value: String) {
+    override fun processScanStatus(status: String) {
         isProcessScanStatusCalled = true
-        processScanStatusValue = value
+        processScanStatusValue = status
     }
 
     override fun addScanResult(scanResult: ScanResult) {
