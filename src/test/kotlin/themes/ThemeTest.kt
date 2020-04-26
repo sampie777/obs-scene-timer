@@ -10,14 +10,14 @@ class ThemeTest {
 
     @Test
     fun testSetAndApplyTheme() {
-        Config.theme = "Default"
+        Config.theme = "LightTheme"
         Theme.init()
 
         // Then
-        assertEquals(DefaultTheme().BACKGROUND_COLOR, UIManager.get("Panel.background"))
+        assertEquals(LightTheme().BACKGROUND_COLOR, UIManager.get("Panel.background"))
 
         // When
-        Config.theme = "Dark"
+        Config.theme = "DarkTheme"
         Theme.init()
 
         // Then
@@ -33,6 +33,25 @@ class ThemeTest {
         Theme.init()
 
         // Then
-        assertEquals(DefaultTheme().BACKGROUND_COLOR, UIManager.get("Panel.background"))
+        assertEquals(LightTheme().BACKGROUND_COLOR, UIManager.get("Panel.background"))
+    }
+
+    @Test
+    fun testAddNewThemeAndSetAndApplyTheme() {
+        Config.theme = "LightTheme"
+        Theme.init()
+
+        // Then
+        assertEquals(2, Theme.availableThemes().size)
+        assertEquals(LightTheme().BACKGROUND_COLOR, UIManager.get("Panel.background"))
+
+        // When
+        Theme.addTheme("ThemeMock", "Mock Theme", ThemeMock::class.java)
+        Config.theme = "ThemeMock"
+        Theme.init()
+
+        // Then
+        assertEquals(3, Theme.availableThemes().size)
+        assertEquals(Color.RED, UIManager.get("Panel.background"))
     }
 }

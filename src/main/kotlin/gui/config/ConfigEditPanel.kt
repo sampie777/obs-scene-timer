@@ -27,7 +27,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(NumberFormInput<Long>("obsReconnectionTimeout", "Connection retry interval (millisec.)", 0, null))
 
         formComponents.add(HeaderFormComponent("Theme"))
-        formComponents.add(SelectFormInput("theme", "Theme", Theme.availableThemes()))
+        formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
 
         formComponents.add(HeaderFormComponent("Timer styling"))
         formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size (pt.)", 0, null))

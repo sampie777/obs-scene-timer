@@ -22,7 +22,7 @@ object Config {
 
     var enableSceneTimestampLogger: Boolean = false
 
-    var theme: String = "Default"
+    var theme: String = "LightTheme"
 
     fun load() {
         try {

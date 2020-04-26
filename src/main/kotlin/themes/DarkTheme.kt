@@ -2,7 +2,7 @@ package themes
 
 import java.awt.Color
 
-open class DarkTheme : DefaultTheme() {
+open class DarkTheme : BaseTheme() {
     override val FONT_FAMILY = "Dialog"
     override val FONT_COLOR = Color(200, 200, 200)
     override val LINK_FONT_COLOR = Color(106, 149, 239)

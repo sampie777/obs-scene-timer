@@ -1,13 +1,19 @@
 package themes
 
 import config.Config
+import objects.notifications.Notifications
+import java.lang.IndexOutOfBoundsException
 import java.util.logging.Logger
 import javax.swing.UIManager
 
 object Theme {
     private val logger = Logger.getLogger(Theme::class.java.name)
 
-    lateinit var get: DefaultTheme
+    lateinit var get: BaseTheme
+    private val themeList: ArrayList<ThemeWrapper> = arrayListOf(
+        ThemeWrapper("LightTheme", "Light (default)", LightTheme::class.java),
+        ThemeWrapper("DarkTheme", "Dark", DarkTheme::class.java)
+    )
 
     init {
         set(Config.theme)
@@ -18,21 +24,39 @@ object Theme {
         apply()
     }
 
-    fun set(theme: String) {
-        val themeClassName = theme + "Theme"
+    private fun set(themeInternalName: String) {
+        try {
+            val newTheme = loadTheme(themeInternalName)
+            if (newTheme == null) {
+                logger.warning("Could not find theme '$themeInternalName'. Using default theme.")
 
-        get = when (themeClassName) {
-            "DarkTheme" -> DarkTheme()
-            "DefaultTheme" -> DefaultTheme()
-            else -> {
-                logger.warning("Could not find theme '$theme'. Using default theme.")
-                DefaultTheme()
+                if (themeList.size == 0) {
+                    throw IndexOutOfBoundsException("No themes available")
+                }
+
+                get = loadTheme(themeList[0].internalName)!!
+                return
             }
+
+            get = newTheme
+        } catch (e: Exception) {
+            logger.severe("Failed to set theme to '$themeInternalName'")
+            e.printStackTrace()
+            Notifications.add("Failed to set theme to '$themeInternalName", "Theme")
         }
     }
 
-    fun availableThemes(): List<String> {
-        return listOf("Default", "Dark")
+    private fun loadTheme(themeInternalName: String): BaseTheme? {
+        val themeWrapper = themeList.find { themeInternalName == it.internalName } ?: return null
+        return themeWrapper.clazz.newInstance() as BaseTheme
+    }
+
+    fun availableThemes(): List<ThemeWrapper> {
+        return themeList
+    }
+
+    fun addTheme(themeInternalName: String, themeDisplayName: String, themeClass: Class<*>) {
+        themeList.add(ThemeWrapper(themeInternalName, themeDisplayName, themeClass))
     }
 
     private fun apply() {

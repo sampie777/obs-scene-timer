@@ -2,7 +2,7 @@ package themes
 
 import java.awt.Color
 
-open class DefaultTheme {
+abstract class BaseTheme {
     open val FONT_FAMILY = "Dialog"
     open val FONT_COLOR = Color(51, 51, 51)
     open val LINK_FONT_COLOR = Color(25, 90, 244)
