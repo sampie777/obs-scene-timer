@@ -4,6 +4,7 @@ import GUI
 import config.Config
 import objects.Globals
 import objects.OBSSceneTimer
+import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
@@ -33,10 +34,10 @@ class SceneTablePanel : JPanel(), Refreshable {
     val sceneInputs = HashMap<String, JSpinner>()
     val container = JPanel()
 
-    private val labelFont = Font("Dialog", Font.PLAIN, 16)
-    private val currentSceneLabelFont = Font("Dialog", Font.BOLD, 16)
-    private val inputFont = Font("Dialog", Font.PLAIN, 16)
-    private val currentSceneInputFont = Font("Dialog", Font.BOLD, 16)
+    private val labelFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
+    private val currentSceneLabelFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
+    private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
+    private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
 
     init {
         GUI.register(this)
@@ -99,9 +100,10 @@ class SceneTablePanel : JPanel(), Refreshable {
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
-            sceneInput.preferredSize = Dimension(100, 20)
+            sceneInput.preferredSize = Dimension(100, 22)
             sceneInput.model = SpinnerNumberModel(sceneValue, 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(this, scene.name))
+            sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
             sceneInput.font = if (scene.name == OBSSceneTimer.getCurrentSceneName())
                 currentSceneInputFont else inputFont
             sceneInputs[scene.name] = sceneInput

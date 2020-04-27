@@ -8,5 +8,5 @@ target/
 user.properties
 dependency-reduced-pom.xml
 out/
-img/gimp/
 releases/
+*.xcf

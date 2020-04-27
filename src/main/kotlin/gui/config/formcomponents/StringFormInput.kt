@@ -1,12 +1,13 @@
 package gui.config.formcomponents
 
 import config.Config
-import gui.config.ConfigEditPanel
+import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
 import java.util.logging.Logger
+import javax.swing.BorderFactory
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
@@ -16,7 +17,7 @@ class StringFormInput(
     private val labelText: String,
     private val allowEmpty: Boolean
 ) : FormInput {
-    private val logger = Logger.getLogger(ConfigEditPanel::class.java.name)
+    private val logger = Logger.getLogger(StringFormInput::class.java.name)
 
     private val input = JTextField()
 
@@ -24,10 +25,11 @@ class StringFormInput(
         val configValue: String? = Config.get(key) as? String
 
         val label = JLabel(labelText)
-        label.font = Font("Dialog", Font.PLAIN, 12)
+        label.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 12)
 
         input.text = configValue
         input.preferredSize = Dimension(100, 20)
+        input.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
 
         val panel = JPanel()
         panel.layout = BorderLayout(10, 10)

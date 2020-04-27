@@ -4,16 +4,25 @@ import GUI
 import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
+import themes.Theme
 import java.awt.*
 import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 
+enum class TimerState {
+    NEUTRAL,
+    APPROACHING,
+    EXCEEDED
+}
+
+
 class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
     val sceneLabel: JLabel = JLabel("Initializing...")
+    val resetTimerButton = JButton("Reset")
     val timerUpLabel: JLabel = JLabel()
     val timerDownLabel: JLabel = JLabel()
 
@@ -31,9 +40,8 @@ class TimerPanel : JPanel(), Refreshable {
         border = EmptyBorder(10, 10, 10, 10)
 
         sceneLabel.horizontalAlignment = SwingConstants.CENTER
-        sceneLabel.font = Font("Dialog", Font.PLAIN, 24)
+        sceneLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 24)
 
-        val resetTimerButton = JButton("Reset")
         resetTimerButton.toolTipText = "Reset timer to 0"
         resetTimerButton.background = null
         resetTimerButton.requestFocus()
@@ -54,12 +62,12 @@ class TimerPanel : JPanel(), Refreshable {
         timerUpLabel.horizontalAlignment = SwingConstants.CENTER
         timerUpLabel.alignmentX = Component.CENTER_ALIGNMENT
         timerUpLabel.alignmentY = Component.CENTER_ALIGNMENT
-        timerUpLabel.font = Font("Dialog", Font.PLAIN, Config.timerCountUpFontSize)
+        timerUpLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, Config.timerCountUpFontSize)
 
         timerDownLabel.toolTipText = "Time remaining"
         timerDownLabel.horizontalAlignment = SwingConstants.CENTER
         timerDownLabel.alignmentX = Component.CENTER_ALIGNMENT
-        timerDownLabel.font = Font("Dialog", Font.PLAIN, Config.timerCountDownFontSize)
+        timerDownLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, Config.timerCountDownFontSize)
         timerDownLabel.isVisible = false
 
         val timersPanel = JPanel()
@@ -76,7 +84,7 @@ class TimerPanel : JPanel(), Refreshable {
 
     override fun refreshTimer() {
         updateLabelsForTimer()
-        updateBackgroundColorForTimer()
+        updateColorsForTimer()
         repaint()
     }
 
@@ -96,34 +104,57 @@ class TimerPanel : JPanel(), Refreshable {
         }
     }
 
-    private fun updateBackgroundColorForTimer() {
+    private fun updateColorsForTimer() {
         val sceneMaxDuration = OBSSceneTimer.getMaxTimerValue()
 
         if (sceneMaxDuration == 0L) {
-            background = Config.timerBackgroundColor
+            setColorsFor(TimerState.NEUTRAL)
             return
         }
 
         if (OBSSceneTimer.getTimerValue() >= sceneMaxDuration) {
             logger.severe("Timer exceeded!")
-            background = Config.exceededLimitColor
+            setColorsFor(TimerState.EXCEEDED)
 
         } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
             && OBSSceneTimer.getTimerValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
         ) {
-            logger.severe("Timer almost exceeded!")
-            background = Config.approachingLimitColor
+            logger.warning("Timer almost exceeded!")
+            setColorsFor(TimerState.APPROACHING)
 
         } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
             && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
             && OBSSceneTimer.getTimerValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
         ) {
-            logger.severe("Timer almost exceeded!")
-            background = Config.approachingLimitColor
+            logger.warning("Timer almost exceeded!")
+            setColorsFor(TimerState.APPROACHING)
 
         } else {
-            background = Config.timerBackgroundColor
+            setColorsFor(TimerState.NEUTRAL)
         }
     }
 
+    private fun setColorsFor(state: TimerState) {
+        when (state) {
+            TimerState.EXCEEDED -> {
+                setLabelsColor(Theme.get.TIMER_EXCEEDED_FONT_COLOR)
+                background = Theme.getTimerExceededBackgroundColor()
+            }
+            TimerState.APPROACHING -> {
+                setLabelsColor(Theme.get.TIMER_APPROACHING_FONT_COLOR)
+                background = Theme.getTimerApproachingBackgroundColor()
+            }
+            else -> {
+                setLabelsColor(Theme.get.FONT_COLOR)
+                background = Theme.getTimerDefaultBackgroundColor()
+            }
+        }
+    }
+
+    private fun setLabelsColor(color: Color) {
+        sceneLabel.foreground = color
+        resetTimerButton.foreground = color
+        timerUpLabel.foreground = color
+        timerDownLabel.foreground = color
+    }
 }

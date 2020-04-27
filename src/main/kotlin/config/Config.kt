@@ -11,9 +11,13 @@ object Config {
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
 
-    var timerBackgroundColor: Color = Color(230,230,230)
-    var approachingLimitColor: Color = Color.ORANGE
-    var exceededLimitColor: Color = Color.RED
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var timerBackgroundColor: Color? = null
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var approachingLimitColor: Color? = null
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var exceededLimitColor: Color? = null
+
     var timerCountUpFontSize: Int = 80
     var timerCountDownFontSize: Int = 100
 
@@ -25,6 +29,8 @@ object Config {
     var sceneLimitValues: HashMap<String, Int> = HashMap()
 
     var enableSceneTimestampLogger: Boolean = false
+
+    var theme: String = "LightTheme"
 
     fun load() {
         try {

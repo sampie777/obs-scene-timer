@@ -150,6 +150,9 @@ object PropertyLoader {
         if (type == Double::class.javaPrimitiveType) return value.toDouble()
         if (type == Color::class.java) {
             val rgb = value.split(",")
+            if (rgb.size < 3) {
+                return null
+            }
             return Color(rgb[0].toInt(), rgb[1].toInt(), rgb[2].toInt())
         }
         if (type == HashMap::class.java) {
@@ -171,7 +174,12 @@ object PropertyLoader {
         throw IllegalArgumentException("Unknown configuration value type: " + type.name)
     }
 
-    private fun setPropertyValue(props: Properties, name: String, type: Class<*>, value: Any) {
+    private fun setPropertyValue(props: Properties, name: String, type: Class<*>, value: Any?) {
+        if (value == null) {
+            props.setProperty(name, "")
+            return
+        }
+
         if (type == Color::class.java) {
             val color = value as Color
             val stringValue = listOf(color.red, color.green, color.blue).joinToString(",")
