@@ -3,7 +3,6 @@ package themes
 import config.Config
 import objects.notifications.Notifications
 import java.awt.Color
-import java.lang.IndexOutOfBoundsException
 import java.util.logging.Logger
 import javax.swing.UIManager
 
@@ -86,6 +85,7 @@ object Theme {
         UIManager.put("CheckBox.foreground", get.FONT_COLOR)
         UIManager.put("OptionPane.background", get.BACKGROUND_COLOR)
         UIManager.put("OptionPane.foreground", get.FONT_COLOR)
+        UIManager.put("OptionPane.messageForeground", get.FONT_COLOR)
         UIManager.put("ScrollBar.background", get.BACKGROUND_COLOR)
         UIManager.put("ScrollBar.foreground", get.FONT_COLOR)
         UIManager.put("Separator.background", get.BACKGROUND_COLOR)
@@ -120,6 +120,7 @@ object Theme {
         UIManager.put("Spinner.foreground", get.FONT_COLOR)
     }
 
+    @Suppress("DEPRECATION")
     fun getTimerDefaultBackgroundColor(): Color {
         if (Config.timerBackgroundColor == null) {
             return get.BACKGROUND_COLOR
@@ -134,6 +135,7 @@ object Theme {
         return get.BACKGROUND_COLOR
     }
 
+    @Suppress("DEPRECATION")
     fun getTimerApproachingBackgroundColor(): Color {
         if (Config.approachingLimitColor == null) {
             return get.TIMER_APPROACHING_BACKGROUND_COLOR
@@ -148,6 +150,7 @@ object Theme {
         return get.TIMER_APPROACHING_BACKGROUND_COLOR
     }
 
+    @Suppress("DEPRECATION")
     fun getTimerExceededBackgroundColor(): Color {
         if (Config.exceededLimitColor == null) {
             return get.TIMER_EXCEEDED_BACKGROUND_COLOR

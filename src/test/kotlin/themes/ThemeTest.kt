@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
+@Suppress("DEPRECATION")
 class ThemeTest {
 
     @Test
