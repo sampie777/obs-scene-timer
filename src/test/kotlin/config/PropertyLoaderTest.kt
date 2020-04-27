@@ -118,4 +118,26 @@ class PropertyLoaderTest {
 
         assertEquals("", PropertyLoader.getUserProperties().getProperty("nullableColorProperty1"))
     }
+
+    @Test
+    fun testSaveConfigReturnsTrueForNewChanges() {
+        PropertyLoader.saveConfig(ConfigMock::class.java)
+
+        ConfigMock.stringProperty1 = "newValue"
+
+        assertTrue(PropertyLoader.saveConfig(ConfigMock::class.java))
+        assertEquals("newValue", PropertyLoader.getUserProperties().getProperty("stringProperty1"))
+        assertEquals("stringValue2", PropertyLoader.getUserProperties().getProperty("stringProperty2"))
+        assertEquals("100", PropertyLoader.getUserProperties().getProperty("longProperty1"))
+    }
+
+    @Test
+    fun testSaveConfigReturnsFalseForNoChanges() {
+        PropertyLoader.saveConfig(ConfigMock::class.java)
+
+        assertFalse(PropertyLoader.saveConfig(ConfigMock::class.java))
+        assertEquals("stringValue1", PropertyLoader.getUserProperties().getProperty("stringProperty1"))
+        assertEquals("stringValue2", PropertyLoader.getUserProperties().getProperty("stringProperty2"))
+        assertEquals("100", PropertyLoader.getUserProperties().getProperty("longProperty1"))
+    }
 }

@@ -45,8 +45,9 @@ object Config {
 
     fun save() {
         try {
-            PropertyLoader.saveConfig(this::class.java)
-            PropertyLoader.save()
+            if (PropertyLoader.saveConfig(this::class.java)) {
+                PropertyLoader.save()
+            }
         } catch (e: Exception) {
             logger.severe("Failed to save Config")
             e.printStackTrace()
