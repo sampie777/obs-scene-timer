@@ -1,6 +1,8 @@
 package objects.websocketScanner
 
-import java.net.*
+import java.net.InetSocketAddress
+import java.net.NetworkInterface
+import java.net.Socket
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService

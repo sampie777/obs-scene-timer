@@ -20,7 +20,7 @@ class InfoFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
         mainPanel.border = EmptyBorder(0, 20, 10, 20)
         add(mainPanel)
 
-        val currentRelease = "1.2.0"
+        val currentRelease = "1.3.0"
         val versionLabel = JLabel("<html><h1>OBS Scene Timer</h1><p>By Samuel-Anton Jansen</p><p>Version: $currentRelease</p></html>")
         versionLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
         val sourceCodeLabel = ClickableLinkComponent(
