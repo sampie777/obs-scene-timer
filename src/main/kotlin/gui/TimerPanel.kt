@@ -134,19 +134,19 @@ class TimerPanel : JPanel(), Refreshable {
         }
     }
 
-    fun setColorsFor(state: TimerState) {
+    private fun setColorsFor(state: TimerState) {
         when (state) {
             TimerState.EXCEEDED -> {
                 setLabelsColor(Theme.get.TIMER_EXCEEDED_FONT_COLOR)
-                background = Theme.get.TIMER_EXCEEDED_BACKGROUND_COLOR
+                background = Theme.getTimerExceededBackgroundColor()
             }
             TimerState.APPROACHING -> {
                 setLabelsColor(Theme.get.TIMER_APPROACHING_FONT_COLOR)
-                background = Theme.get.TIMER_APPROACHING_BACKGROUND_COLOR
+                background = Theme.getTimerApproachingBackgroundColor()
             }
             else -> {
                 setLabelsColor(Theme.get.FONT_COLOR)
-                background = Theme.get.BACKGROUND_COLOR
+                background = Theme.getTimerDefaultBackgroundColor()
             }
         }
     }

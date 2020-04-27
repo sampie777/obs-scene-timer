@@ -1,6 +1,7 @@
 package config
 
 import objects.notifications.Notifications
+import java.awt.Color
 import java.util.logging.Logger
 
 object Config {
@@ -9,6 +10,13 @@ object Config {
     var obsAddress: String = "ws://localhost:4444"
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
+
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var timerBackgroundColor: Color? = null
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var approachingLimitColor: Color? = null
+    @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
+    var exceededLimitColor: Color? = null
 
     var timerCountUpFontSize: Int = 80
     var timerCountDownFontSize: Int = 100

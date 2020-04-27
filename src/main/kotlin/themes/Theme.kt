@@ -2,6 +2,7 @@ package themes
 
 import config.Config
 import objects.notifications.Notifications
+import java.awt.Color
 import java.lang.IndexOutOfBoundsException
 import java.util.logging.Logger
 import javax.swing.UIManager
@@ -11,7 +12,7 @@ object Theme {
 
     lateinit var get: BaseTheme
     private val themeList: ArrayList<ThemeWrapper> = arrayListOf(
-        ThemeWrapper("LightTheme", "Light (default)", LightTheme::class.java),
+        ThemeWrapper("LightTheme", "Light", LightTheme::class.java),
         ThemeWrapper("DarkTheme", "Dark", DarkTheme::class.java)
     )
 
@@ -113,5 +114,47 @@ object Theme {
         UIManager.put("Viewport.foreground", get.FONT_COLOR)
         UIManager.put("Spinner.background", get.TEXT_FIELD_BACKGROUND_COLOR)
         UIManager.put("Spinner.foreground", get.FONT_COLOR)
+    }
+
+    fun getTimerDefaultBackgroundColor(): Color {
+        if (Config.timerBackgroundColor == null) {
+            return get.BACKGROUND_COLOR
+        }
+
+        // Compare config color with the default color
+        if (Config.timerBackgroundColor != Color(230,230,230)) {
+            return Config.timerBackgroundColor!!
+        }
+
+        Config.timerBackgroundColor = null
+        return get.BACKGROUND_COLOR
+    }
+
+    fun getTimerApproachingBackgroundColor(): Color {
+        if (Config.approachingLimitColor == null) {
+            return get.TIMER_APPROACHING_BACKGROUND_COLOR
+        }
+
+        // Compare config color with the default color
+        if (Config.approachingLimitColor != Color.ORANGE) {
+            return Config.approachingLimitColor!!
+        }
+
+        Config.approachingLimitColor = null
+        return get.TIMER_APPROACHING_BACKGROUND_COLOR
+    }
+
+    fun getTimerExceededBackgroundColor(): Color {
+        if (Config.exceededLimitColor == null) {
+            return get.TIMER_EXCEEDED_BACKGROUND_COLOR
+        }
+
+        // Compare config color with the default color
+        if (Config.exceededLimitColor != Color.RED) {
+            return Config.exceededLimitColor!!
+        }
+
+        Config.exceededLimitColor = null
+        return get.TIMER_EXCEEDED_BACKGROUND_COLOR
     }
 }
