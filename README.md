@@ -25,7 +25,7 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 1. Make sure you have at least Java 8 installed.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
 1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
-1. **Edit the settings** if needed. This can be done using the menu File -> Settings or editing the _user.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after chaning the settings.
+1. **Edit the settings** if needed. This can be done using the menu Application menu -> Settings or editing the _user.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after changing the application settings.
 
 ## How it works
 
@@ -37,6 +37,14 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 1. When the **countdown has reached 0**, the screen will turn red, and the countdown will continue to count the elapsed time since the time limit has passed (negative number).
 
 More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
+
+
+#### Network Scanner
+
+When using OBS Scene Timer on another computer as OBS projector itself, it can be quite a struggle to figure out the correct IP address of the OBS projector computer. Head to Application menu -> Network Scanner to let OBS Scene Timer scan for any possible OBS projector hosts on your local network. This scanning is done by querying the default OBS websocket port 4444 on all possible IP address available on your local network(s). 
+
+#### Themes
+A application theme can be set in Application menu -> Settings. Currently, only Light theme is available and Dark theme is experimental. You can develop your own theme by extending the BaseTheme class and creating a pull request to the `develop` branch. 
 
 #### Notifications
 
@@ -54,9 +62,9 @@ OBS Scene Timer will not attempt to reconnect immediately, but during a continuo
 
 ### Properties
 
-In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via File -> Settings, the new values will also be saved to this _user.properties_ file. By deleting this file, all properties are reset to default. 
+In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via Application menu -> Settings, the new values will also be saved to this _user.properties_ file. By deleting this file, all properties are reset to default. 
 
-Don't run the application while editing the _user.properties_ file (and before saving your changes), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. If you need to edit the properties during application execution, use the GUI: File -> Settings. Note that some settings still require application restart.
+Don't run the application while editing the _user.properties_ file (and before saving your changes), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. If you need to edit the properties during application execution, use the GUI: Application menu -> Settings. Note that some settings still require application restart.
 
 #### Explanation
 
@@ -72,24 +80,23 @@ _Application color settings_
 * `approachingLimitColor` (rgb) (default: `255,200,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit is being approached (see `smallTimeDifferenceForLimitApproaching` and `largeTimeDifferenceForLimitApproaching`).
 * `exceededLimitColor` (rgb) (default: `255,0,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit has been reached.
 
- _Timer settings_
- 
- * `smallMinLimitForLimitApproaching` (seconds) (default `20`): don't show time-limit-approaching warnings for time limits smaller than this value.
- * `smallTimeDifferenceForLimitApproaching` (seconds) (default `10`): show the time-limit-approaching warning this amount of seconds before reaching the time limit.
- * `largeMinLimitForLimitApproaching` (seconds) (default `60`): use `largeTimeDifferenceForLimitApproaching` value for time-limit-approaching warning for time limits greater or equal to this value.  
- * `largeTimeDifferenceForLimitApproaching` (seconds) (default `30`): show the time-limit-approaching warning this amount of seconds before reaching the time limit. Only for scene's with a time limit greater or equal than `largeTimeDifferenceForLimitApproaching` value.
- * `timerCountUpFontSize` (number) (default `80`): the font size of the main timer (which is always visible).
- * `timerCountDownFontSize` (number) (default `100`): the font size of the countdown timer (which is visible when a time limit is set for the current scene).
- 
- _Other settings_
- 
- * `enableSceneTimestampLogger` (boolean) (default: `false`): enable the logging of every scene change to a .csv file. This file will be generated in the same folder as the application. Might be handy for diagnoses afterwards. 
- 
- 
- ---
- 
- ## Contribution
- 
+_Timer settings_
+
+* `smallMinLimitForLimitApproaching` (seconds) (default `20`): don't show time-limit-approaching warnings for time limits smaller than this value.
+* `smallTimeDifferenceForLimitApproaching` (seconds) (default `10`): show the time-limit-approaching warning this amount of seconds before reaching the time limit.
+* `largeMinLimitForLimitApproaching` (seconds) (default `60`): use `largeTimeDifferenceForLimitApproaching` value for time-limit-approaching warning for time limits greater or equal to this value.  
+* `largeTimeDifferenceForLimitApproaching` (seconds) (default `30`): show the time-limit-approaching warning this amount of seconds before reaching the time limit. Only for scene's with a time limit greater or equal than `largeTimeDifferenceForLimitApproaching` value.
+* `timerCountUpFontSize` (number) (default `80`): the font size of the main timer (which is always visible).
+* `timerCountDownFontSize` (number) (default `100`): the font size of the countdown timer (which is visible when a time limit is set for the current scene).
+
+_Other settings_
+
+* `enableSceneTimestampLogger` (boolean) (default: `false`): enable the logging of every scene change to a .csv file. This file will be generated in the same folder as the application. Might be handy for diagnoses afterwards. 
+
+---
+
+## Contribution
+
 Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
 
 Please try to add/edit tests for the code you've worked on. Also build the application with `mvn clean install` and run the compiled jar with `java -jar obs-scene-timer-X.X.X-SNAPSHOT.jar`.
