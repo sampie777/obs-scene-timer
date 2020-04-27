@@ -16,6 +16,7 @@ class WebsocketScannerSwingWorker(private val component: WebsocketScannerFrame) 
         websocketScanner.scan()
 
         component.processScanStatus("Scan finished")
+        component.onScanFinished()
         return true
     }
 

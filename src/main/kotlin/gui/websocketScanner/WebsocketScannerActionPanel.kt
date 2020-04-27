@@ -12,8 +12,11 @@ import javax.swing.border.EmptyBorder
 class WebsocketScannerActionPanel(private val frame: WebsocketScannerFrame) : JPanel() {
     private val logger = Logger.getLogger(WebsocketScannerActionPanel::class.java.name)
 
+    private val buttonsToEnable = ArrayList<JButton>()
+
     init {
         createGui()
+        buttonsEnable(true)
     }
 
     private fun createGui() {
@@ -21,9 +24,12 @@ class WebsocketScannerActionPanel(private val frame: WebsocketScannerFrame) : JP
         border = EmptyBorder(0, 10, 10, 10)
 
         val scanButton = JButton("Scan")
+        buttonsToEnable.add(scanButton)
         scanButton.addActionListener { frame.scan() }
+
         val saveButton = JButton("Save")
         saveButton.addActionListener { saveConfigAndClose() }
+
         val cancelButton = JButton("Cancel")
         cancelButton.addActionListener { cancelWindow() }
 
@@ -48,5 +54,9 @@ class WebsocketScannerActionPanel(private val frame: WebsocketScannerFrame) : JP
 
         Config.save()
         frame.close()
+    }
+
+    fun buttonsEnable(enable: Boolean) {
+        buttonsToEnable.forEach { it.isEnabled = enable }
     }
 }

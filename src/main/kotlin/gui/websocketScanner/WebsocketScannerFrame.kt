@@ -16,6 +16,7 @@ open class WebsocketScannerFrame(private val parentFrame: Frame?, private val vi
 
     val websocketScannerTable = WebsocketScannerTable()
     private val websocketScannerStatusPanel = WebsocketScannerStatusPanel()
+    private lateinit var websocketScannerActionPanel: WebsocketScannerActionPanel
     private var worker: WebsocketScannerSwingWorker? = null
 
     init {
@@ -23,13 +24,15 @@ open class WebsocketScannerFrame(private val parentFrame: Frame?, private val vi
     }
 
     private fun createGui() {
+        websocketScannerActionPanel = WebsocketScannerActionPanel(this)
+
         val mainPanel = JPanel(BorderLayout(10, 10))
         mainPanel.border = EmptyBorder(10, 10, 10, 10)
         add(mainPanel)
 
         val bottomPanel = JPanel(BorderLayout())
         bottomPanel.add(websocketScannerStatusPanel, BorderLayout.LINE_START)
-        bottomPanel.add(WebsocketScannerActionPanel(this), BorderLayout.LINE_END)
+        bottomPanel.add(websocketScannerActionPanel, BorderLayout.LINE_END)
 
         mainPanel.add(WebsocketScannerInfoPanel(), BorderLayout.PAGE_START)
         mainPanel.add(websocketScannerTable, BorderLayout.CENTER)
@@ -43,6 +46,8 @@ open class WebsocketScannerFrame(private val parentFrame: Frame?, private val vi
     }
 
     fun scan() {
+        websocketScannerActionPanel.buttonsEnable(false)
+
         websocketScannerTable.clearTable()
 
         worker = WebsocketScannerSwingWorker(this)
@@ -59,6 +64,10 @@ open class WebsocketScannerFrame(private val parentFrame: Frame?, private val vi
 
     open fun addScanResult(scanResult: ScanResult) {
         websocketScannerTable.addScanResult(scanResult)
+    }
+
+    fun onScanFinished() {
+        websocketScannerActionPanel.buttonsEnable(true)
     }
 
     fun close() {
