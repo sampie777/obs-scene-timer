@@ -13,7 +13,7 @@ class WebsocketScannerStatusPanel : JPanel() {
     }
 
     private fun createGui() {
-        statusLabel.font = Font("Dialog", Font.PLAIN, 10)
+        statusLabel.font = Font("Dialog", Font.PLAIN, 12)
         add(statusLabel)
     }
 

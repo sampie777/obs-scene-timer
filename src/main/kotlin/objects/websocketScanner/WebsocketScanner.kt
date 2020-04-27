@@ -26,7 +26,11 @@ class WebsocketScanner(private val processStatus: WebsocketScannerProcessStatus,
     private val threadPoolSize = 20
 
     fun scan(): List<ScanResult> {
-        val localNetworkIpAddresses = getLocalNetworkIpAddresses()
+        val networkIpAddresses = getNetworkIpAddresses()
+
+        val localNetworkIpAddresses = networkIpAddresses
+            .filter { it.startsWith("192.168.") }
+            .distinct()
 
         val scanResultFutures: ArrayList<Future<ScanResult>> = scanIpAddresses(localNetworkIpAddresses)
 
@@ -43,21 +47,20 @@ class WebsocketScanner(private val processStatus: WebsocketScannerProcessStatus,
         return addressesFound
     }
 
-    private fun getLocalNetworkIpAddresses(): List<String> {
+    private fun getNetworkIpAddresses(): List<String> {
         logger.info("Getting network IP addresses from host")
         processStatus.setState("Getting network IP addresses")
-        val localNetworkIpAddresses = ArrayList<String>()
+        val networkIpAddresses = ArrayList<String>()
 
-        NetworkInterface.getNetworkInterfaces().iterator()
+        NetworkInterface.getNetworkInterfaces()
+            .iterator()
             .forEach { networkInterface ->
-                networkInterface.inetAddresses.iterator().forEach {
-                    if (it.hostAddress.startsWith("192.168.")) {
-                        localNetworkIpAddresses.add(it.hostAddress)
-                    }
-                }
+                networkInterface.inetAddresses
+                    .iterator()
+                    .forEach { networkIpAddresses.add(it.hostAddress) }
             }
 
-        return localNetworkIpAddresses
+        return networkIpAddresses
     }
 
     private fun scanIpAddresses(localNetworkIpAddresses: List<String>): ArrayList<Future<ScanResult>> {
@@ -68,13 +71,15 @@ class WebsocketScanner(private val processStatus: WebsocketScannerProcessStatus,
         scanResultFutures.add(scanAddressPort(es, "localhost", port, timeout))
 
         // Try IP addresses
-        localNetworkIpAddresses.forEach {
-            val ipTemplate = it.substringBeforeLast(".")
-            logger.info("Scanning IP addresses for base IP: $ipTemplate.0")
-            for (ip in 1..255) {
-                scanResultFutures.add(scanAddressPort(es, "$ipTemplate.$ip", port, timeout))
+        localNetworkIpAddresses
+            .map { it.substringBeforeLast(".") }
+            .distinct()
+            .forEach {
+                logger.info("Scanning IP addresses for IP range: $it.*")
+                for (ip in 1..255) {
+                    scanResultFutures.add(scanAddressPort(es, "$it.$ip", port, timeout))
+                }
             }
-        }
         es.shutdown()
         return scanResultFutures
     }
