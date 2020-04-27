@@ -5,12 +5,10 @@ import config.Config
 import objects.Globals
 import objects.OBSSceneTimer
 import themes.Theme
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.Font
+import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
+import javax.swing.border.LineBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
@@ -46,15 +44,15 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     private fun initGUI() {
-        layout = BorderLayout(0, 0)
+        layout = BorderLayout()
 
         container.border = EmptyBorder(0, 10, 0, 10)
-        container.layout = BoxLayout(container, BoxLayout.PAGE_AXIS)
+        container.layout = GridLayout(0, 1)
 
         createSceneTable()
 
-        val scrollPanelInnerPanel = JPanel()
-        scrollPanelInnerPanel.add(container)
+        val scrollPanelInnerPanel = JPanel(BorderLayout())
+        scrollPanelInnerPanel.add(container, BorderLayout.PAGE_START)
         val scrollPanel = JScrollPane(scrollPanelInnerPanel)
         scrollPanel.border = null
         add(scrollPanel, BorderLayout.CENTER)
