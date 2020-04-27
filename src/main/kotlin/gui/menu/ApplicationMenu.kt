@@ -11,8 +11,8 @@ import javax.swing.BorderFactory
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 
-class FileMenu : JMenu("File") {
-    private val logger = Logger.getLogger(FileMenu::class.java.name)
+class ApplicationMenu : JMenu("Application") {
+    private val logger = Logger.getLogger(ApplicationMenu::class.java.name)
 
     init {
         initGui()

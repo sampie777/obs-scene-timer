@@ -6,6 +6,7 @@ import java.util.*
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
+import javax.swing.ListSelectionModel
 import javax.swing.table.DefaultTableModel
 
 class WebsocketScannerTable : JPanel() {
@@ -19,6 +20,8 @@ class WebsocketScannerTable : JPanel() {
 
     private fun createGui() {
         layout = BorderLayout()
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
 
         add(JScrollPane(table), BorderLayout.CENTER)
     }
