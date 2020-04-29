@@ -2,6 +2,7 @@ package gui
 
 import config.Config
 import objects.OBSSceneTimer
+import objects.OBSState
 import themes.Theme
 import kotlin.test.*
 
@@ -82,12 +83,12 @@ class TimerPanelTest {
         assertTrue(panel.sceneLabel.isVisible)
         assertEquals("Initializing...", panel.sceneLabel.text)
 
-        OBSSceneTimer.setCurrentSceneName("scene1")
+        OBSState.currentSceneName = "scene1"
         panel.switchedScenes()
 
         assertEquals("scene1", panel.sceneLabel.text)
 
-        OBSSceneTimer.setCurrentSceneName("scene2")
+        OBSState.currentSceneName = "scene2"
         panel.switchedScenes()
 
         assertEquals("scene2", panel.sceneLabel.text)

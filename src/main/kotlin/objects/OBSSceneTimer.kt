@@ -8,7 +8,6 @@ object OBSSceneTimer {
 
     private var timerValue = 0L
     private var maxTimerValue = 0L
-    private var currentSceneName = "No scene selected"
 
     fun resetTimer() {
         logger.info("Resetting timer to 0")
@@ -21,14 +20,6 @@ object OBSSceneTimer {
 
     fun getTimerValue(): Long {
         return timerValue
-    }
-
-    fun getCurrentSceneName(): String {
-        return currentSceneName
-    }
-
-    fun setCurrentSceneName(name: String) {
-        currentSceneName = name
     }
 
     fun getTimerAsClock(): String {

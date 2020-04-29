@@ -4,6 +4,7 @@ import GUI
 import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
+import objects.OBSState
 import themes.Theme
 import java.awt.*
 import java.util.logging.Logger
@@ -89,7 +90,7 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     override fun switchedScenes() {
-        sceneLabel.text = OBSSceneTimer.getCurrentSceneName()
+        sceneLabel.text = OBSState.currentSceneName
     }
 
     private fun updateLabelsForTimer() {

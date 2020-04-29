@@ -1,7 +1,7 @@
 package gui
 
 import config.Config
-import objects.Globals
+import objects.OBSState
 import objects.OBSSceneTimer
 import objects.TScene
 import objects.TSource
@@ -14,8 +14,8 @@ class SceneTablePanelTest {
     @BeforeTest
     fun before() {
         Config.sceneLimitValues.clear()
-        Globals.scenes.clear()
-        OBSSceneTimer.setCurrentSceneName("")
+        OBSState.scenes.clear()
+        OBSState.currentSceneName = ""
         OBSSceneTimer.setMaxTimerValue(0)
     }
 
@@ -27,8 +27,8 @@ class SceneTablePanelTest {
         assertEquals(0, panel.sceneLabels.size)
 
         // When
-        Globals.scenes.add(TScene("scene1"))
-        Globals.scenes.add(TScene("scene2"))
+        OBSState.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene2"))
 
         panel.refreshScenes()
 
@@ -39,7 +39,7 @@ class SceneTablePanelTest {
     @Test
     fun testCreatingSceneInputsHashMapWithFilledConfig() {
         Config.sceneLimitValues["scene1"] = 10
-        Globals.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene1"))
         val panel = SceneTablePanel()
 
         assertEquals(1, panel.sceneInputs.size)
@@ -48,7 +48,7 @@ class SceneTablePanelTest {
         assertEquals(1, panel.sceneLabels.size)
 
         // When
-        Globals.scenes.add(TScene("scene2"))
+        OBSState.scenes.add(TScene("scene2"))
 
         panel.refreshScenes()
 
@@ -60,8 +60,8 @@ class SceneTablePanelTest {
     fun testCreatingCorrectSceneInputsHashMapWithFilledConfigAndMaxVideoSizeAvailable() {
         Config.sceneLimitValues["scene1_value_set_in_config"] = 10
         Config.sceneLimitValues["scene4_with_maxvideo_but_value_set_in_config"] = 40
-        Globals.scenes.add(TScene("scene1_value_set_in_config"))
-        Globals.scenes.add(TScene("scene4_with_maxvideo_but_value_set_in_config"))
+        OBSState.scenes.add(TScene("scene1_value_set_in_config"))
+        OBSState.scenes.add(TScene("scene4_with_maxvideo_but_value_set_in_config"))
         val panel = SceneTablePanel()
 
         assertEquals(2, panel.sceneInputs.size)
@@ -86,10 +86,10 @@ class SceneTablePanelTest {
         val scene4 = TScene("scene4_with_maxvideo_but_value_set_in_config")
         scene4.sources = sources4
 
-        Globals.scenes.add(TScene("scene1_value_set_in_config"))
-        Globals.scenes.add(scene2)
-        Globals.scenes.add(TScene("scene3"))
-        Globals.scenes.add(scene4)
+        OBSState.scenes.add(TScene("scene1_value_set_in_config"))
+        OBSState.scenes.add(scene2)
+        OBSState.scenes.add(TScene("scene3"))
+        OBSState.scenes.add(scene4)
 
         panel.refreshScenes()
 
@@ -104,10 +104,10 @@ class SceneTablePanelTest {
     @Test
     fun testScenesAreCorrectlyOrdered() {
         val panel = SceneTablePanel()
-        Globals.scenes.add(TScene("scene1"))
-        Globals.scenes.add(TScene("scene4"))
-        Globals.scenes.add(TScene("scene2"))
-        Globals.scenes.add(TScene("scene3"))
+        OBSState.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene4"))
+        OBSState.scenes.add(TScene("scene2"))
+        OBSState.scenes.add(TScene("scene3"))
 
         panel.refreshScenes()
 
@@ -121,7 +121,7 @@ class SceneTablePanelTest {
 
     @Test
     fun testInputChangePassesThroughToSceneInputsAndConfig() {
-        Globals.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene1"))
         val panel = SceneTablePanel()
 
         assertEquals(0, panel.sceneInputs["scene1"]!!.value)
@@ -137,9 +137,9 @@ class SceneTablePanelTest {
 
     @Test
     fun testInputChangeIsHandledForActiveScene() {
-        Globals.scenes.add(TScene("scene1"))
-        Globals.scenes.add(TScene("scene2"))
-        OBSSceneTimer.setCurrentSceneName("scene2")
+        OBSState.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene2"))
+        OBSState.currentSceneName = "scene2"
         val panel = SceneTablePanel()
         panel.switchedScenes()
 
@@ -158,9 +158,9 @@ class SceneTablePanelTest {
     @Test
     fun testSceneTimeLimitIsSetOnRefreshScenes() {
         Config.sceneLimitValues["scene1"] = 10
-        Globals.scenes.add(TScene("scene1"))
-        Globals.scenes.add(TScene("scene2"))
-        OBSSceneTimer.setCurrentSceneName("scene1")
+        OBSState.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene2"))
+        OBSState.currentSceneName = "scene1"
 
         val panel = SceneTablePanel()
         panel.refreshScenes()
@@ -171,15 +171,15 @@ class SceneTablePanelTest {
 
     @Test
     fun testSceneTimeLimitIsSetAfterLoadingSceneTableWithNewConfigValues() {
-        Globals.scenes.add(TScene("scene1"))
-        Globals.scenes.add(TScene("scene2"))
+        OBSState.scenes.add(TScene("scene1"))
+        OBSState.scenes.add(TScene("scene2"))
         val panel = SceneTablePanel()
 
         assertNotEquals(10, panel.sceneInputs["scene1"]!!.value)
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
         Config.sceneLimitValues["scene1"] = 10
-        OBSSceneTimer.setCurrentSceneName("scene1")
+        OBSState.currentSceneName = "scene1"
         panel.switchedScenes()
 
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())

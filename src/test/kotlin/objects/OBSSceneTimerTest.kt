@@ -34,19 +34,6 @@ class OBSSceneTimerTest {
     }
 
     @Test
-    fun setAndGetCurrentSceneName() {
-        val sceneName = "mySceneName"
-
-        OBSSceneTimer.setCurrentSceneName("nothing")
-
-        assertNotEquals(sceneName, OBSSceneTimer.getCurrentSceneName())
-
-        OBSSceneTimer.setCurrentSceneName(sceneName)
-
-        assertEquals(sceneName, OBSSceneTimer.getCurrentSceneName())
-    }
-
-    @Test
     fun setAndGetMaxTimerValue() {
         val maxTimerValue = 100L
 

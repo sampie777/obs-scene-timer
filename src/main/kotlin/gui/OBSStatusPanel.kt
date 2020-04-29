@@ -3,8 +3,8 @@ package gui
 import GUI
 import config.Config
 import config.PropertyLoader
-import objects.Globals
-import objects.OBSStatus
+import objects.OBSState
+import objects.OBSClientStatus
 import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Font
@@ -36,7 +36,7 @@ class OBSStatusPanel : JPanel(), Refreshable {
     override fun refreshOBSStatus() {
         messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
 
-        if (Globals.OBSConnectionStatus == OBSStatus.CONNECTED) {
+        if (OBSState.connectionStatus == OBSClientStatus.CONNECTED) {
             messageLabel.toolTipText = "Connected to ${Config.obsAddress}. ${settingsFileString()}"
         } else {
             messageLabel.toolTipText = settingsFileString()
@@ -45,11 +45,11 @@ class OBSStatusPanel : JPanel(), Refreshable {
     }
 
     fun getOBSStatusRepresentation(): String {
-        val obsDisplayStatus = if (Globals.OBSActivityStatus != null)
-            Globals.OBSActivityStatus else Globals.OBSConnectionStatus
+        val obsDisplayStatus = if (OBSState.clientActivityStatus != null)
+            OBSState.clientActivityStatus else OBSState.connectionStatus
 
         var obsDisplayStatusString = obsDisplayStatus!!.status
-        if (obsDisplayStatus == OBSStatus.CONNECTING) {
+        if (obsDisplayStatus == OBSClientStatus.CONNECTING) {
             obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
         }
 

@@ -29,14 +29,14 @@ class OBSClient {
 
     fun start() {
         logger.info("Connecting to OBS on: ${Config.obsAddress}")
-        Globals.OBSConnectionStatus = if (!reconnecting) OBSStatus.CONNECTING else OBSStatus.RECONNECTING
+        OBSState.connectionStatus = if (!reconnecting) OBSClientStatus.CONNECTING else OBSClientStatus.RECONNECTING
         GUI.refreshOBSStatus()
 
         controller = OBSRemoteController(Config.obsAddress, false)
 
         if (controller!!.isFailed) { // Awaits response from OBS
             logger.severe("Failed to create controller")
-            Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
+            OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
             GUI.refreshOBSStatus()
 
             if (!reconnecting) {
@@ -69,7 +69,7 @@ class OBSClient {
         try {
             controller!!.registerDisconnectCallback {
                 logger.info("Disconnected from OBS")
-                Globals.OBSConnectionStatus = OBSStatus.DISCONNECTED
+                OBSState.connectionStatus = OBSClientStatus.DISCONNECTED
                 GUI.refreshOBSStatus()
 
                 Notifications.add(Notification("Disconnected from OBS", "OBS"))
@@ -88,7 +88,7 @@ class OBSClient {
         try {
             controller!!.registerConnectCallback {
                 logger.info("Connected to OBS")
-                Globals.OBSConnectionStatus = OBSStatus.CONNECTED
+                OBSState.connectionStatus = OBSClientStatus.CONNECTED
                 GUI.refreshOBSStatus()
 
                 if (reconnecting) {
@@ -130,7 +130,7 @@ class OBSClient {
                 logger.fine("Processing scene switch event")
                 val response = responseBase as SwitchScenesResponse
 
-                if (OBSSceneTimer.getCurrentSceneName() == response.sceneName) {
+                if (OBSState.currentSceneName == response.sceneName) {
                     return@registerSwitchScenesCallback
                 }
 
@@ -174,7 +174,7 @@ class OBSClient {
         controller!!.getCurrentScene { res: ResponseBase ->
             val currentScene = res as GetCurrentSceneResponse
 
-            if (OBSSceneTimer.getCurrentSceneName() == currentScene.name) {
+            if (OBSState.currentSceneName == currentScene.name) {
                 return@getCurrentScene
             }
 
@@ -186,20 +186,20 @@ class OBSClient {
      * Set the new scene name as new current scene and notify everyone of this change
      */
     fun processNewScene(sceneName: String) {
-        OBSSceneTimer.setCurrentSceneName(sceneName)
+        logger.info("New scene: $sceneName")
+        OBSState.currentSceneName = sceneName
 
-        logger.info("New scene: " + OBSSceneTimer.getCurrentSceneName())
         OBSSceneTimer.resetTimer()
 
         GUI.switchedScenes()
         GUI.refreshTimer()
 
-        SceneLogger.log(OBSSceneTimer.getCurrentSceneName())
+        SceneLogger.log(OBSState.currentSceneName)
     }
 
     private fun getScenes() {
         logger.info("Retrieving scenes")
-        Globals.OBSActivityStatus = OBSStatus.LOADING_SCENES
+        OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENES
         GUI.refreshOBSStatus()
 
         controller!!.getScenes { response: ResponseBase ->
@@ -212,7 +212,7 @@ class OBSClient {
 
     fun setOBSScenes(scenes: List<Scene>) {
         logger.info("Set the OBS Scenes")
-        Globals.scenes.clear()
+        OBSState.scenes.clear()
         for (scene in scenes) {
             val tScene = TScene(scene.name)
 
@@ -222,13 +222,13 @@ class OBSClient {
                 tScene.sources = tSources
             }
 
-            Globals.scenes.add(tScene)
+            OBSState.scenes.add(tScene)
         }
 
         if (!loadSourceSettings()) {
             logger.info("Refreshing scenes info")
             GUI.refreshScenes()
-            Globals.OBSActivityStatus = null
+            OBSState.clientActivityStatus = null
             GUI.refreshOBSStatus()
         }
     }
@@ -244,10 +244,10 @@ class OBSClient {
             return false
         }
 
-        Globals.OBSActivityStatus = OBSStatus.LOADING_SCENE_SOURCES
+        OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENE_SOURCES
         GUI.refreshOBSStatus()
 
-        val sources: List<TSource> = Globals.scenes
+        val sources: List<TSource> = OBSState.scenes
             .flatMap { tScene: TScene -> tScene.sources }
 
         val sourceNames: MutableList<String> = sources
@@ -277,7 +277,7 @@ class OBSClient {
 
                 if (sourceNames.isEmpty()) {
                     GUI.refreshScenes()
-                    Globals.OBSActivityStatus = null
+                    OBSState.clientActivityStatus = null
                     GUI.refreshOBSStatus()
                 } else {
                     loadSourceSettings(sources, sourceNames)

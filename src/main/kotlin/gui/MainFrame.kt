@@ -4,6 +4,7 @@ import GUI
 import exitApplication
 import gui.menu.MenuBar
 import objects.OBSSceneTimer
+import objects.OBSState
 import java.awt.Image
 import java.awt.Toolkit
 import java.awt.event.WindowAdapter
@@ -45,7 +46,7 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     override fun refreshTimer() {
-        title = "${OBSSceneTimer.getCurrentSceneName()}: ${OBSSceneTimer.getTimerAsClock()}"
+        title = "${OBSState.currentSceneName}: ${OBSSceneTimer.getTimerAsClock()}"
 
         if (OBSSceneTimer.getMaxTimerValue() > 0
             && OBSSceneTimer.getTimerValue() >= OBSSceneTimer.getMaxTimerValue()) {
