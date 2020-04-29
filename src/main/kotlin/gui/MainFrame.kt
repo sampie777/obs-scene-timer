@@ -49,7 +49,7 @@ class MainFrame : JFrame(), Refreshable {
         title = "${OBSState.currentSceneName}: ${OBSSceneTimer.getTimerAsClock()}"
 
         if (OBSSceneTimer.getMaxTimerValue() > 0
-            && OBSSceneTimer.getTimerValue() >= OBSSceneTimer.getMaxTimerValue()) {
+            && OBSSceneTimer.getValue() >= OBSSceneTimer.getMaxTimerValue()) {
             iconImage = applicationIconRed
         } else {
             iconImage = applicationIconDefault

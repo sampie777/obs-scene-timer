@@ -21,7 +21,7 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 
 ## OBS Scene Timer application setup
 
-1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** for your OBS application.
+1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** (>= v4.0.0) for your OBS application.
 1. Make sure you have at least Java 8 installed.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
 1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
@@ -76,11 +76,15 @@ _Connection settings_
 
 _Application color settings_
 
+**Note**: these color settings will disappear, because they are included in the Themes. 
+
 * `timerBackgroundColor` (rgb) (default: `192,192,192`): a RGB color, separated by comma's, which will be used as the default background color for the timer.
 * `approachingLimitColor` (rgb) (default: `255,200,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit is being approached (see `smallTimeDifferenceForLimitApproaching` and `largeTimeDifferenceForLimitApproaching`).
 * `exceededLimitColor` (rgb) (default: `255,0,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit has been reached.
 
 _Timer settings_
+
+* `timerStartDelay` (milliseconds) (default: `300`): start the timer with this delay. Decrease this value if the timer value seems to be lagging behind the real scene duration. This is caused by (network) connection delays but mainly by the OBS scene transition delay. 
 
 * `smallMinLimitForLimitApproaching` (seconds) (default `20`): don't show time-limit-approaching warnings for time limits smaller than this value.
 * `smallTimeDifferenceForLimitApproaching` (seconds) (default `10`): show the time-limit-approaching warning this amount of seconds before reaching the time limit.

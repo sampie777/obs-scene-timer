@@ -1,36 +1,39 @@
 package objects
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
+import kotlin.test.*
 
 class OBSSceneTimerTest {
 
-    @Test
-    fun testResetTimer() {
-        // Given
-        OBSSceneTimer.increaseTimer()
-        OBSSceneTimer.increaseTimer()
+    @BeforeTest
+    fun before() {
+        OBSSceneTimer.stop()
+    }
 
-        assertNotEquals(0, OBSSceneTimer.getTimerValue())
+    @Test
+    fun testResetTimerValue() {
+        // Given
+        OBSSceneTimer.increase()
+        OBSSceneTimer.increase()
+
+        assertNotEquals(0, OBSSceneTimer.getValue())
 
         // When
-        OBSSceneTimer.resetTimer()
+        OBSSceneTimer.resetValue()
 
         // Then
-        assertEquals(0, OBSSceneTimer.getTimerValue())
+        assertEquals(0, OBSSceneTimer.getValue())
     }
 
     @Test
     fun testIncreaseTimer() {
         // Given
-        val valueBefore = OBSSceneTimer.getTimerValue()
+        val valueBefore = OBSSceneTimer.getValue()
 
         // When
-        OBSSceneTimer.increaseTimer()
+        OBSSceneTimer.increase()
 
         // Then
-        assertEquals(valueBefore + 1, OBSSceneTimer.getTimerValue())
+        assertEquals(valueBefore + 1, OBSSceneTimer.getValue())
     }
 
     @Test
@@ -44,5 +47,22 @@ class OBSSceneTimerTest {
         OBSSceneTimer.setMaxTimerValue(maxTimerValue)
 
         assertEquals(maxTimerValue, OBSSceneTimer.getMaxTimerValue())
+    }
+
+    @Test
+    fun testResetTimerWhenRunning() {
+        OBSSceneTimer.reset()
+        OBSSceneTimer.increase()
+        assertEquals(1, OBSSceneTimer.getValue())
+
+        OBSSceneTimer.reset()
+        assertEquals(0, OBSSceneTimer.getValue())
+    }
+
+    @Test
+    fun testStopTimerWhenRunning() {
+        OBSSceneTimer.reset()
+
+        assertTrue(OBSSceneTimer.stop())
     }
 }

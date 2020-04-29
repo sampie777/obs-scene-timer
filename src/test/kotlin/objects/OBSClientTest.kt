@@ -11,7 +11,8 @@ class OBSClientTest {
 
     @BeforeTest
     fun before() {
-        OBSSceneTimer.resetTimer()
+        OBSSceneTimer.stop()
+        OBSSceneTimer.resetValue()
         OBSState.currentSceneName = ""
         OBSState.scenes.clear()
     }
@@ -21,12 +22,12 @@ class OBSClientTest {
         val obsClient = OBSClient()
         val panelMock = GuiComponentMock()
         GUI.register(panelMock)
-        OBSSceneTimer.increaseTimer()   // 1
+        OBSSceneTimer.increase()   // 1
 
         assertFalse(panelMock.refreshScenesCalled)
         assertFalse(panelMock.switchedScenesCalled)
         assertFalse(panelMock.refreshTimerCalled)
-        assertEquals(1, OBSSceneTimer.getTimerValue())
+        assertEquals(1, OBSSceneTimer.getValue())
 
         // When
         obsClient.processNewScene("scene1")
@@ -35,7 +36,7 @@ class OBSClientTest {
         assertTrue(panelMock.switchedScenesCalled)
         assertTrue(panelMock.refreshTimerCalled)
         assertEquals("scene1", OBSState.currentSceneName)
-        assertEquals(0, OBSSceneTimer.getTimerValue())
+        assertEquals(0, OBSSceneTimer.getValue())
     }
 
     @Test

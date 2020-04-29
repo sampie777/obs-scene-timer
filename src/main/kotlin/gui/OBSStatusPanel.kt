@@ -3,8 +3,8 @@ package gui
 import GUI
 import config.Config
 import config.PropertyLoader
-import objects.OBSState
 import objects.OBSClientStatus
+import objects.OBSState
 import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Font

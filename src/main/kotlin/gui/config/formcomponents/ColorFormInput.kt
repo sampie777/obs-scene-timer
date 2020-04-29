@@ -10,7 +10,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 
 class ColorFormInput(
-    private val key: String,
+    override val key: String,
     private val labelText: String
 ) : FormInput {
     private val logger = Logger.getLogger(ColorFormInput::class.java.name)

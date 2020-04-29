@@ -13,7 +13,7 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 
 class BooleanFormInput(
-    private val key: String,
+    override val key: String,
     private val labelText: String
 ) : FormInput {
     private val logger = Logger.getLogger(BooleanFormInput::class.java.name)

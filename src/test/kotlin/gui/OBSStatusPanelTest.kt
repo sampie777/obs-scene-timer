@@ -1,8 +1,8 @@
 package gui
 
 import config.Config
-import objects.OBSState
 import objects.OBSClientStatus
+import objects.OBSState
 import kotlin.test.*
 
 class OBSStatusPanelTest {

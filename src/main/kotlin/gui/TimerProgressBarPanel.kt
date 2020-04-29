@@ -34,10 +34,10 @@ class TimerProgressBarPanel : JPanel() {
         drawImageInYCenter(g2, height, 0, drawEmptyBar())
 
         val cursorPositionPrecentage: Double
-        if (OBSSceneTimer.getTimerValue() >= OBSSceneTimer.getMaxTimerValue()) {
+        if (OBSSceneTimer.getValue() >= OBSSceneTimer.getMaxTimerValue()) {
             cursorPositionPrecentage = 1.0
         } else {
-            cursorPositionPrecentage = OBSSceneTimer.getTimerValue().toDouble() / OBSSceneTimer.getMaxTimerValue()
+            cursorPositionPrecentage = OBSSceneTimer.getValue().toDouble() / OBSSceneTimer.getMaxTimerValue()
         }
         val cursorPositionX = cursorPositionPrecentage * (width - 2.0 * paintMargin)
 

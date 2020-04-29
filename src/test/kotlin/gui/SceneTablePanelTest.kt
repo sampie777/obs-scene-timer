@@ -1,8 +1,8 @@
 package gui
 
 import config.Config
-import objects.OBSState
 import objects.OBSSceneTimer
+import objects.OBSState
 import objects.TScene
 import objects.TSource
 import javax.swing.JLabel
@@ -16,6 +16,7 @@ class SceneTablePanelTest {
         Config.sceneLimitValues.clear()
         OBSState.scenes.clear()
         OBSState.currentSceneName = ""
+        OBSSceneTimer.stop()
         OBSSceneTimer.setMaxTimerValue(0)
     }
 

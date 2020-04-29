@@ -11,7 +11,7 @@ import java.util.logging.Logger
 import javax.swing.*
 
 class ThemeSelectFormInput(
-    private val key: String,
+    override val key: String,
     private val labelText: String,
     private val values: List<ThemeWrapper>
 ) : FormInput {

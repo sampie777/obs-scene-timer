@@ -2,8 +2,8 @@ package gui
 
 import GUI
 import config.Config
-import objects.OBSState
 import objects.OBSSceneTimer
+import objects.OBSState
 import themes.Theme
 import java.awt.*
 import javax.swing.*

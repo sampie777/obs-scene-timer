@@ -13,9 +13,10 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 class StringFormInput(
-    private val key: String,
+    override val key: String,
     private val labelText: String,
-    private val allowEmpty: Boolean
+    private val allowEmpty: Boolean,
+    private val toolTipText: String = ""
 ) : FormInput {
     private val logger = Logger.getLogger(StringFormInput::class.java.name)
 
@@ -33,6 +34,7 @@ class StringFormInput(
 
         val panel = JPanel()
         panel.layout = BorderLayout(10, 10)
+        panel.toolTipText = toolTipText
         panel.add(label, BorderLayout.LINE_START)
         panel.add(input, BorderLayout.CENTER)
         return panel

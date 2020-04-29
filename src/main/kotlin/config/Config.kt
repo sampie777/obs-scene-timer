@@ -10,6 +10,7 @@ object Config {
     var obsAddress: String = "ws://localhost:4444"
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
+    var timerStartDelay: Long = -300
 
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var timerBackgroundColor: Color? = null

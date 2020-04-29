@@ -10,7 +10,7 @@ import java.util.logging.Logger
 import javax.swing.*
 
 class NumberFormInput<T : Number>(
-    private val key: String,
+    override val key: String,
     private val labelText: String,
     private val min: T?,
     private val max: T?

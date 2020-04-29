@@ -10,7 +10,8 @@ class TimerPanelTest {
 
     @BeforeTest
     fun before() {
-        OBSSceneTimer.resetTimer()
+        OBSSceneTimer.stop()
+        OBSSceneTimer.resetValue()
         OBSSceneTimer.setMaxTimerValue(0)
     }
 
@@ -23,17 +24,17 @@ class TimerPanelTest {
         Config.largeMinLimitForLimitApproaching = 100
         OBSSceneTimer.setMaxTimerValue(3)
 
-        OBSSceneTimer.increaseTimer()   // 1
+        OBSSceneTimer.increase()   // 1
         panel.refreshTimer()
 
         assertEquals(Theme.get.BACKGROUND_COLOR, panel.background)
 
-        OBSSceneTimer.increaseTimer()   // 2
+        OBSSceneTimer.increase()   // 2
         panel.refreshTimer()
 
         assertEquals(Theme.get.TIMER_APPROACHING_BACKGROUND_COLOR, panel.background)
 
-        OBSSceneTimer.increaseTimer()   // 3
+        OBSSceneTimer.increase()   // 3
         panel.refreshTimer()
 
         assertEquals(Theme.get.TIMER_EXCEEDED_BACKGROUND_COLOR, panel.background)
@@ -47,13 +48,13 @@ class TimerPanelTest {
         assertEquals("0:00:00", panel.timerUpLabel.text)
         assertFalse(panel.timerDownLabel.isVisible)
 
-        OBSSceneTimer.increaseTimer()   // 1
+        OBSSceneTimer.increase()   // 1
         panel.refreshTimer()
 
         assertEquals("0:00:01", panel.timerUpLabel.text)
         assertFalse(panel.timerDownLabel.isVisible)
 
-        OBSSceneTimer.increaseTimer()   // 2
+        OBSSceneTimer.increase()   // 2
         OBSSceneTimer.setMaxTimerValue(3)
         panel.refreshTimer()
 
@@ -61,14 +62,14 @@ class TimerPanelTest {
         assertTrue(panel.timerDownLabel.isVisible)
         assertEquals("0:00:01", panel.timerDownLabel.text)
 
-        OBSSceneTimer.increaseTimer()   // 3
+        OBSSceneTimer.increase()   // 3
         panel.refreshTimer()
 
         assertEquals("0:00:03", panel.timerUpLabel.text)
         assertTrue(panel.timerDownLabel.isVisible)
         assertEquals("0:00:00", panel.timerDownLabel.text)
 
-        OBSSceneTimer.increaseTimer()   // 4
+        OBSSceneTimer.increase()   // 4
         panel.refreshTimer()
 
         assertEquals("0:00:04", panel.timerUpLabel.text)

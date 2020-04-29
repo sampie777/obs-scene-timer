@@ -49,7 +49,7 @@ class TimerPanel : JPanel(), Refreshable {
         resetTimerButton.cursor = Cursor(Cursor.HAND_CURSOR)
         resetTimerButton.isContentAreaFilled = false
         resetTimerButton.addActionListener {
-            OBSSceneTimer.resetTimer()
+            OBSSceneTimer.reset()
         }
 
         val topPanel = JPanel()
@@ -97,7 +97,7 @@ class TimerPanel : JPanel(), Refreshable {
         timerUpLabel.text = OBSSceneTimer.getTimerAsClock()
 
         if (OBSSceneTimer.getMaxTimerValue() > 0L) {
-            val timeDifference = OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getTimerValue()
+            val timeDifference = OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getValue()
             timerDownLabel.text = getTimeAsClock(timeDifference)
             timerDownLabel.isVisible = true
         } else {
@@ -113,19 +113,19 @@ class TimerPanel : JPanel(), Refreshable {
             return
         }
 
-        if (OBSSceneTimer.getTimerValue() >= sceneMaxDuration) {
+        if (OBSSceneTimer.getValue() >= sceneMaxDuration) {
             logger.severe("Timer exceeded!")
             setColorsFor(TimerState.EXCEEDED)
 
         } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
-            && OBSSceneTimer.getTimerValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
+            && OBSSceneTimer.getValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
         ) {
             logger.warning("Timer almost exceeded!")
             setColorsFor(TimerState.APPROACHING)
 
         } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
             && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
-            && OBSSceneTimer.getTimerValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
+            && OBSSceneTimer.getValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
         ) {
             logger.warning("Timer almost exceeded!")
             setColorsFor(TimerState.APPROACHING)

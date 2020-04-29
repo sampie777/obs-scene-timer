@@ -23,8 +23,6 @@ class OBSClient {
     private var logger = Logger.getLogger(OBSClient::class.java.name)
 
     private var controller: OBSRemoteController? = null
-    private var timerCounter = Timer()
-    private val sceneListenerTimerInterval = 1000
     private var reconnecting: Boolean = false
 
     fun start() {
@@ -99,8 +97,6 @@ class OBSClient {
                 getScenes()
 
                 getCurrentSceneFromOBS()
-
-                startSceneWatcherTimer()
             }
         } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerConnectCallback")
@@ -146,26 +142,6 @@ class OBSClient {
         }
     }
 
-    private fun startSceneWatcherTimer() {
-        try {
-            logger.info("Trying to cancel timer")
-            timerCounter.cancel()
-            timerCounter = Timer()
-            logger.info("Timer canceled")
-        } catch (t: Throwable) {
-            t.printStackTrace()
-        }
-
-        timerCounter.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                OBSSceneTimer.increaseTimer()
-                GUI.refreshTimer()
-
-                Config.save()
-            }
-        }, 0, sceneListenerTimerInterval.toLong())
-    }
-
     /**
      * Actively request the current scene from BOS
      */
@@ -189,7 +165,7 @@ class OBSClient {
         logger.info("New scene: $sceneName")
         OBSState.currentSceneName = sceneName
 
-        OBSSceneTimer.resetTimer()
+        OBSSceneTimer.reset()
 
         GUI.switchedScenes()
         GUI.refreshTimer()

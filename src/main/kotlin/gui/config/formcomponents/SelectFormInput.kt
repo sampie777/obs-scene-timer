@@ -10,7 +10,7 @@ import java.util.logging.Logger
 import javax.swing.*
 
 class SelectFormInput<T : Any>(
-    private val key: String,
+    override val key: String,
     private val labelText: String,
     private val values: List<T>
 ) : FormInput {
