@@ -3,13 +3,12 @@ package gui
 import GUI
 import exitApplication
 import gui.menu.MenuBar
+import gui.utils.loadIcon
 import objects.OBSSceneTimer
 import objects.OBSState
 import java.awt.Image
-import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.net.URL
 import java.util.logging.Logger
 import javax.swing.JFrame
 
@@ -19,11 +18,21 @@ class MainFrame : JFrame(), Refreshable {
     private val applicationIconDefault: Image?
     private val applicationIconRed: Image?
 
+    companion object {
+        fun create(): MainFrame = MainFrame()
+
+        fun createAndShow(): MainFrame {
+            val frame = create()
+            frame.isVisible = true
+            return frame
+        }
+    }
+
     init {
         GUI.register(this)
 
-        applicationIconDefault = loadApplicationIcon("/icon-512.png")
-        applicationIconRed = loadApplicationIcon("/icon-red-512.png")
+        applicationIconDefault = loadIcon("/icon-512.png")
+        applicationIconRed = loadIcon("/icon-red-512.png")
 
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(winEvt: WindowEvent) {
@@ -54,15 +63,5 @@ class MainFrame : JFrame(), Refreshable {
         } else {
             iconImage = applicationIconDefault
         }
-    }
-
-    private fun loadApplicationIcon(iconPath: String): Image? {
-        val resource: URL? = javaClass.getResource(iconPath)
-        if (resource == null) {
-            logger.warning("Could not find icon: $iconPath")
-            return null
-        }
-
-        return Toolkit.getDefaultToolkit().getImage(resource)
     }
 }

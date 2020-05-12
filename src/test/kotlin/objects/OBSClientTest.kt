@@ -19,7 +19,6 @@ class OBSClientTest {
 
     @Test
     fun testProcessNewScene() {
-        val obsClient = OBSClient()
         val panelMock = GuiComponentMock()
         GUI.register(panelMock)
         OBSSceneTimer.increase()   // 1
@@ -30,7 +29,7 @@ class OBSClientTest {
         assertEquals(1, OBSSceneTimer.getValue())
 
         // When
-        obsClient.processNewScene("scene1")
+        OBSClient.processNewScene("scene1")
 
         assertFalse(panelMock.refreshScenesCalled)
         assertTrue(panelMock.switchedScenesCalled)
@@ -41,7 +40,6 @@ class OBSClientTest {
 
     @Test
     fun testSetOBSScenes() {
-        val obsClient = OBSClient()
         OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENES
         val panelMock = GuiComponentMock()
         GUI.register(panelMock)
@@ -59,7 +57,7 @@ class OBSClientTest {
         scenes.add(Scene())
 
         // When
-        obsClient.setOBSScenes(scenes)
+        OBSClient.processOBSScenesToOBSStateScenes(scenes)
 
         assertTrue(panelMock.refreshScenesCalled)
         assertFalse(panelMock.switchedScenesCalled)
@@ -71,17 +69,15 @@ class OBSClientTest {
 
     @Test
     fun testGetVideoLength() {
-        val obsClient = OBSClient()
         val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
 
-        assertEquals(2, obsClient.getVideoLength(filename))
+        assertEquals(2, OBSClient.getVideoLength(filename))
     }
 
     @Test
     fun testGetVideoLengthForNonExistingVideo() {
-        val obsClient = OBSClient()
         val filename = "nonexistingfile"
 
-        assertEquals(0, obsClient.getVideoLength(filename))
+        assertEquals(0, OBSClient.getVideoLength(filename))
     }
 }

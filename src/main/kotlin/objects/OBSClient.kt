@@ -12,14 +12,13 @@ import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse
 import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse
 import net.twasi.obsremotejava.requests.ResponseBase
-import objects.notifications.Notification
 import objects.notifications.Notifications
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.Logger
 
-class OBSClient {
+object OBSClient {
     private var logger = Logger.getLogger(OBSClient::class.java.name)
 
     private var controller: OBSRemoteController? = null
@@ -37,14 +36,7 @@ class OBSClient {
         // Await response from OBS
         if (controller!!.isFailed) {
             logger.severe("Failed to create controller")
-            OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
-            GUI.refreshOBSStatus()
-
-            if (!reconnecting) {
-                Notifications.add("Could not connect to OBS", "OBS")
-            }
-
-            startReconnectingTimeout()
+            processFailedConnection("Could not connect to OBS", reconnect = true)
         }
 
         registerCallbacks()
@@ -53,6 +45,19 @@ class OBSClient {
             controller!!.await()
         } catch (e: InterruptedException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun processFailedConnection(message: String, reconnect: Boolean = true) {
+        OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
+        GUI.refreshOBSStatus()
+
+        if (!reconnecting) {
+            Notifications.add(message, "OBS")
+        }
+
+        if (reconnect) {
+            startReconnectingTimeout()
         }
     }
 
@@ -89,7 +94,7 @@ class OBSClient {
                 OBSState.connectionStatus = OBSClientStatus.DISCONNECTED
                 GUI.refreshOBSStatus()
 
-                Notifications.add(Notification("Disconnected from OBS", "OBS"))
+                Notifications.add("Disconnected from OBS", "OBS")
 
                 startReconnectingTimeout()
             }
@@ -141,7 +146,7 @@ class OBSClient {
             logger.severe("Failed to create OBS callback: registerConnectionFailedCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register connectionFailed callback: failures during connection won't be shown",
+                "Failed to register connectionFailed callback: connection failures won't be shown",
                 "OBS"
             )
         }
@@ -221,11 +226,11 @@ class OBSClient {
             val res = response as GetSceneListResponse
             logger.info(res.scenes.size.toString() + " scenes retrieved")
 
-            setOBSScenes(res.scenes)
+            processOBSScenesToOBSStateScenes(res.scenes)
         }
     }
 
-    fun setOBSScenes(scenes: List<Scene>) {
+    fun processOBSScenesToOBSStateScenes(scenes: List<Scene>) {
         logger.info("Set the OBS Scenes")
         OBSState.scenes.clear()
         for (scene in scenes) {

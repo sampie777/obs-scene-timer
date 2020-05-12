@@ -1,8 +1,8 @@
 package gui
 
 import GUI
-import createImageIcon
 import gui.notifications.NotificationFrame
+import gui.utils.createImageIcon
 import gui.utils.getMainFrameComponent
 import objects.notifications.Notifications
 import themes.Theme

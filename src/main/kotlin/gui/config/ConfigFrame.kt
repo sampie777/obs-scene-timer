@@ -1,12 +1,12 @@
 package gui.config
 
 import java.awt.BorderLayout
-import java.awt.Frame
 import java.util.logging.Logger
 import javax.swing.JDialog
+import javax.swing.JFrame
 import javax.swing.JPanel
 
-class ConfigFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
+class ConfigFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
     private val logger = Logger.getLogger(ConfigFrame::class.java.name)
 
     private val configEditPanel: ConfigEditPanel = ConfigEditPanel()

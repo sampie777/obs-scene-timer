@@ -76,4 +76,8 @@ object Config {
             Notifications.add("Could not set configuration setting: $key", "Configuration")
         }
     }
+
+    fun enableWriteToFile(value: Boolean) {
+        PropertyLoader.writeToFile = value
+    }
 }

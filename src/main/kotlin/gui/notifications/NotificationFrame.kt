@@ -4,10 +4,9 @@ import GUI
 import gui.Refreshable
 import java.awt.BorderLayout
 import java.awt.Component
-import java.awt.Frame
 import javax.swing.*
 
-class NotificationFrame(private val parentFrame: Frame?) : JDialog(parentFrame), Refreshable {
+class NotificationFrame(private val parentFrame: JFrame?) : JDialog(parentFrame), Refreshable {
 
     init {
         GUI.register(this)

@@ -28,4 +28,6 @@ class TScene {
     constructor(name: String?) {
         this.name = name ?: ""
     }
+
+    override fun toString(): String = name
 }

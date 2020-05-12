@@ -10,15 +10,15 @@ fun main(args: Array<String>) {
     logger.info("Starting application")
     logger.info("Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath)
 
+    Config.enableWriteToFile(true)
     Config.load()
     Config.save()
 
     Theme.init()
 
     EventQueue.invokeLater {
-        MainFrame()
+        MainFrame.createAndShow()
     }
 
-    val obsClient = OBSClient()
-    obsClient.start()
+    OBSClient.start()
 }

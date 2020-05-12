@@ -33,6 +33,7 @@ class ConfigEditPanel : JPanel() {
                 null
             )
         )
+
         formComponents.add(HeaderFormComponent("Theme"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
 

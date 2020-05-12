@@ -4,11 +4,10 @@ import gui.utils.ClickableLinkComponent
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font
-import java.awt.Frame
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-class InfoFrame(private val parentFrame: Frame?) : JDialog(parentFrame) {
+class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
 
     init {
         createGui()
