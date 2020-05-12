@@ -34,7 +34,8 @@ class OBSClient {
 
         controller = OBSRemoteController(Config.obsAddress, false, obsPassword)
 
-        if (controller!!.isFailed) { // Awaits response from OBS
+        // Await response from OBS
+        if (controller!!.isFailed) {
             logger.severe("Failed to create controller")
             OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
             GUI.refreshOBSStatus()
@@ -66,6 +67,22 @@ class OBSClient {
     }
 
     private fun registerCallbacks() {
+        try {
+            controller!!.registerOnError { message, throwable ->
+                logger.severe("OBS Controller gave an error: $message")
+                throwable.printStackTrace()
+
+                Notifications.add("OBS Connection module gave an unexpected error: $message", "OBS")
+            }
+        } catch (t: Throwable) {
+            logger.severe("Failed to create OBS callback: registerOnError")
+            t.printStackTrace()
+            Notifications.add(
+                "Failed to register error callback: cannot notify when unexpected errors occur",
+                "OBS"
+            )
+        }
+
         try {
             controller!!.registerDisconnectCallback {
                 logger.info("Disconnected from OBS")
@@ -112,8 +129,12 @@ class OBSClient {
         try {
             controller!!.registerConnectionFailedCallback { message: String ->
                 logger.severe("Failed to connect to OBS: $message")
-                Globals.OBSConnectionFailedMessage = message
-                Globals.OBSConnectionStatus = OBSStatus.CONNECTION_FAILED
+                OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
+                Notifications.add(
+                    "Failed to connect to OBS: $message",
+                    "OBS"
+                )
+
                 GUI.refreshOBSStatus()
             }
         } catch (t: Throwable) {

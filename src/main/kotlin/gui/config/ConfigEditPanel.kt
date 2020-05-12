@@ -24,7 +24,7 @@ class ConfigEditPanel : JPanel() {
     private fun createFormInputs() {
         formComponents.add(HeaderFormComponent("OBS"))
         formComponents.add(StringFormInput("obsAddress", "OBS websocket address", false))
-//        formComponents.add(StringFormInput("obsPassword", "<html><s>OBS websocket password</s></html>", true, toolTipText = "Currently not yet implemented"))
+        formComponents.add(StringFormInput("obsPassword", "OBS websocket password", true, toolTipText = "This value is not stored encrypted"))
         formComponents.add(
             NumberFormInput<Long>(
                 "obsReconnectionTimeout",
