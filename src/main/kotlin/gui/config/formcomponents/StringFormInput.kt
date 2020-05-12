@@ -27,10 +27,12 @@ class StringFormInput(
 
         val label = JLabel(labelText)
         label.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 12)
+        label.toolTipText = toolTipText
 
         input.text = configValue
         input.preferredSize = Dimension(100, 20)
         input.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
+        input.toolTipText = toolTipText
 
         val panel = JPanel()
         panel.layout = BorderLayout(10, 10)

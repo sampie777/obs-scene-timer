@@ -29,7 +29,7 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 
 ## How it works
 
-1. The **application will connect** on startup with an (already) running OBS websocket server, as specified in the properties.
+1. The **application will connect** on start up with an (already) running OBS websocket server, as specified in the properties.
 1. All available OBS **scenes will be loaded**, and the time limit for each scene can be adjusted. If you are running OBS on the same computer as this application, the application will try to automatically set the maximum time limit for each scene with a video file(s) as source. Note that it might not be able to do this magic for all video sources.
 1. When the current **scene changes, the timer will reset** and start counting again from 0 seconds. You can also reset the timer to 0 by clicking the reset button. Also, the list of scenes will be reloaded.
 1. When a time limit greater than 0 is set for the current scene, a **countdown** will also be displayed including a track/progress bar.
@@ -71,16 +71,16 @@ Don't run the application while editing the _user.properties_ file (and before s
 _Connection settings_
 
 * `obsAddress` (string) (default: `ws://localhost:4444`): holds the full address of the OBS websocket server. This server can be on any computer in the same network of even over internet, as long as it can be reached by the obs-scene-timer application.
-* `obsPassword` (string) (default: `<empty>`): the password needed to connect to the OBS websocket. **Note**: this isn't yet implemented, as we wait for the next release of `obs-websocket-java`.
+* `obsPassword` (string) (default: `<empty>`): the password needed to connect to the OBS websocket. Please note that this **password is stored as plain text** in the properties file and therefore is readable by anyone with access to this file.
 * `obsReconnectionTimeout` (milliseconds) (default: `3000`): if connection with OBS failed or is lost, OBS Scene Timer will try to reconnect to OBS after this time in milliseconds.
 
 _Application color settings_
 
 **Note**: these color settings will disappear, because they are included in the Themes. 
 
-* `timerBackgroundColor` (rgb) (default: `192,192,192`): a RGB color, separated by comma's, which will be used as the default background color for the timer.
-* `approachingLimitColor` (rgb) (default: `255,200,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit is being approached (see `smallTimeDifferenceForLimitApproaching` and `largeTimeDifferenceForLimitApproaching`).
-* `exceededLimitColor` (rgb) (default: `255,0,0`): a RGB color, separated by comma's, which will be used as the background color for the timer when it warns that the time limit has been reached.
+* `timerBackgroundColor` (rgb) (default: `192,192,192`): a RGB color, separated by commas, which will be used as the default background color for the timer.
+* `approachingLimitColor` (rgb) (default: `255,200,0`): a RGB color, separated by commas, which will be used as the background color for the timer when it warns that the time limit is being approached (see `smallTimeDifferenceForLimitApproaching` and `largeTimeDifferenceForLimitApproaching`).
+* `exceededLimitColor` (rgb) (default: `255,0,0`): an RGB color, separated by commas, which will be used as the background color for the timer when it warns that the time limit has been reached.
 
 _Timer settings_
 
