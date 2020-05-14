@@ -189,7 +189,7 @@
                                 <!--suppress UnresolvedMavenProperty -->
                                 <fileVersion>${project.baseVersion}.0</fileVersion>
                                 <txtFileVersion>-</txtFileVersion>
-                                <fileDescription>${project.name} executable</fileDescription>
+                                <fileDescription>${project.name}</fileDescription>
                                 <copyright>${author}</copyright>
                                 <!--suppress UnresolvedMavenProperty -->
                                 <productVersion>${project.baseVersion}.0</productVersion>
