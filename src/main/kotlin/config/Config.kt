@@ -34,7 +34,7 @@ object Config {
     var enableSceneTimestampLogger: Boolean = false
 
     var theme: String = "LightTheme"
-    var windowRestoreLastPosition: Boolean = false
+    var windowRestoreLastPosition: Boolean = true
     var mainWindowLocation: Point = Point(0, 0)
     var mainWindowSize: Dimension = Dimension(900, 600)
     var mainWindowsIsMaximized: Boolean = false
