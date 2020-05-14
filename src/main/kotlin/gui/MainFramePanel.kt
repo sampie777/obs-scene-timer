@@ -1,6 +1,7 @@
 package gui
 
 import GUI
+import config.Config
 import gui.notifications.NotificationFrame
 import gui.utils.createImageIcon
 import gui.utils.getMainFrameComponent
@@ -55,6 +56,14 @@ class MainFramePanel : JSplitPane(), Refreshable {
 
         setLeftComponent(leftPanel)
         setRightComponent(TimerPanel())
+
+        if (Config.windowRestoreLastPosition) {
+            dividerLocation = Config.mainPanelDividerLocation
+        }
+    }
+
+    override fun windowClosing() {
+        Config.mainPanelDividerLocation = dividerLocation
     }
 
     override fun refreshNotifications() {

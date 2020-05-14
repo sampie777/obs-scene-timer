@@ -1,6 +1,7 @@
 package gui
 
 import GUI
+import config.Config
 import exitApplication
 import gui.menu.MenuBar
 import gui.utils.loadIcon
@@ -36,6 +37,7 @@ class MainFrame : JFrame(), Refreshable {
 
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(winEvt: WindowEvent) {
+                GUI.windowClosing()
                 exitApplication()
             }
         })
@@ -46,12 +48,36 @@ class MainFrame : JFrame(), Refreshable {
     private fun initGUI() {
         add(MainFramePanel())
 
+        if (Config.windowRestoreLastPosition) {
+            location = Config.mainWindowLocation
+            size = Config.mainWindowSize
+
+            if (Config.mainWindowsIsMaximized) {
+                extendedState = extendedState or MAXIMIZED_BOTH
+            }
+        } else {
+            setSize(900, 600)
+        }
+
         jMenuBar = MenuBar()
-        setSize(900, 600)
         title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
-        isVisible = true
         iconImage = applicationIconDefault
+    }
+
+    override fun windowClosing() {
+        saveWindowPosition()
+    }
+
+    fun saveWindowPosition() {
+        Config.mainWindowLocation = location
+
+        if (extendedState == MAXIMIZED_BOTH) {
+            Config.mainWindowsIsMaximized = true
+        } else {
+            Config.mainWindowsIsMaximized = false
+            Config.mainWindowSize = size
+        }
     }
 
     override fun refreshTimer() {

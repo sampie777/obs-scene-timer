@@ -8,4 +8,6 @@ interface Refreshable {
     fun refreshOBSStatus() {}
 
     fun refreshNotifications() {}
+
+    fun windowClosing() {}
 }

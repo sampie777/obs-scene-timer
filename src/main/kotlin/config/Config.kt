@@ -2,6 +2,8 @@ package config
 
 import objects.notifications.Notifications
 import java.awt.Color
+import java.awt.Dimension
+import java.awt.Point
 import java.util.logging.Logger
 
 object Config {
@@ -32,6 +34,11 @@ object Config {
     var enableSceneTimestampLogger: Boolean = false
 
     var theme: String = "LightTheme"
+    var windowRestoreLastPosition: Boolean = false
+    var mainWindowLocation: Point = Point(0, 0)
+    var mainWindowSize: Dimension = Dimension(900, 600)
+    var mainWindowsIsMaximized: Boolean = false
+    var mainPanelDividerLocation: Int = 370
 
     fun load() {
         try {

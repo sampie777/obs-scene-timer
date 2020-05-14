@@ -1,6 +1,9 @@
 import gui.Refreshable
+import java.util.logging.Logger
 
 object GUI {
+    private val logger = Logger.getLogger(GUI::class.java.name)
+
     private val components: HashSet<Refreshable> = HashSet()
 
     fun refreshTimer() {
@@ -33,8 +36,15 @@ object GUI {
         }
     }
 
+    fun windowClosing() {
+        for (component in components) {
+            component.windowClosing()
+        }
+    }
+
 
     fun register(component: Refreshable) {
+        logger.info("Registering component: ${component::class.java}")
         components.add(component)
     }
 
@@ -43,10 +53,12 @@ object GUI {
     }
 
     fun unregister(component: Refreshable) {
+        logger.info("Unregistering component: ${component::class.java}")
         components.remove(component)
     }
 
     fun unregisterAll() {
+        logger.info("Unregistering all (${components.size}) components")
         components.clear()
     }
 }

@@ -34,8 +34,9 @@ class ConfigEditPanel : JPanel() {
             )
         )
 
-        formComponents.add(HeaderFormComponent("Theme"))
+        formComponents.add(HeaderFormComponent("GUI"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
+        formComponents.add(BooleanFormInput("windowRestoreLastPosition", "Restore window position on start up"))
 
         formComponents.add(HeaderFormComponent("Timer styling"))
         formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size (pt.)", 0, null))
