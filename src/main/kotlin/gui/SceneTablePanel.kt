@@ -57,6 +57,11 @@ class SceneTablePanel : JPanel(), Refreshable {
         add(scrollPanel, BorderLayout.CENTER)
     }
 
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
+    }
+
     private fun createSceneTable() {
         sceneLabels.clear()
         sceneInputs.clear()

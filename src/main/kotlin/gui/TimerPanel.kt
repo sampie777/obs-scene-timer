@@ -23,7 +23,7 @@ class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
     val sceneLabel: JLabel = JLabel("Initializing...")
-    val resetTimerButton = JButton("Reset")
+    private val resetTimerButton = JButton("Reset")
     val timerUpLabel: JLabel = JLabel()
     val timerDownLabel: JLabel = JLabel()
 
@@ -81,6 +81,11 @@ class TimerPanel : JPanel(), Refreshable {
         timersPanel.add(Box.createVerticalGlue())
         timersPanel.add(TimerProgressBarPanel())
         add(timersPanel, BorderLayout.CENTER)
+    }
+
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
     }
 
     override fun refreshTimer() {

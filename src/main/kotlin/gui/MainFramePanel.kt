@@ -62,6 +62,11 @@ class MainFramePanel : JSplitPane(), Refreshable {
         }
     }
 
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
+    }
+
     override fun windowClosing() {
         Config.mainPanelDividerLocation = dividerLocation
     }
