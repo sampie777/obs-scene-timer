@@ -7,11 +7,20 @@ import gui.menu.MenuBar
 import gui.utils.loadIcon
 import objects.OBSSceneTimer
 import objects.OBSState
+import java.awt.Component
 import java.awt.Image
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.util.logging.Logger
 import javax.swing.JFrame
+
+class MainFrameWindowAdapter(private val frame: MainFrame) : WindowAdapter() {
+    override fun windowClosing(winEvt: WindowEvent) {
+        frame.saveWindowPosition()
+        GUI.windowClosing(frame)
+        exitApplication()
+    }
+}
 
 class MainFrame : JFrame(), Refreshable {
     private val logger = Logger.getLogger(MainFrame::class.java.name)
@@ -35,12 +44,7 @@ class MainFrame : JFrame(), Refreshable {
         applicationIconDefault = loadIcon("/icon-512.png")
         applicationIconRed = loadIcon("/icon-red-512.png")
 
-        addWindowListener(object : WindowAdapter() {
-            override fun windowClosing(winEvt: WindowEvent) {
-                GUI.windowClosing()
-                exitApplication()
-            }
-        })
+        addWindowListener(MainFrameWindowAdapter(this))
 
         initGUI()
     }
@@ -63,10 +67,6 @@ class MainFrame : JFrame(), Refreshable {
         title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
         iconImage = applicationIconDefault
-    }
-
-    override fun windowClosing() {
-        saveWindowPosition()
     }
 
     fun saveWindowPosition() {

@@ -1,5 +1,7 @@
 package gui
 
+import java.awt.Component
+
 interface Refreshable {
     fun refreshTimer() {}
     fun switchedScenes() {}
@@ -9,5 +11,5 @@ interface Refreshable {
 
     fun refreshNotifications() {}
 
-    fun windowClosing() {}
+    fun windowClosing(window: Component?) {}
 }

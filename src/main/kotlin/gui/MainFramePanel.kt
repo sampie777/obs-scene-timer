@@ -8,6 +8,7 @@ import gui.utils.getMainFrameComponent
 import objects.notifications.Notifications
 import themes.Theme
 import java.awt.BorderLayout
+import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.util.logging.Logger
@@ -67,7 +68,7 @@ class MainFramePanel : JSplitPane(), Refreshable {
         GUI.unregister(this)
     }
 
-    override fun windowClosing() {
+    override fun windowClosing(window: Component?) {
         Config.mainPanelDividerLocation = dividerLocation
     }
 

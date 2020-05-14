@@ -31,7 +31,7 @@ class MainFramePanelTest {
         val panel = MainFramePanel()
         panel.dividerLocation = 100
 
-        panel.windowClosing()
+        panel.windowClosing(null)
 
         assertEquals(100, Config.mainPanelDividerLocation)
     }

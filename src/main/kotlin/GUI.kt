@@ -1,4 +1,5 @@
 import gui.Refreshable
+import java.awt.Component
 import java.util.logging.Logger
 
 object GUI {
@@ -7,38 +8,44 @@ object GUI {
     private val components: HashSet<Refreshable> = HashSet()
 
     fun refreshTimer() {
-        for (component in components) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
             component.refreshTimer()
         }
     }
 
     fun switchedScenes() {
-        for (component in components) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
             component.switchedScenes()
         }
     }
 
     fun refreshScenes() {
-        for (component in components) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
             component.refreshScenes()
         }
     }
 
     fun refreshOBSStatus() {
-        for (component in components) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
             component.refreshOBSStatus()
         }
     }
 
     fun refreshNotifications() {
-        for (component in components) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
             component.refreshNotifications()
         }
     }
 
-    fun windowClosing() {
-        for (component in components) {
-            component.windowClosing()
+    fun windowClosing(window: Component?) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
+            component.windowClosing(window)
         }
     }
 
@@ -61,4 +68,6 @@ object GUI {
         logger.info("Unregistering all (${components.size}) components")
         components.clear()
     }
+
+    fun registeredComponents() = components
 }
