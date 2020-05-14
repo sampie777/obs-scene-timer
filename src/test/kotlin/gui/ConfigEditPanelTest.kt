@@ -32,7 +32,7 @@ class ConfigEditPanelTest {
 
     @Test
     fun testComponentWithInvalidValuesWillGiveErrorNotification() {
-        Notifications.list.clear()
+        Notifications.clear()
         // Set invalid config value
         Config.set("timerCountUpFontSize", -9000)
 
