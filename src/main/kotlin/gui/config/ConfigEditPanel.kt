@@ -24,7 +24,14 @@ class ConfigEditPanel : JPanel() {
     private fun createFormInputs() {
         formComponents.add(HeaderFormComponent("OBS"))
         formComponents.add(StringFormInput("obsAddress", "OBS websocket address", false))
-        formComponents.add(StringFormInput("obsPassword", "OBS websocket password", true, toolTipText = "This value is not stored encrypted"))
+        formComponents.add(
+            StringFormInput(
+                "obsPassword",
+                "OBS websocket password",
+                true,
+                toolTipText = "This value is not stored encrypted"
+            )
+        )
         formComponents.add(
             NumberFormInput<Long>(
                 "obsReconnectionTimeout",
@@ -90,7 +97,14 @@ class ConfigEditPanel : JPanel() {
             )
         )
 
-        formComponents.add(HeaderFormComponent("Scene logger"))
+        formComponents.add(HeaderFormComponent("Logging"))
+        formComponents.add(
+            BooleanFormInput(
+                "enableApplicationLoggingToFile",
+                "Enable application logging to a file",
+                toolTipText = "Location of this logfile is shown in the Information screen, under Menu"
+            )
+        )
         formComponents.add(BooleanFormInput("enableSceneTimestampLogger", "Enable scene change logging"))
     }
 

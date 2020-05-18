@@ -18,6 +18,11 @@ object LogService {
 
     @Throws(IOException::class, IllegalAccessException::class)
     fun setup(args: Array<String>) {
+        if (!Config.enableApplicationLoggingToFile) {
+            logger.info("File logging is disabled")
+            return
+        }
+
         // Create logging directory
         val logDirectoryPath = Paths.get(System.getProperty("java.io.tmpdir"), "OBSSceneTimer")
         if (!logDirectoryPath.toFile().exists()) {

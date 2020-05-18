@@ -12,20 +12,17 @@ import kotlin.Exception
 fun main(args: Array<String>) {
     val logger = Logger.getLogger("Application")
     logger.info("Starting application")
-    LogService.logBuffer.add(LogRecord(Level.INFO, "Starting application"))
     logger.info("Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath)
-    LogService.logBuffer.add(LogRecord(Level.INFO, "Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath))
-
-    try {
-        LogService.setup(args)
-    } catch (e: Exception) {
-        logger.severe("Failed to initiate logging: $e")
-        e.printStackTrace()
-        Notifications.add("Failed to setup logging service", "Application")
-    }
+    LogService.logBuffer.add(
+        LogRecord(
+            Level.INFO,
+            "Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath
+        )
+    )
 
     Config.enableWriteToFile(true)
     Config.load()
+    setupLogging(args)  // Setup logging as soon as possible, but because it depends on Config, just let Config load first
     Config.save()
 
     Theme.init()
@@ -35,4 +32,15 @@ fun main(args: Array<String>) {
     }
 
     OBSClient.start()
+}
+
+private fun setupLogging(args: Array<String>) {
+    val logger = Logger.getLogger("Application")
+    try {
+        LogService.setup(args)
+    } catch (e: Exception) {
+        logger.severe("Failed to initiate logging: $e")
+        e.printStackTrace()
+        Notifications.add("Failed to setup logging service", "Application")
+    }
 }
