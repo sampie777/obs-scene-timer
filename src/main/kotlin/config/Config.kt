@@ -32,6 +32,8 @@ object Config {
     var sceneLimitValues: HashMap<String, Int> = HashMap()
 
     var enableSceneTimestampLogger: Boolean = false
+    var enableApplicationLoggingToFile: Boolean = false
+    var maxLogFileSize: Int = 768 * 1024    // 750 kB
 
     var theme: String = "LightTheme"
     var windowRestoreLastPosition: Boolean = true

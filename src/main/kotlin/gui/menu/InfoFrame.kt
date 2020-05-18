@@ -34,15 +34,19 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         )
         sourceCodeLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
+        val applicationLoggingInfoLabel = JLabel("<html>Application log file location: ${LogService.getLogFile()?.absolutePath}</html>")
+        applicationLoggingInfoLabel.font = Font(Theme.get.FONT_FAMILY, Font.ITALIC, 12)
+
         mainPanel.add(versionLabel)
         mainPanel.add(Box.createRigidArea(Dimension(0, 10)))
         mainPanel.add(sourceCodeLabel)
+        mainPanel.add(Box.createRigidArea(Dimension(0, 20)))
+        mainPanel.add(applicationLoggingInfoLabel)
 
         title = "Information"
-        setSize(400, 160)
+        pack()
         setLocationRelativeTo(parentFrame)
         modalityType = ModalityType.APPLICATION_MODAL
-        isResizable = false
         isVisible = true
     }
 }

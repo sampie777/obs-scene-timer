@@ -60,6 +60,14 @@ When connection to OBS is lost, OBS Scene Timer will continue keeping track of t
 
 OBS Scene Timer will not attempt to reconnect immediately, but during a continuous interval of 3 seconds (as specified in the properties).
 
+#### Logging
+
+Application logging is done to the console and to a file. Location of this file is displayed in the Info window. By default, the log level is INFO. For debug logging, pass the `-v` argument when running the application, like so: 
+
+```bash
+java -jar obs-scene-timer.jar -v
+```
+
 ### Properties
 
 In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via Application menu -> Settings, the new values will also be saved to this _user.properties_ file. By deleting this file, all properties are reset to default. 
