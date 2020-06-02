@@ -44,7 +44,7 @@ object LogService {
         val applicationLogger = Logger.getLogger("")
         applicationLogger.addHandler(logFileHandler)
         if (args.contains("-v")) {
-            applicationLogger.level = Level.FINEST
+            applicationLogger.level = Level.FINER
             logger.info("Debug logging turned on")
         } else {
             applicationLogger.level = Level.INFO
