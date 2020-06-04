@@ -3,20 +3,15 @@ package gui
 import GUI
 import config.Config
 import getTimeAsClock
+import getTimerState
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TimerState
 import themes.Theme
 import java.awt.*
 import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
-
-
-enum class TimerState {
-    NEUTRAL,
-    APPROACHING,
-    EXCEEDED
-}
 
 
 class TimerPanel : JPanel(), Refreshable {
@@ -111,33 +106,7 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     private fun updateColorsForTimer() {
-        val sceneMaxDuration = OBSSceneTimer.getMaxTimerValue()
-
-        if (sceneMaxDuration == 0L) {
-            setColorsFor(TimerState.NEUTRAL)
-            return
-        }
-
-        if (OBSSceneTimer.getValue() >= sceneMaxDuration) {
-            logger.severe("Timer exceeded!")
-            setColorsFor(TimerState.EXCEEDED)
-
-        } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
-            && OBSSceneTimer.getValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
-        ) {
-            logger.warning("Timer almost exceeded!")
-            setColorsFor(TimerState.APPROACHING)
-
-        } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
-            && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
-            && OBSSceneTimer.getValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
-        ) {
-            logger.warning("Timer almost exceeded!")
-            setColorsFor(TimerState.APPROACHING)
-
-        } else {
-            setColorsFor(TimerState.NEUTRAL)
-        }
+        setColorsFor(getTimerState())
     }
 
     private fun setColorsFor(state: TimerState) {

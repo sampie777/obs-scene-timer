@@ -1,4 +1,6 @@
 import config.Config
+import objects.TimerState
+import objects.OBSSceneTimer
 import objects.SceneLogger
 import java.io.File
 import java.io.UnsupportedEncodingException
@@ -21,6 +23,32 @@ fun getTimeAsClock(value: Long): String {
     val timerMinutes = (positiveValue - timerHours * 3600) / 60
     val timerSeconds = positiveValue - timerHours * 3600 - timerMinutes * 60
     return String.format("%s%d:%02d:%02d", signString, timerHours, timerMinutes, timerSeconds)
+}
+
+fun getTimerState(): TimerState {
+    val sceneMaxDuration = OBSSceneTimer.getMaxTimerValue()
+
+    if (sceneMaxDuration == 0L) {
+        return TimerState.NEUTRAL
+    }
+
+    if (OBSSceneTimer.getValue() >= sceneMaxDuration) {
+        return TimerState.EXCEEDED
+
+    } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
+        && OBSSceneTimer.getValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
+    ) {
+        return TimerState.APPROACHING
+
+    } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
+        && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
+        && OBSSceneTimer.getValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
+    ) {
+        return TimerState.APPROACHING
+
+    } else {
+        return TimerState.NEUTRAL
+    }
 }
 
 @Throws(UnsupportedEncodingException::class)

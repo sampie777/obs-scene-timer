@@ -107,6 +107,10 @@ class ConfigEditPanel : JPanel() {
             )
         )
         formComponents.add(BooleanFormInput("enableSceneTimestampLogger", "Enable scene change logging"))
+
+        formComponents.add(HeaderFormComponent("Timer Websocket"))
+        formComponents.add(BooleanFormInput("timerWebsocketEnabled", "Enable timer websocket server"))
+        formComponents.add(NumberFormInput<Int>("timerWebsocketPort", "Port for timer websocket", 0, null))
     }
 
     private fun createGui() {

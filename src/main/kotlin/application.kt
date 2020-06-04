@@ -3,6 +3,7 @@ import gui.MainFrame
 import objects.ApplicationInfo
 import objects.OBSClient
 import objects.notifications.Notifications
+import server.TimerServer
 import themes.Theme
 import java.awt.EventQueue
 import java.util.logging.Level
@@ -30,6 +31,10 @@ fun main(args: Array<String>) {
 
     EventQueue.invokeLater {
         MainFrame.createAndShow()
+    }
+
+    if (Config.timerWebsocketEnabled) {
+        TimerServer().startServer()
     }
 
     OBSClient.start()

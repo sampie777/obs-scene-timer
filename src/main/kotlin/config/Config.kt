@@ -42,6 +42,9 @@ object Config {
     var mainWindowsIsMaximized: Boolean = false
     var mainPanelDividerLocation: Int = 370
 
+    var timerWebsocketEnabled: Boolean = false
+    var timerWebsocketPort: Int = 4050
+
     fun load() {
         try {
             PropertyLoader.load()
