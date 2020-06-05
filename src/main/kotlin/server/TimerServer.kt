@@ -61,7 +61,7 @@ class TimerServer : Server(), Refreshable {
         return TimerMessage(
             sceneName = OBSState.currentSceneName,
             elapsedTime = OBSSceneTimer.getTimerAsClock(),
-            timerPhase = getTimerState(),
+            timerState = getTimerState(),
             isTimed = (OBSSceneTimer.getMaxTimerValue() > 0),
             remainingTime = getTimeAsClock(OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getValue())
             )

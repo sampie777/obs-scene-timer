@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 data class TimerMessage(
     val sceneName: String,
     val elapsedTime: String,
-    val timerPhase: TimerState,
+    val timerState: TimerState,
     val isTimed: Boolean = false,
     val remainingTime: String = "",
     val timestamp: String = DateTimeFormatter.ISO_INSTANT.format(Instant.now()),

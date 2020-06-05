@@ -40,7 +40,7 @@ class TimerMessageTest {
         val json = message.json()
 
         assertEquals(
-            "{\"sceneName\":\"scenename\",\"elapsedTime\":\"00:00:10\",\"timerPhase\":\"NEUTRAL\",\"isTimed\":true,\"remainingTime\":\"00:00:20\",\"timestamp\":\"2020-06-04T16:49:58.670Z\",\"messageType\":\"TimerMessage\"}",
+            "{\"sceneName\":\"scenename\",\"elapsedTime\":\"00:00:10\",\"timerState\":\"NEUTRAL\",\"isTimed\":true,\"remainingTime\":\"00:00:20\",\"timestamp\":\"2020-06-04T16:49:58.670Z\",\"messageType\":\"TimerMessage\"}",
             json
         )
     }
