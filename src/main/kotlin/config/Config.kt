@@ -40,6 +40,7 @@ object Config {
     var mainWindowLocation: Point = Point(0, 0)
     var mainWindowSize: Dimension = Dimension(900, 600)
     var mainWindowsIsMaximized: Boolean = false
+    var mainWindowsIsFullscreen: Boolean = false
     var mainPanelDividerLocation: Int = 370
 
     var timerWebsocketEnabled: Boolean = false
