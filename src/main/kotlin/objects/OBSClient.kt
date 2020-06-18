@@ -281,7 +281,7 @@ object OBSClient {
      * @return boolean
      */
     fun loadSourceSettings(): Boolean {
-        if (Config.autoCalculateSceneLimitsBySources) {
+        if (!Config.autoCalculateSceneLimitsBySources) {
             logger.info("Auto calculation of scene time limits by source files is disabled")
             return false
         }
