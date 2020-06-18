@@ -223,11 +223,23 @@ object OBSClient {
         OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENES
         GUI.refreshOBSStatus()
 
-        controller!!.getScenes { response: ResponseBase ->
-            val res = response as GetSceneListResponse
-            logger.info(res.scenes.size.toString() + " scenes retrieved")
+        try {
+            controller!!.getScenes { response: ResponseBase ->
+                val res = response as GetSceneListResponse
+                logger.info(res.scenes.size.toString() + " scenes retrieved")
 
-            processOBSScenesToOBSStateScenes(res.scenes)
+                try {
+                    processOBSScenesToOBSStateScenes(res.scenes)
+                } catch (e: Exception) {
+                    logger.severe("Failed to process scenes")
+                    e.printStackTrace()
+                    Notifications.add("Something went wrong during scenes processing", "OBS")
+                }
+            }
+        } catch (e: Exception) {
+            logger.severe("Failed to retrieve scenes")
+            e.printStackTrace()
+            Notifications.add("Something went wrong during retrieving scenes", "OBS")
         }
     }
 
@@ -246,7 +258,16 @@ object OBSClient {
             OBSState.scenes.add(tScene)
         }
 
-        if (!loadSourceSettings()) {
+        val sourceSettingsAreLoading = try {
+            loadSourceSettings()
+        } catch (e: Exception) {
+            logger.severe("Failed to load scene sources settings")
+            e.printStackTrace()
+            Notifications.add("Something went wrong while processing scene sources settings", "OBS")
+            false
+        }
+
+        if (!sourceSettingsAreLoading) {
             logger.info("Refreshing scenes info")
             GUI.refreshScenes()
             OBSState.clientActivityStatus = null
