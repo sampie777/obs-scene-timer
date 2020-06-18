@@ -1,7 +1,7 @@
 package gui
 
 import GUI
-import GuiComponentMock
+import mocks.GuiComponentMock
 import gui.notifications.NotificationListPanel
 import objects.notifications.Notifications
 import kotlin.test.Test

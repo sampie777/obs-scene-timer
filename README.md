@@ -83,6 +83,7 @@ _Connection settings_
 * `obsAddress` (string) (default: `ws://localhost:4444`): holds the full address of the OBS websocket server. This server can be on any computer in the same network of even over internet, as long as it can be reached by the obs-scene-timer application.
 * `obsPassword` (string) (default: `<empty>`): the password needed to connect to the OBS websocket. Please note that this **password is stored as plain text** in the properties file and therefore is readable by anyone with access to this file.
 * `obsReconnectionTimeout` (milliseconds) (default: `3000`): if connection with OBS failed or is lost, OBS Scene Timer will try to reconnect to OBS after this time in milliseconds.
+* `autoCalculateSceneLimitsBySources` (boolean) (default: `true`): if enabled and OBS Scene Timer is running on the same computer as OBS, OBS Scene Timer will load all video sources to automatically determine each scene max duration.
 
 _Application color settings_
 

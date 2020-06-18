@@ -249,7 +249,7 @@ object OBSClient {
         for (scene in scenes) {
             val tScene = TScene(scene.name)
 
-            if (scene.sources != null) {
+            if (scene.sources != null && Config.autoCalculateSceneLimitsBySources) {
                 val tSources = scene.sources.map { source: Source -> TSource(source.name, source.type) }
 
                 tScene.sources = tSources
@@ -280,7 +280,12 @@ object OBSClient {
      * Otherwise it will return true and will eventually call GUI.INSTANCE.refreshScenes();
      * @return boolean
      */
-    private fun loadSourceSettings(): Boolean {
+    fun loadSourceSettings(): Boolean {
+        if (Config.autoCalculateSceneLimitsBySources) {
+            logger.info("Auto calculation of scene time limits by source files is disabled")
+            return false
+        }
+
         if (!isAddressLocalhost(Config.obsAddress)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
             return false

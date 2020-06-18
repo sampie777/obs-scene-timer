@@ -1,8 +1,9 @@
 package objects
 
 import GUI
-import GuiComponentMock
+import mocks.GuiComponentMock
 import config.Config
+import mocks.SceneMockWithSources
 import net.twasi.obsremotejava.objects.Scene
 import java.io.File
 import kotlin.test.*
@@ -15,6 +16,7 @@ class OBSClientTest {
         OBSSceneTimer.resetValue()
         OBSState.currentSceneName = ""
         OBSState.scenes.clear()
+        Config.autoCalculateSceneLimitsBySources = true
     }
 
     @Test
@@ -52,9 +54,9 @@ class OBSClientTest {
         assertFalse(panelMock.refreshOBSStatusCalled)
 
         val scenes = ArrayList<Scene>()
+        scenes.add(SceneMockWithSources("Scene 1"))
         scenes.add(Scene())
-        scenes.add(Scene())
-        scenes.add(Scene())
+        scenes.add(SceneMockWithSources("Scene 3"))
 
         // When
         OBSClient.processOBSScenesToOBSStateScenes(scenes)
@@ -65,6 +67,37 @@ class OBSClientTest {
         assertTrue(panelMock.refreshOBSStatusCalled)
         assertEquals(3, OBSState.scenes.size)
         assertNull(OBSState.clientActivityStatus)
+
+        assertEquals("Scene 1", OBSState.scenes[0].name)
+        assertEquals(1, OBSState.scenes[0].sources.size)
+        assertEquals("Scene 1 source", OBSState.scenes[0].sources[0].name)
+        assertEquals(0, OBSState.scenes[1].sources.size)
+        assertEquals("Scene 3", OBSState.scenes[2].name)
+        assertEquals(1, OBSState.scenes[2].sources.size)
+    }
+
+    @Test
+    fun testAutoCalculateSceneLimitsBySourcesPreventsSourceLoading() {
+        Config.autoCalculateSceneLimitsBySources = false
+        val scenes = ArrayList<Scene>()
+        scenes.add(SceneMockWithSources("Scene 1"))
+        scenes.add(Scene())
+        scenes.add(SceneMockWithSources("Scene 3"))
+
+        // When
+        OBSClient.processOBSScenesToOBSStateScenes(scenes)
+
+        assertEquals(0, OBSState.scenes[0].sources.size)
+        assertEquals(0, OBSState.scenes[1].sources.size)
+        assertEquals(0, OBSState.scenes[2].sources.size)
+    }
+
+    @Test
+    fun testAutoCalculateSceneLimitsBySourcesPreventsSourceSettingsLoading() {
+        Config.autoCalculateSceneLimitsBySources = false
+        Config.obsAddress = "ws://123.123.123.123:0"
+
+        assertFalse(OBSClient.loadSourceSettings())
     }
 
     @Test

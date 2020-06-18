@@ -1,6 +1,7 @@
 package themes
 
 import config.Config
+import mocks.ThemeMock
 import java.awt.Color
 import javax.swing.UIManager
 import kotlin.test.Test

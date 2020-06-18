@@ -40,6 +40,7 @@ class ConfigEditPanel : JPanel() {
                 null
             )
         )
+        formComponents.add(BooleanFormInput("autoCalculateSceneLimitsBySources", "Automatically calculate scene time limits by scanning video sources"))
 
         formComponents.add(HeaderFormComponent("GUI"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))

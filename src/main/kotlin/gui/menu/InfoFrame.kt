@@ -1,5 +1,6 @@
 package gui.menu
 
+import config.Config
 import gui.utils.ClickableLinkComponent
 import objects.ApplicationInfo
 import themes.Theme
@@ -41,7 +42,9 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         mainPanel.add(Box.createRigidArea(Dimension(0, 10)))
         mainPanel.add(sourceCodeLabel)
         mainPanel.add(Box.createRigidArea(Dimension(0, 20)))
-        mainPanel.add(applicationLoggingInfoLabel)
+        if (Config.enableApplicationLoggingToFile) {
+            mainPanel.add(applicationLoggingInfoLabel)
+        }
 
         title = "Information"
         pack()
