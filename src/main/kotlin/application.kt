@@ -3,7 +3,8 @@ import gui.MainFrame
 import objects.ApplicationInfo
 import objects.OBSClient
 import objects.notifications.Notifications
-import server.TimerServer
+import remotesync.client.TimerClient
+import remotesync.server.TimerServer
 import themes.Theme
 import java.awt.EventQueue
 import java.util.logging.Level
@@ -33,11 +34,17 @@ fun main(args: Array<String>) {
         MainFrame.createAndShow()
     }
 
-    if (Config.timerWebsocketEnabled) {
-        TimerServer().startServer()
-    }
+    if (Config.remoteSyncClientEnabled) {
+        logger.info("Start up with remote sync client enabled")
+        TimerClient.connect(Config.remoteSyncClientAddress)
+    } else {
+        if (Config.remoteSyncServerEnabled) {
+            logger.info("Start up with remote sync server enabled")
+            TimerServer.startServer()
+        }
 
-    OBSClient.start()
+        OBSClient.start()
+    }
 }
 
 private fun setupLogging(args: Array<String>) {

@@ -1,4 +1,4 @@
-package server
+package remotesync.server
 
 
 import org.eclipse.jetty.websocket.api.Session

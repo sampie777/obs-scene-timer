@@ -5,18 +5,23 @@ import config.Config
 import config.PropertyLoader
 import objects.OBSClientStatus
 import objects.OBSState
+import remotesync.RemoteSyncRefreshableRegister
+import remotesync.objects.ConnectionState
+import remotesync.objects.RemoteSyncRefreshable
 import themes.Theme
 import java.awt.BorderLayout
 import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-class OBSStatusPanel : JPanel(), Refreshable {
+class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
 
     private val messageLabel: JLabel = JLabel()
 
     init {
         GUI.register(this)
+        RemoteSyncRefreshableRegister.register(this)
+
         initGUI()
         refreshOBSStatus()
     }
@@ -32,6 +37,7 @@ class OBSStatusPanel : JPanel(), Refreshable {
     override fun removeNotify() {
         super.removeNotify()
         GUI.unregister(this)
+        RemoteSyncRefreshableRegister.unregister(this)
     }
 
     fun getMessageLabel(): JLabel {
@@ -59,6 +65,30 @@ class OBSStatusPanel : JPanel(), Refreshable {
         }
 
         return obsDisplayStatusString
+    }
+
+    override fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
+        if (!Config.remoteSyncClientEnabled) {
+            return
+        }
+
+        messageLabel.text = "Remote sync: ${getRemoteSyncClientStatusRepresentation(state)}"
+
+        if (state == ConnectionState.CONNECTED) {
+            messageLabel.toolTipText = "Connected to ${Config.remoteSyncClientAddress}. ${settingsFileString()}"
+        } else {
+            messageLabel.toolTipText = settingsFileString()
+        }
+        repaint()
+    }
+
+    private fun getRemoteSyncClientStatusRepresentation(state: ConnectionState): String {
+        var remoteSyncClientDisplayStatusString = state.text
+        if (state == ConnectionState.CONNECTING) {
+            remoteSyncClientDisplayStatusString = "Connecting to ${Config.remoteSyncClientAddress}..."
+        }
+
+        return remoteSyncClientDisplayStatusString
     }
 
     private fun settingsFileString(): String {

@@ -23,14 +23,12 @@ class ApplicationMenu : JMenu("Application") {
         popupMenu.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
 
         val notificationsItem = JMenuItem("Notifications")
-        val scannerItem = JMenuItem("Network Scanner")
         val settingsItem = JMenuItem("Settings")
         val fullscreenItem = JMenuItem("Toggle fullscreen")
         val infoItem = JMenuItem("Info")
         val quitItem = JMenuItem("Quit")
 
         notificationsItem.addActionListener { NotificationFrame(getMainFrameComponent(this)) }
-        scannerItem.addActionListener { WebsocketScannerFrame(getMainFrameComponent(this)) }
         settingsItem.addActionListener { ConfigFrame(getMainFrameComponent(this)) }
         fullscreenItem.addActionListener {
             (getMainFrameComponent(this) as MainFrame).toggleFullscreen()
@@ -39,7 +37,6 @@ class ApplicationMenu : JMenu("Application") {
         quitItem.addActionListener { exitApplication() }
 
         add(notificationsItem)
-        add(scannerItem)
         add(settingsItem)
         addSeparator()
         add(fullscreenItem)
