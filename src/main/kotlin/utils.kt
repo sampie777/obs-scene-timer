@@ -25,32 +25,6 @@ fun getTimeAsClock(value: Long): String {
     return String.format("%s%d:%02d:%02d", signString, timerHours, timerMinutes, timerSeconds)
 }
 
-fun getTimerState(): TimerState {
-    val sceneMaxDuration = OBSSceneTimer.getMaxTimerValue()
-
-    if (sceneMaxDuration == 0L) {
-        return TimerState.NEUTRAL
-    }
-
-    if (OBSSceneTimer.getValue() >= sceneMaxDuration) {
-        return TimerState.EXCEEDED
-
-    } else if (sceneMaxDuration >= Config.largeMinLimitForLimitApproaching
-        && OBSSceneTimer.getValue() + Config.largeTimeDifferenceForLimitApproaching >= sceneMaxDuration
-    ) {
-        return TimerState.APPROACHING
-
-    } else if (sceneMaxDuration < Config.largeMinLimitForLimitApproaching
-        && sceneMaxDuration >= Config.smallMinLimitForLimitApproaching
-        && OBSSceneTimer.getValue() + Config.smallTimeDifferenceForLimitApproaching >= sceneMaxDuration
-    ) {
-        return TimerState.APPROACHING
-
-    } else {
-        return TimerState.NEUTRAL
-    }
-}
-
 @Throws(UnsupportedEncodingException::class)
 fun getCurrentJarDirectory(caller: Any): File {
     val url = caller::class.java.protectionDomain.codeSource.location

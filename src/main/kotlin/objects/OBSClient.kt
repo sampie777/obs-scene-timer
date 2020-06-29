@@ -25,6 +25,10 @@ object OBSClient {
     private var reconnecting: Boolean = false
 
     fun start() {
+        if (Config.remoteSyncClientEnabled) {
+            return
+        }
+
         logger.info("Connecting to OBS on: ${Config.obsAddress}")
         OBSState.connectionStatus = if (!reconnecting) OBSClientStatus.CONNECTING else OBSClientStatus.RECONNECTING
         GUI.refreshOBSStatus()
@@ -49,6 +53,11 @@ object OBSClient {
         }
     }
 
+    fun stop() {
+        logger.info("Disconnecting with OBS")
+        controller!!.disconnect()
+    }
+
     private fun processFailedConnection(message: String, reconnect: Boolean = true) {
         OBSState.connectionStatus = OBSClientStatus.CONNECTION_FAILED
         GUI.refreshOBSStatus()
@@ -63,6 +72,10 @@ object OBSClient {
     }
 
     private fun startReconnectingTimeout() {
+        if (Config.remoteSyncClientEnabled) {
+            return
+        }
+
         val connectionRetryTimer = Timer()
         connectionRetryTimer.schedule(object : TimerTask() {
             override fun run() {

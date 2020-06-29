@@ -108,9 +108,11 @@ class MainFrame : JFrame(), Refreshable {
     override fun refreshTimer() {
         title = "${OBSState.currentSceneName}: ${OBSSceneTimer.getTimerAsClock()}"
 
-        if (OBSSceneTimer.getMaxTimerValue() > 0
-            && OBSSceneTimer.getValue() >= OBSSceneTimer.getMaxTimerValue()) {
+        val timerState = OBSSceneTimer.getTimerState()
+        if (timerState == TimerState.EXCEEDED) {
             iconImage = applicationIconRed
+        } else if (timerState == TimerState.APPROACHING) {
+            iconImage = applicationIconOrange
         } else {
             iconImage = applicationIconDefault
         }

@@ -9,12 +9,14 @@ import java.util.logging.Logger
 object Config {
     private val logger = Logger.getLogger(Config.toString())
 
+    // OBS Connection
     var obsAddress: String = "ws://localhost:4444"
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
     var timerStartDelay: Long = -300
     var autoCalculateSceneLimitsBySources: Boolean = true
 
+    // Timer Style
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var timerBackgroundColor: Color? = null
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
@@ -32,10 +34,12 @@ object Config {
 
     var sceneLimitValues: HashMap<String, Int> = HashMap()
 
+    // Logging
     var enableSceneTimestampLogger: Boolean = false
     var enableApplicationLoggingToFile: Boolean = false
     var maxLogFileSize: Int = 768 * 1024    // 750 kB
 
+    // Window Layout
     var theme: String = "LightTheme"
     var windowRestoreLastPosition: Boolean = true
     var mainWindowLocation: Point = Point(0, 0)
@@ -44,8 +48,12 @@ object Config {
     var mainWindowsIsFullscreen: Boolean = false
     var mainPanelDividerLocation: Int = 370
 
-    var timerWebsocketEnabled: Boolean = false
-    var timerWebsocketPort: Int = 4050
+    // Remote Sync
+    var remoteSyncServerEnabled: Boolean = false
+    var remoteSyncServerPort: Int = 4050
+    var remoteSyncClientEnabled: Boolean = false
+    var remoteSyncClientAddress: String = obsAddress.replace(":4444", ":4050")
+    var remoteSyncClientReconnectionTimeout: Long = 3000
 
     fun load() {
         try {

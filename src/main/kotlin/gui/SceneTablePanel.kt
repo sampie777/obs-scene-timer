@@ -48,7 +48,13 @@ class SceneTablePanel : JPanel(), Refreshable {
         container.border = EmptyBorder(0, 10, 0, 10)
         container.layout = GridLayout(0, 1)
 
-        createSceneTable()
+        if (Config.remoteSyncClientEnabled) {
+            val scenesNotLoadedLabel = JLabel("Scenes are not loaded in Client mode")
+            scenesNotLoadedLabel.font = Font(Theme.get.FONT_FAMILY, Font.ITALIC, 16)
+            container.add(scenesNotLoadedLabel)
+        } else {
+            createSceneTable()
+        }
 
         val scrollPanelInnerPanel = JPanel(BorderLayout())
         scrollPanelInnerPanel.add(container, BorderLayout.PAGE_START)
@@ -140,6 +146,10 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     override fun switchedScenes() {
+        if (Config.remoteSyncClientEnabled) {
+            return
+        }
+
         createSceneTable()
 
         OBSSceneTimer.setMaxTimerValue(

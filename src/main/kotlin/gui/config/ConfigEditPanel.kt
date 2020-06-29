@@ -40,7 +40,12 @@ class ConfigEditPanel : JPanel() {
                 null
             )
         )
-        formComponents.add(BooleanFormInput("autoCalculateSceneLimitsBySources", "Automatically calculate scene time limits by scanning video sources"))
+        formComponents.add(
+            BooleanFormInput(
+                "autoCalculateSceneLimitsBySources",
+                "Automatically calculate scene time limits by scanning video sources"
+            )
+        )
 
         formComponents.add(HeaderFormComponent("GUI"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
@@ -109,9 +114,17 @@ class ConfigEditPanel : JPanel() {
         )
         formComponents.add(BooleanFormInput("enableSceneTimestampLogger", "Enable scene change logging"))
 
-        formComponents.add(HeaderFormComponent("Timer Websocket"))
-        formComponents.add(BooleanFormInput("timerWebsocketEnabled", "Enable timer websocket server"))
-        formComponents.add(NumberFormInput<Int>("timerWebsocketPort", "Port for timer websocket", 0, null))
+        formComponents.add(HeaderFormComponent("Remote Synchronisation"))
+        formComponents.add(NumberFormInput<Int>("remoteSyncServerPort", "Server: Port to run on", 0, null))
+        formComponents.add(StringFormInput("remoteSyncClientAddress", "Client: Remote sync server address", true))
+        formComponents.add(
+            NumberFormInput<Long>(
+                "obsReconnectionTimeout",
+                "Client: Connection retry interval (millisec.)",
+                0,
+                null
+            )
+        )
     }
 
     private fun createGui() {

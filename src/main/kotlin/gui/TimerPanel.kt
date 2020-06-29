@@ -3,7 +3,6 @@ package gui
 import GUI
 import config.Config
 import getTimeAsClock
-import getTimerState
 import objects.OBSSceneTimer
 import objects.OBSState
 import objects.TimerState
@@ -51,7 +50,13 @@ class TimerPanel : JPanel(), Refreshable {
         topPanel.background = null
         topPanel.layout = BorderLayout(10, 10)
         topPanel.add(sceneLabel, BorderLayout.CENTER)
-        topPanel.add(resetTimerButton, BorderLayout.LINE_END)
+        if (Config.remoteSyncClientEnabled) {
+            val clientModeLabel = JLabel("Client mode")
+            clientModeLabel.font = Font(Theme.get.FONT_FAMILY, Font.ITALIC, 12)
+            topPanel.add(clientModeLabel, BorderLayout.LINE_END)
+        } else {
+            topPanel.add(resetTimerButton, BorderLayout.LINE_END)
+        }
         add(topPanel, BorderLayout.PAGE_START)
 
         timerUpLabel.toolTipText = "Time elapsed"
@@ -96,8 +101,11 @@ class TimerPanel : JPanel(), Refreshable {
     private fun updateLabelsForTimer() {
         timerUpLabel.text = OBSSceneTimer.getTimerAsClock()
 
-        if (OBSSceneTimer.getMaxTimerValue() > 0L) {
-            val timeDifference = OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getValue()
+        if (Config.remoteSyncClientEnabled) {
+            timerDownLabel.isVisible = OBSSceneTimer.timerMessage?.isTimed ?: false
+            timerDownLabel.text = OBSSceneTimer.timerMessage?.remainingTime
+        } else if (OBSSceneTimer.getMaxTimerValue() > 0L) {
+            val timeDifference = OBSSceneTimer.getRemainingTime()
             timerDownLabel.text = getTimeAsClock(timeDifference)
             timerDownLabel.isVisible = true
         } else {
@@ -106,7 +114,7 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     private fun updateColorsForTimer() {
-        setColorsFor(getTimerState())
+        setColorsFor(OBSSceneTimer.getTimerState())
     }
 
     private fun setColorsFor(state: TimerState) {

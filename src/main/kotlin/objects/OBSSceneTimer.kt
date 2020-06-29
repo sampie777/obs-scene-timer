@@ -3,6 +3,8 @@ package objects
 import GUI
 import config.Config
 import getTimeAsClock
+import objects.notifications.Notifications
+import remotesync.objects.TimerMessage
 import java.util.*
 import java.util.logging.Logger
 import kotlin.math.max
@@ -25,8 +27,15 @@ object OBSSceneTimer {
     private var timer = Timer()
     private const val timerIntervalSecond = 1000L
 
+    var timerMessage: TimerMessage? = null
+
     fun reset() {
         logger.info("Resetting timer")
+        if (Config.remoteSyncClientEnabled) {
+            logger.warning("Can't reset Scene Timer because Client mode is enabled")
+            Notifications.add("Can't restart Timer while in client mode", "Timer")
+            return
+        }
 
         stop()
         resetValue()
@@ -61,7 +70,17 @@ object OBSSceneTimer {
     }
 
     fun getValue(): Long {
+        if (Config.remoteSyncClientEnabled) {
+            return timerMessage?.elapsedTimeRaw ?: 0
+        }
         return timerValue
+    }
+
+    fun getRemainingTime(): Long {
+        if (Config.remoteSyncClientEnabled) {
+            return timerMessage?.remainingTimeRaw ?: 0
+        }
+        return getMaxTimerValue() - getValue()
     }
 
     fun getTimerAsClock(): String {
@@ -73,6 +92,37 @@ object OBSSceneTimer {
     }
 
     fun getMaxTimerValue(): Long {
+        if (Config.remoteSyncClientEnabled) {
+            return timerMessage?.maximumTime ?: 0
+        }
         return maxTimerValue
+    }
+
+    fun getTimerState(): TimerState {
+        if (Config.remoteSyncClientEnabled) {
+            return timerMessage?.timerState ?: TimerState.NEUTRAL
+        }
+
+        if (getMaxTimerValue() == 0L) {
+            return TimerState.NEUTRAL
+        }
+
+        if (getValue() >= getMaxTimerValue()) {
+            return TimerState.EXCEEDED
+
+        } else if (getMaxTimerValue() >= Config.largeMinLimitForLimitApproaching
+            && getValue() + Config.largeTimeDifferenceForLimitApproaching >= getMaxTimerValue()
+        ) {
+            return TimerState.APPROACHING
+
+        } else if (getMaxTimerValue() < Config.largeMinLimitForLimitApproaching
+            && getMaxTimerValue() >= Config.smallMinLimitForLimitApproaching
+            && getValue() + Config.smallTimeDifferenceForLimitApproaching >= getMaxTimerValue()
+        ) {
+            return TimerState.APPROACHING
+
+        } else {
+            return TimerState.NEUTRAL
+        }
     }
 }

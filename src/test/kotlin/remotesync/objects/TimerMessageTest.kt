@@ -1,4 +1,4 @@
-package server.objects
+package remotesync.objects
 
 import objects.TimerState
 import java.time.Instant
@@ -14,9 +14,10 @@ class TimerMessageTest {
     @Test
     fun testDefaultConstructor() {
         val message = TimerMessage(
-            "scenename",
-            "00:00:10",
-            TimerState.NEUTRAL
+            sceneName = "scenename",
+            elapsedTime = "00:00:10",
+            elapsedTimeRaw = 10L,
+            timerState = TimerState.NEUTRAL
         )
         val now = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
         val strippedNow = now.substring(0, now.length - 3)
@@ -29,12 +30,15 @@ class TimerMessageTest {
     @Test
     fun testToJson() {
         val message = TimerMessage(
-            "scenename",
-            "00:00:10",
-            TimerState.NEUTRAL,
-            true,
-            "00:00:20",
-            "2020-06-04T16:49:58.670Z"
+            sceneName = "scenename",
+            elapsedTime = "00:00:10",
+            elapsedTimeRaw = 10L,
+            timerState = TimerState.NEUTRAL,
+            isTimed = true,
+            remainingTime = "00:00:20",
+            remainingTimeRaw = 20L,
+            maximumTime = 30L,
+            timestamp = "2020-06-04T16:49:58.670Z"
         )
 
         val json = message.json()
