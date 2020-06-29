@@ -7,8 +7,9 @@ import gui.menu.MenuBar
 import gui.utils.loadIcon
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TimerState
 import objects.notifications.Notifications
-import java.awt.Component
+import java.awt.EventQueue
 import java.awt.Image
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -27,9 +28,13 @@ class MainFrame : JFrame(), Refreshable {
     private val logger = Logger.getLogger(MainFrame::class.java.name)
 
     private val applicationIconDefault: Image?
+    private val applicationIconOrange: Image?
     private val applicationIconRed: Image?
 
     companion object {
+        private var instance: MainFrame? = null
+        fun getInstance() = instance
+
         fun create(): MainFrame = MainFrame()
 
         fun createAndShow(): MainFrame {
@@ -40,9 +45,12 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     init {
+        instance = this
+
         GUI.register(this)
 
         applicationIconDefault = loadIcon("/icon-512.png")
+        applicationIconOrange = loadIcon("/icon-orange-512.png")
         applicationIconRed = loadIcon("/icon-red-512.png")
 
         addWindowListener(MainFrameWindowAdapter(this))
@@ -70,6 +78,20 @@ class MainFrame : JFrame(), Refreshable {
         title = "OBS Scene Timer"
         defaultCloseOperation = EXIT_ON_CLOSE
         iconImage = applicationIconDefault
+    }
+
+    fun rebuildGui() {
+        logger.info("Rebuilding main GUI")
+        EventQueue.invokeLater {
+            contentPane.removeAll()
+
+            add(MainFramePanel())
+            jMenuBar = MenuBar()
+
+            revalidate()
+            repaint()
+            logger.info("GUI rebuild done")
+        }
     }
 
     fun saveWindowPosition() {
