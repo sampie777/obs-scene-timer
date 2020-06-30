@@ -45,8 +45,20 @@ When using OBS Scene Timer on another computer as OBS projector itself, it can b
 
 The default timeout used for the scanning progress is 200 ms. This value can be increased in the Network Scanner window if no OBS websockets are detected. Users of slow local networks may need do increase this value. 
 
+#### Remote sync
+
+You can run multiple instances of OBS Scene Timer on different computers in a master/slave configuration. To set this up, you need to run 1 instance of OBS Scene Timer as the server. All the other instances should be running as client. In the settings you can configure the host address of the server instance. The default port is 4050, but can be configured in the settings of the server instance.
+
+To run an instance as server or client, in the menu go to Tools -> Remote Sync and start the server or client. You can also stop the instance running as a server/client. 
+
+The clients will purely rely on the information they get from the server. The server will send all clients a message when the timer changes (every second). This message includes the elapsed time, remaining time, current scene, and even tell if the client must show the time limit approaching/exceeded warnings. 
+Due to network delays, the clients may be slightly lagging behind. 
+
+When a client instance is started while previously connected to OBS itself, that connection will be closed.   
+
 #### Themes
-A application theme can be set in Application menu -> Settings. Currently, only Light theme is available and Dark theme is experimental. You can develop your own theme by extending the BaseTheme class and creating a pull request to the `develop` branch. 
+
+An application theme can be set in Application menu -> Settings. Currently, only Light theme is available and Dark theme is experimental. You can develop your own theme by extending the BaseTheme class and creating a pull request to the `develop` branch. 
 
 #### Notifications
 
@@ -107,6 +119,16 @@ _Timer settings_
 _Other settings_
 
 * `enableSceneTimestampLogger` (boolean) (default: `false`): enable the logging of every scene change to a .csv file. This file will be generated in the same folder as the application. Might be handy for diagnoses afterwards. 
+* `enableApplicationLoggingToFile` (boolean) (default: `true` since v1.4.1): Write application logging to a file. Location of this logfile is shown in the Information screen. Submit this file when reporting issues/bugs.
+* `maxLogFileSize` (number in bytes) (default: `1024*1024` = 1 MB): when the logg file exceeds this size, a new one will be created and the old one will be renamed with `*.1.*`.
+
+_Remote sync_
+
+* `remoteSyncServerEnabled` (boolean) (default: `false`): Whether this instance should run as a remote sync server.
+* `remoteSyncServerPort` (number) (default: `4050`): The port the remote sync server should run on.
+* `remoteSyncClientEnabled` (boolean) (default: `false`): Whether this instance should run as a remote sync client.
+* `remoteSyncClientAddress` (string) (default: `obsAddres:4050`): The remote sync server address which the client should connect to. 
+* `remoteSyncClientReconnectionTimeout` (milliseconds) (default: `3000`): if connection with the remote sync server failed or is lost, OBS Scene Timer will try to reconnect to the server after this time in milliseconds.
 
 ---
 
