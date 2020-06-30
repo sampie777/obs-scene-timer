@@ -86,6 +86,7 @@ class TimerPanelTest {
         assertTrue(panel.sceneLabel.isVisible)
         assertEquals("Waiting for connection...", panel.sceneLabel.text)
 
+        OBSState.connectionStatus = OBSClientStatus.CONNECTED
         OBSState.currentSceneName = "scene1"
         panel.switchedScenes()
 
