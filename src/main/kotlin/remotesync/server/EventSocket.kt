@@ -4,6 +4,7 @@ package remotesync.server
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.WebSocketAdapter
 import org.eclipse.jetty.websocket.common.WebSocketSession
+import remotesync.RemoteSyncRefreshableRegister
 import java.util.logging.Logger
 
 class EventSocket : WebSocketAdapter() {
@@ -19,6 +20,7 @@ class EventSocket : WebSocketAdapter() {
         ServerStatus.clients[sessionId] = session
 
         logger.info("Currently ${ServerStatus.clients.size} clients connected")
+        RemoteSyncRefreshableRegister.remoteSyncServerConnectionsUpdate()
     }
 
     override fun onWebSocketClose(statusCode: Int, reason: String?) {
@@ -28,6 +30,7 @@ class EventSocket : WebSocketAdapter() {
         ServerStatus.clients.remove(sessionId)
 
         logger.info("Currently ${ServerStatus.clients.size} clients connected")
+        RemoteSyncRefreshableRegister.remoteSyncServerConnectionsUpdate()
     }
 
     override fun onWebSocketError(cause: Throwable) {

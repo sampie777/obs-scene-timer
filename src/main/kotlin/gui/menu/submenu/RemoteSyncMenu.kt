@@ -11,6 +11,7 @@ import remotesync.RemoteSyncRefreshableRegister
 import remotesync.client.TimerClient
 import remotesync.objects.ConnectionState
 import remotesync.objects.RemoteSyncRefreshable
+import remotesync.server.ServerStatus
 import remotesync.server.TimerServer
 import themes.Theme
 import java.util.logging.Logger
@@ -44,7 +45,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
             TimerServer.startServer()
 
-            updateEnabledStatus()
+            updateMenuItems()
             MainFrame.getInstance()?.rebuildGui()
 
             if (!OBSClient.isRunning()) {
@@ -57,7 +58,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
             Config.remoteSyncServerEnabled = false
             TimerServer.stopServer()
 
-            updateEnabledStatus()
+            updateMenuItems()
         }
 
         startClientItem.addActionListener {
@@ -85,7 +86,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
                 )
             }
 
-            updateEnabledStatus()
+            updateMenuItems()
             MainFrame.getInstance()?.rebuildGui()
         }
 
@@ -94,7 +95,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
             Config.remoteSyncClientEnabled = false
             TimerClient.disconnect()
 
-            updateEnabledStatus()
+            updateMenuItems()
             Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
         }
 
@@ -103,21 +104,31 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         add(startClientItem)
         add(stopClientItem)
 
-        updateEnabledStatus()
+        updateMenuItems()
     }
 
-    private fun updateEnabledStatus() {
+    private fun updateMenuItems() {
         startServerItem.isEnabled = !Config.remoteSyncServerEnabled
         stopServerItem.isEnabled = Config.remoteSyncServerEnabled
         startClientItem.isEnabled = !Config.remoteSyncClientEnabled
         stopClientItem.isEnabled = Config.remoteSyncClientEnabled
+
+        if (!Config.remoteSyncServerEnabled) {
+            stopServerItem.toolTipText = ""
+        } else {
+            remoteSyncServerConnectionsUpdate()
+        }
     }
 
     override fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
-        updateEnabledStatus()
+        updateMenuItems()
     }
 
     override fun remoteSyncServerRefreshConnectionState() {
-        updateEnabledStatus()
+        updateMenuItems()
+    }
+
+    override fun remoteSyncServerConnectionsUpdate() {
+        stopServerItem.toolTipText = "${ServerStatus.clients.size} connections"
     }
 }

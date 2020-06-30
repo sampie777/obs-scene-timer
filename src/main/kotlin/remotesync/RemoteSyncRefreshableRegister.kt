@@ -24,6 +24,13 @@ object RemoteSyncRefreshableRegister {
         }
     }
 
+    fun remoteSyncServerConnectionsUpdate() {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
+            component.remoteSyncServerConnectionsUpdate()
+        }
+    }
+
     fun register(component: RemoteSyncRefreshable) {
         logger.info("Registering component: ${component::class.java}")
         components.add(component)
