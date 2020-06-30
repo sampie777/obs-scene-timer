@@ -36,8 +36,8 @@ object Config {
 
     // Logging
     var enableSceneTimestampLogger: Boolean = false
-    var enableApplicationLoggingToFile: Boolean = false
-    var maxLogFileSize: Int = 768 * 1024    // 750 kB
+    var enableApplicationLoggingToFile: Boolean = true
+    var maxLogFileSize: Int = 1024 * 1024    // 1 MB
 
     // Window Layout
     var theme: String = "LightTheme"
