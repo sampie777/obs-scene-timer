@@ -82,7 +82,7 @@ class TimerPanelTest {
         val panel = TimerPanel()
 
         assertTrue(panel.sceneLabel.isVisible)
-        assertEquals("Initializing...", panel.sceneLabel.text)
+        assertEquals("Waiting for connection...", panel.sceneLabel.text)
 
         OBSState.currentSceneName = "scene1"
         panel.switchedScenes()

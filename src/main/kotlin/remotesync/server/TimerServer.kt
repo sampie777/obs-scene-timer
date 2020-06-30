@@ -37,6 +37,9 @@ object TimerServer : Server(), Refreshable {
         isSetup = true
     }
 
+    /**
+     * startServer() will start a Jetty server, which by default starts in its own thread
+     */
     fun startServer() {
         if (!isSetup) {
             try {

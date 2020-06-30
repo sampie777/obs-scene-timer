@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder
 class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
-    val sceneLabel: JLabel = JLabel("Initializing...")
+    val sceneLabel: JLabel = JLabel("Waiting for connection...")
     private val resetTimerButton = JButton("Reset")
     val timerUpLabel: JLabel = JLabel()
     val timerDownLabel: JLabel = JLabel()

@@ -44,13 +44,6 @@ object OBSClient {
         }
 
         registerCallbacks()
-
-        try {
-            controller!!.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-            Notifications.add("Connection with OBS suddenly stopped", "OBS")
-        }
     }
 
     fun stop() {

@@ -51,6 +51,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         if (Config.remoteSyncClientEnabled) {
             val scenesNotLoadedLabel = JLabel("Scenes are not loaded in Client mode")
             scenesNotLoadedLabel.font = Font(Theme.get.FONT_FAMILY, Font.ITALIC, 16)
+            scenesNotLoadedLabel.border = EmptyBorder(10, 0, 0, 10)
             container.add(scenesNotLoadedLabel)
         } else {
             createSceneTable()

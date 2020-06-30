@@ -3,6 +3,7 @@ package gui.menu.submenu
 
 import config.Config
 import gui.MainFrame
+import objects.ApplicationInfo
 import objects.OBSClient
 import objects.notifications.Notifications
 import remotesync.RemoteSyncRefreshableRegister
@@ -62,9 +63,21 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
                 Config.remoteSyncServerEnabled = false
                 TimerServer.stopServer()
             }
-            OBSClient.stop()
-            TimerClient.connect(Config.remoteSyncClientAddress)
-//            Notifications.popup("Please restart the application for the changes to take effect", "Remote Sync")
+
+            try {
+                Thread {
+                    OBSClient.stop()
+
+                    TimerClient.connect(Config.remoteSyncClientAddress)
+                }.start()
+            } catch (e: Exception) {
+                logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server")
+                e.printStackTrace()
+                Notifications.popup(
+                    "Could not setup connection to remote sync server: ${e.localizedMessage}. Try restarting ${ApplicationInfo.name}",
+                    "Remote Sync"
+                )
+            }
 
             updateEnabledStatus()
             MainFrame.getInstance()?.rebuildGui()
