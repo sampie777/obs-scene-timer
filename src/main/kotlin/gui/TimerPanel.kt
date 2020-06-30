@@ -3,9 +3,12 @@ package gui
 import GUI
 import config.Config
 import getTimeAsClock
+import objects.OBSClientStatus
 import objects.OBSSceneTimer
 import objects.OBSState
 import objects.TimerState
+import remotesync.client.TimerClient
+import remotesync.objects.ConnectionState
 import themes.Theme
 import java.awt.*
 import java.util.logging.Logger
@@ -16,7 +19,7 @@ import javax.swing.border.EmptyBorder
 class TimerPanel : JPanel(), Refreshable {
     private val logger = Logger.getLogger(TimerPanel::class.java.name)
 
-    val sceneLabel: JLabel = JLabel("Waiting for connection...")
+    val sceneLabel: JLabel = JLabel()
     private val resetTimerButton = JButton("Reset")
     val timerUpLabel: JLabel = JLabel()
     val timerDownLabel: JLabel = JLabel()
@@ -25,6 +28,7 @@ class TimerPanel : JPanel(), Refreshable {
         GUI.register(this)
         initGUI()
         refreshTimer()
+        switchedScenes()
     }
 
     private fun initGUI() {
@@ -95,6 +99,13 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     override fun switchedScenes() {
+        if ((Config.remoteSyncClientEnabled && TimerClient.getConnectionState() != ConnectionState.CONNECTED)
+            || (!Config.remoteSyncClientEnabled && OBSState.connectionStatus != OBSClientStatus.CONNECTED)
+        ) {
+            sceneLabel.text = "Waiting for connection..."
+            return
+        }
+
         sceneLabel.text = OBSState.currentSceneName
     }
 

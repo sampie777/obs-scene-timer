@@ -23,11 +23,15 @@ object OBSClient {
 
     private var controller: OBSRemoteController? = null
     private var reconnecting: Boolean = false
+    private var isRunning: Boolean = false
+    fun isRunning() = isRunning
 
     fun start() {
         if (Config.remoteSyncClientEnabled) {
+            isRunning = false
             return
         }
+        isRunning = true
 
         logger.info("Connecting to OBS on: ${Config.obsAddress}")
         OBSState.connectionStatus = if (!reconnecting) OBSClientStatus.CONNECTING else OBSClientStatus.RECONNECTING
@@ -49,6 +53,8 @@ object OBSClient {
     fun stop() {
         logger.info("Disconnecting with OBS")
         controller!!.disconnect()
+
+        isRunning = false
     }
 
     private fun processFailedConnection(message: String, reconnect: Boolean = true) {

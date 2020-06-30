@@ -5,6 +5,7 @@ import config.Config
 import gui.MainFrame
 import objects.ApplicationInfo
 import objects.OBSClient
+import objects.OBSSceneTimer
 import objects.notifications.Notifications
 import remotesync.RemoteSyncRefreshableRegister
 import remotesync.client.TimerClient
@@ -45,7 +46,10 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
             updateEnabledStatus()
             MainFrame.getInstance()?.rebuildGui()
-            Notifications.popup("Please restart the application to (re)connect to OBS", "Remote Sync")
+
+            if (!OBSClient.isRunning()) {
+                Notifications.popup("Please restart the application to (re)connect to OBS", "Remote Sync")
+            }
         }
 
         stopServerItem.addActionListener {
@@ -63,6 +67,8 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
                 Config.remoteSyncServerEnabled = false
                 TimerServer.stopServer()
             }
+
+            OBSSceneTimer.stop()
 
             try {
                 Thread {
@@ -87,6 +93,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
             logger.info("Disabling remote sync client")
             Config.remoteSyncClientEnabled = false
             TimerClient.disconnect()
+
             updateEnabledStatus()
             Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
         }

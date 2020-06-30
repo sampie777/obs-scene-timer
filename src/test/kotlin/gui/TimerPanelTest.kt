@@ -1,6 +1,7 @@
 package gui
 
 import config.Config
+import objects.OBSClientStatus
 import objects.OBSSceneTimer
 import objects.OBSState
 import themes.Theme
@@ -79,6 +80,7 @@ class TimerPanelTest {
 
     @Test
     fun testTimerPanelDisplaysCorrectScene() {
+        OBSState.connectionStatus = OBSClientStatus.DISCONNECTED
         val panel = TimerPanel()
 
         assertTrue(panel.sceneLabel.isVisible)
