@@ -23,7 +23,7 @@ object Notifications {
     }
 
     fun add(message: String, subject: String = "", markAsRead: Boolean = false) {
-        add(Notification(message, subject))
+        add(Notification(message, subject), markAsRead)
     }
 
     fun markAllAsRead() {
@@ -49,6 +49,6 @@ object Notifications {
     }
 
     fun popup(message: String, subject: String = "", markAsRead: Boolean = true) {
-        popup(Notification(message, subject))
+        popup(Notification(message, subject), markAsRead)
     }
 }

@@ -1,6 +1,7 @@
 package gui.menu
 
 import config.Config
+import gui.MainFrame
 import gui.utils.ClickableLinkComponent
 import objects.ApplicationInfo
 import themes.Theme
@@ -10,6 +11,16 @@ import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
+
+    companion object {
+        fun create(parentFrame: JFrame?): InfoFrame = InfoFrame(parentFrame)
+
+        fun createAndShow(parentFrame: JFrame?): InfoFrame {
+            val frame = create(parentFrame)
+            frame.isVisible = true
+            return frame
+        }
+    }
 
     init {
         createGui()
@@ -50,6 +61,5 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         pack()
         setLocationRelativeTo(parentFrame)
         modalityType = ModalityType.APPLICATION_MODAL
-        isVisible = true
     }
 }

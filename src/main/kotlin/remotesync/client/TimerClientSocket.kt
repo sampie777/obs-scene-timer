@@ -31,7 +31,7 @@ class TimerClientSocket(
     }
 
     @OnWebSocketMessage
-    fun onTextMessage(session: Session, message: String) {
+    fun onTextMessage(message: String) {
         logger.fine("Received message: $message")
 
         val timerMessage = try {
@@ -52,7 +52,7 @@ class TimerClientSocket(
     }
 
     @OnWebSocketClose
-    fun onClose(session: Session, status: Int, reason: String?) {
+    fun onClose(session: Session, reason: String?) {
         logger.info("Connection closed with: ${session.remoteAddress.hostString}. Reason: $reason")
         Notifications.add("Connection with timer server lost", "Scene Timer")
 

@@ -22,10 +22,10 @@ import javax.swing.JMenuItem
 class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
     private val logger = Logger.getLogger(RemoteSyncMenu::class.java.name)
 
-    private val startServerItem = JMenuItem("Start server")
-    private val stopServerItem = JMenuItem("Stop server")
-    private val startClientItem = JMenuItem("Start client")
-    private val stopClientItem = JMenuItem("Stop client")
+    val startServerItem = JMenuItem("Start server")
+    val stopServerItem = JMenuItem("Stop server")
+    val startClientItem = JMenuItem("Start client")
+    val stopClientItem = JMenuItem("Stop client")
 
     init {
         RemoteSyncRefreshableRegister.register(this)
@@ -35,69 +35,10 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
     private fun initGui() {
         popupMenu.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
 
-        startServerItem.addActionListener {
-            logger.info("Enabling remote sync server")
-            Config.remoteSyncServerEnabled = true
-            if (Config.remoteSyncClientEnabled) {
-                Config.remoteSyncClientEnabled = false
-                TimerClient.disconnect()
-            }
-
-            TimerServer.startServer()
-
-            updateMenuItems()
-            MainFrame.getInstance()?.rebuildGui()
-
-            if (!OBSClient.isRunning()) {
-                Notifications.popup("Please restart the application to (re)connect to OBS", "Remote Sync")
-            }
-        }
-
-        stopServerItem.addActionListener {
-            logger.info("Disabling remote sync server")
-            Config.remoteSyncServerEnabled = false
-            TimerServer.stopServer()
-
-            updateMenuItems()
-        }
-
-        startClientItem.addActionListener {
-            logger.info("Enabling remote sync client")
-            Config.remoteSyncClientEnabled = true
-            if (Config.remoteSyncServerEnabled) {
-                Config.remoteSyncServerEnabled = false
-                TimerServer.stopServer()
-            }
-
-            OBSSceneTimer.stop()
-
-            try {
-                Thread {
-                    OBSClient.stop()
-
-                    TimerClient.connect(Config.remoteSyncClientAddress)
-                }.start()
-            } catch (e: Exception) {
-                logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server")
-                e.printStackTrace()
-                Notifications.popup(
-                    "Could not setup connection to remote sync server: ${e.localizedMessage}. Try restarting ${ApplicationInfo.name}",
-                    "Remote Sync"
-                )
-            }
-
-            updateMenuItems()
-            MainFrame.getInstance()?.rebuildGui()
-        }
-
-        stopClientItem.addActionListener {
-            logger.info("Disabling remote sync client")
-            Config.remoteSyncClientEnabled = false
-            TimerClient.disconnect()
-
-            updateMenuItems()
-            Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
-        }
+        startServerItem.addActionListener { startServer() }
+        stopServerItem.addActionListener { stopServer() }
+        startClientItem.addActionListener { startClient() }
+        stopClientItem.addActionListener { stopClient() }
 
         add(startServerItem)
         add(stopServerItem)
@@ -107,7 +48,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         updateMenuItems()
     }
 
-    private fun updateMenuItems() {
+    fun updateMenuItems() {
         startServerItem.isEnabled = !Config.remoteSyncServerEnabled
         stopServerItem.isEnabled = Config.remoteSyncServerEnabled
         startClientItem.isEnabled = !Config.remoteSyncClientEnabled
@@ -130,5 +71,69 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
     override fun remoteSyncServerConnectionsUpdate() {
         stopServerItem.toolTipText = "${ServerStatus.clients.size} connections"
+    }
+
+    private fun startServer() {
+        logger.info("Enabling remote sync server")
+        Config.remoteSyncServerEnabled = true
+        if (Config.remoteSyncClientEnabled) {
+            Config.remoteSyncClientEnabled = false
+            TimerClient.disconnect()
+        }
+
+        TimerServer.startServer()
+
+        updateMenuItems()
+        MainFrame.getInstance()?.rebuildGui()
+
+        if (!OBSClient.isRunning()) {
+            Notifications.popup("Please restart the application to (re)connect to OBS", "Remote Sync")
+        }
+    }
+
+    private fun stopServer() {
+        logger.info("Disabling remote sync server")
+        Config.remoteSyncServerEnabled = false
+        TimerServer.stopServer()
+
+        updateMenuItems()
+    }
+
+    private fun startClient() {
+        logger.info("Enabling remote sync client")
+        Config.remoteSyncClientEnabled = true
+        if (Config.remoteSyncServerEnabled) {
+            Config.remoteSyncServerEnabled = false
+            TimerServer.stopServer()
+        }
+
+        OBSSceneTimer.stop()
+
+        try {
+            Thread {
+                OBSClient.stop()
+
+                TimerClient.connect(Config.remoteSyncClientAddress)
+            }.start()
+        } catch (e: Exception) {
+            logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server")
+            e.printStackTrace()
+            Notifications.popup(
+                "Could not setup connection to remote sync server: ${e.localizedMessage}. Try restarting ${ApplicationInfo.name}",
+                "Remote Sync"
+            )
+        }
+
+        updateMenuItems()
+        MainFrame.getInstance()?.rebuildGui()
+    }
+
+    private fun stopClient() {
+        logger.info("Disabling remote sync client")
+        Config.remoteSyncClientEnabled = false
+        TimerClient.disconnect()
+
+        updateMenuItems()
+        Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
     }
 }

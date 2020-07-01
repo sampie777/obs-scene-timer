@@ -113,4 +113,13 @@ class OBSClientTest {
 
         assertEquals(0, OBSClient.getVideoLength(filename))
     }
+
+    @Test
+    fun testNotRunningIfRemoteSyncClientEnabled() {
+        Config.remoteSyncClientEnabled = true
+
+        OBSClient.start()
+
+        assertFalse(OBSClient.isRunning())
+    }
 }

@@ -72,6 +72,7 @@ object OBSClient {
 
     private fun startReconnectingTimeout() {
         if (Config.remoteSyncClientEnabled) {
+            reconnecting = false
             return
         }
 

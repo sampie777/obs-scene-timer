@@ -15,7 +15,7 @@ object TimerClient {
     private val logger = Logger.getLogger(TimerClient::class.java.name)
 
     private val websocketClient = WebSocketClient()
-    private val timerClientSocket = TimerClientSocket({ onConnect() }, { reason -> onClose(reason) })
+    private val timerClientSocket = TimerClientSocket({ onConnect() }, { onClose() })
     private var session: Session? = null
     private var reconnecting: Boolean = false
     private var connectionState: ConnectionState = ConnectionState.NOT_CONNECTED
@@ -100,7 +100,7 @@ object TimerClient {
         updateConnectionState(ConnectionState.CONNECTED)
     }
 
-    private fun onClose(reason: String?) {
+    private fun onClose() {
         updateConnectionState(ConnectionState.DISCONNECTED)
         startReconnectingTimeout()
     }

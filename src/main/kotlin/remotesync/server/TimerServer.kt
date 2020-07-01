@@ -104,7 +104,7 @@ object TimerServer : Server(), Refreshable {
         }
     }
 
-    private fun getCurrentTimerMessage(): TimerMessage {
+    fun getCurrentTimerMessage(): TimerMessage {
         return TimerMessage(
             sceneName = OBSState.currentSceneName,
             elapsedTime = OBSSceneTimer.getTimerAsClock(),
@@ -112,7 +112,7 @@ object TimerServer : Server(), Refreshable {
             timerState = OBSSceneTimer.getTimerState(),
             isTimed = (OBSSceneTimer.getMaxTimerValue() > 0),
             remainingTime = getTimeAsClock(OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getValue()),
-            remainingTimeRaw = OBSSceneTimer.getMaxTimerValue(),
+            remainingTimeRaw = OBSSceneTimer.getMaxTimerValue() - OBSSceneTimer.getValue(),
             maximumTime = OBSSceneTimer.getMaxTimerValue()
         )
     }

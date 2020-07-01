@@ -33,7 +33,7 @@ class ApplicationMenu : JMenu("Application") {
         fullscreenItem.addActionListener {
             (getMainFrameComponent(this) as MainFrame).toggleFullscreen()
         }
-        infoItem.addActionListener { InfoFrame(getMainFrameComponent(this)) }
+        infoItem.addActionListener { InfoFrame.createAndShow(getMainFrameComponent(this)) }
         quitItem.addActionListener { exitApplication() }
 
         add(notificationsItem)
