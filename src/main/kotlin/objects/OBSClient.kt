@@ -52,7 +52,7 @@ object OBSClient {
 
     fun stop() {
         logger.info("Disconnecting with OBS")
-        controller!!.disconnect()
+        controller?.disconnect()
 
         isRunning = false
     }
