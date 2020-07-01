@@ -1,6 +1,7 @@
 package remotesync.server
 
 
+import GUI
 import config.Config
 import getTimeAsClock
 import gui.Refreshable
@@ -87,10 +88,7 @@ object TimerServer : Server(), Refreshable {
             return
         }
 
-        val timerMessageJson = getCurrentTimerMessage().json()
-        ServerStatus.clients.values.forEach {
-            it.remote.sendString(timerMessageJson)
-        }
+        Thread { updateClientsWithTimerMessage() }.run()
     }
 
     override fun refreshTimer() {
@@ -98,6 +96,10 @@ object TimerServer : Server(), Refreshable {
             return
         }
 
+        Thread { updateClientsWithTimerMessage() }.run()
+    }
+
+    private fun updateClientsWithTimerMessage() {
         val timerMessageJson = getCurrentTimerMessage().json()
         ServerStatus.clients.values.forEach {
             it.remote.sendString(timerMessageJson)

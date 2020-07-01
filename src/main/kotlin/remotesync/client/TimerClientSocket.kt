@@ -1,5 +1,6 @@
 package remotesync.client
 
+import GUI
 import com.google.gson.Gson
 import objects.OBSSceneTimer
 import objects.OBSState
@@ -51,8 +52,9 @@ class TimerClientSocket(
         t.printStackTrace()
     }
 
+    @Suppress("unused")
     @OnWebSocketClose
-    fun onClose(session: Session, reason: String?) {
+    fun onClose(session: Session, status: Int, reason: String?) {
         logger.info("Connection closed with: ${session.remoteAddress.hostString}. Reason: $reason")
         Notifications.add("Connection with timer server lost", "Scene Timer")
 

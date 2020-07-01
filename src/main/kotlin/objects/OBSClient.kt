@@ -128,7 +128,7 @@ object OBSClient {
                 GUI.refreshOBSStatus()
 
                 if (reconnecting) {
-                    Notifications.add("Connection re-established", "OBS")
+                    Notifications.add("Connection re-established", "OBS", markAsRead = true)
                 }
                 reconnecting = false
 
