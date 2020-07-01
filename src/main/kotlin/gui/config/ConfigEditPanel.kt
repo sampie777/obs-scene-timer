@@ -157,7 +157,7 @@ class ConfigEditPanel : JPanel() {
 
                 logger.severe("Failed to create Config Edit GUI component: ${it.key}")
                 Notifications.add(
-                    "Failed to load GUI input for config key: <strong>${it.key}</strong>. Delete your <i>user.properties</i> file and try again.",
+                    "Failed to load GUI input for config key: <strong>${it.key}</strong>. Delete your <i>user.properties</i> file and try again. (Error: ${e.localizedMessage})",
                     "Configuration"
                 )
                 panel.add(TextFormComponent("Failed to load component. See Notifications.").component())

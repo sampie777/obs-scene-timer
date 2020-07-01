@@ -21,7 +21,7 @@
         <junit.version>4.12</junit.version>
         <jetty.version>9.4.29.v20200521</jetty.version>
         <gson.version>2.8.6</gson.version>
-        <twasi.version>1.0.7-snapshot-increased-message-size</twasi.version>
+        <twasi.version>1.0.9-snapshot-increased-message-size</twasi.version>
         <xuggle.version>5.5-20140728</xuggle.version>
         <launch4j.version>1.7.25</launch4j.version>
     </properties>

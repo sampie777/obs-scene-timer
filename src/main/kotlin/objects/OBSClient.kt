@@ -97,7 +97,7 @@ object OBSClient {
             logger.severe("Failed to create OBS callback: registerOnError")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register error callback: cannot notify when unexpected errors occur",
+                "Failed to register error callback: cannot notify when unexpected errors occur (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -116,7 +116,7 @@ object OBSClient {
             logger.severe("Failed to create OBS callback: registerDisconnectCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register disconnect callback: cannot notify when connection is lost",
+                "Failed to register disconnect callback: cannot notify when connection is lost (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -132,7 +132,7 @@ object OBSClient {
                 }
                 reconnecting = false
 
-                getScenes()
+                loadScenes()
 
                 getCurrentSceneFromOBS()
             }
@@ -140,7 +140,7 @@ object OBSClient {
             logger.severe("Failed to create OBS callback: registerConnectCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register connect callback: scenes cannot be loaded at startup",
+                "Failed to register connect callback: scenes cannot be loaded at startup (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -160,7 +160,7 @@ object OBSClient {
             logger.severe("Failed to create OBS callback: registerConnectionFailedCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register connectionFailed callback: connection failures won't be shown",
+                "Failed to register connectionFailed callback: connection failures won't be shown (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -168,13 +168,13 @@ object OBSClient {
         try {
             controller!!.registerScenesChangedCallback {
                 logger.fine("Processing scenes changed event")
-                getScenes()
+                loadScenes()
             }
         } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerScenesChangedCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register scenesChanged callback: new scenes cannot be loaded",
+                "Failed to register scenesChanged callback: new scenes cannot be loaded (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -188,13 +188,19 @@ object OBSClient {
                     return@registerSwitchScenesCallback
                 }
 
-                processNewScene(response.sceneName)
+                try {
+                    processNewScene(response.sceneName)
+                } catch (t: Throwable) {
+                    logger.severe("Could not process new scene change")
+                    t.printStackTrace()
+                    Notifications.add("Could not process new scene change: ${t.localizedMessage}", "OBS")
+                }
             }
         } catch (t: Throwable) {
             logger.severe("Failed to create OBS callback: registerSwitchScenesCallback")
             t.printStackTrace()
             Notifications.add(
-                "Failed to register switchScenes callback: cannot detect scene changes",
+                "Failed to register switchScenes callback: cannot detect scene changes (${t.localizedMessage})",
                 "OBS"
             )
         }
@@ -206,13 +212,26 @@ object OBSClient {
     private fun getCurrentSceneFromOBS() {
         logger.fine("Retrieving current scene")
         controller!!.getCurrentScene { res: ResponseBase ->
-            val currentScene = res as GetCurrentSceneResponse
+            val currentScene = try {
+                res as GetCurrentSceneResponse
+            } catch (t: Throwable) {
+                logger.severe("Could not cast response to GetCurrentSceneResponse")
+                t.printStackTrace()
+                Notifications.add("Could not process 'GetCurrentSceneResponse' from OBS: ${t.localizedMessage}", "OBS")
+                return@getCurrentScene
+            }
 
             if (OBSState.currentSceneName == currentScene.name) {
                 return@getCurrentScene
             }
 
-            processNewScene(currentScene.name)
+            try {
+                processNewScene(currentScene.name)
+            } catch (t: Throwable) {
+                logger.severe("Could not process current scene")
+                t.printStackTrace()
+                Notifications.add("Could not process current scene: ${t.localizedMessage}", "OBS")
+            }
         }
     }
 
@@ -231,28 +250,35 @@ object OBSClient {
         SceneLogger.log(OBSState.currentSceneName)
     }
 
-    private fun getScenes() {
+    private fun loadScenes() {
         logger.info("Retrieving scenes")
         OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENES
         GUI.refreshOBSStatus()
 
         try {
             controller!!.getScenes { response: ResponseBase ->
-                val res = response as GetSceneListResponse
-                logger.info(res.scenes.size.toString() + " scenes retrieved")
+                val res = try {
+                    response as GetSceneListResponse
+                } catch (t: Throwable) {
+                    logger.severe("Could not cast response to GetSceneListResponse")
+                    t.printStackTrace()
+                    Notifications.add("Could not process 'GetSceneListResponse' from OBS: ${t.localizedMessage}", "OBS")
+                    return@getScenes
+                }
+                logger.info("${res.scenes.size} scenes retrieved")
 
                 try {
                     processOBSScenesToOBSStateScenes(res.scenes)
-                } catch (e: Exception) {
+                } catch (t: Throwable) {
                     logger.severe("Failed to process scenes")
-                    e.printStackTrace()
-                    Notifications.add("Something went wrong during scenes processing", "OBS")
+                    t.printStackTrace()
+                    Notifications.add("Something went wrong during scenes processing: ${t.localizedMessage}", "OBS")
                 }
             }
-        } catch (e: Exception) {
+        } catch (t: Throwable) {
             logger.severe("Failed to retrieve scenes")
-            e.printStackTrace()
-            Notifications.add("Something went wrong during retrieving scenes", "OBS")
+            t.printStackTrace()
+            Notifications.add("Something went wrong during retrieving scenes: ${t.localizedMessage}", "OBS")
         }
     }
 
@@ -273,10 +299,13 @@ object OBSClient {
 
         val sourceSettingsAreLoading = try {
             loadSourceSettings()
-        } catch (e: Exception) {
+        } catch (t: Throwable) {
             logger.severe("Failed to load scene sources settings")
-            e.printStackTrace()
-            Notifications.add("Something went wrong while processing scene sources settings", "OBS")
+            t.printStackTrace()
+            Notifications.add(
+                "Something went wrong while processing scene sources settings: ${t.localizedMessage}",
+                "OBS"
+            )
             false
         }
 
@@ -347,7 +376,7 @@ object OBSClient {
             logger.severe("Failed to load source settings for source: $sourceName")
             t.printStackTrace()
             Notifications.add(
-                "Failed to load sources information",
+                "Failed to load sources information: ${t.localizedMessage}",
                 "OBS"
             )
         }
@@ -365,8 +394,8 @@ object OBSClient {
                 logger.info("Trying to get video length for: ${source.fileName}")
                 videoLength = getVideoLength(source.fileName).toInt()
             } catch (t: Throwable) {
+                logger.severe("Failed to get video length: ${t.message}")
                 t.printStackTrace()
-                logger.severe("Failed to get video length: $t")
             }
             source.videoLength = videoLength
         }

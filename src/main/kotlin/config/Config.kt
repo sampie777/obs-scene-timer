@@ -62,7 +62,7 @@ object Config {
         } catch (e: Exception) {
             logger.severe("Failed to load Config")
             e.printStackTrace()
-            Notifications.add("Failed to load configuration from file", "Configuration")
+            Notifications.add("Failed to load configuration from file: ${e.localizedMessage}", "Configuration")
         }
     }
 
@@ -74,7 +74,7 @@ object Config {
         } catch (e: Exception) {
             logger.severe("Failed to save Config")
             e.printStackTrace()
-            Notifications.add("Failed to save configuration to file", "Configuration")
+            Notifications.add("Failed to save configuration to file: ${e.localizedMessage}", "Configuration")
         }
     }
 
@@ -84,7 +84,7 @@ object Config {
         } catch (e: Exception) {
             logger.severe("Could not get config key $key")
             e.printStackTrace()
-            Notifications.add("Could not get configuration setting: $key", "Configuration")
+            Notifications.add("Could not get configuration setting: $key (${e.localizedMessage})", "Configuration")
         }
         return null
     }
@@ -95,7 +95,7 @@ object Config {
         } catch (e: Exception) {
             logger.severe("Could not set config key $key")
             e.printStackTrace()
-            Notifications.add("Could not set configuration setting: $key", "Configuration")
+            Notifications.add("Could not set configuration setting: $key (${e.localizedMessage})", "Configuration")
         }
     }
 
