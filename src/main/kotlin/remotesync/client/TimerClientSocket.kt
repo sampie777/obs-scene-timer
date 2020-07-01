@@ -53,7 +53,7 @@ class TimerClientSocket(
     }
 
     @OnWebSocketClose
-    fun onClose(session: Session, @Suppress("unused") status: Int, reason: String?) {
+    fun onClose(session: Session, @Suppress("UNUSED_PARAMETER") status: Int, reason: String?) {
         logger.info("Connection closed with: ${session.remoteAddress.hostString}. Reason: $reason")
         Notifications.add("Connection with timer server lost", "Scene Timer")
 
