@@ -119,7 +119,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(StringFormInput("remoteSyncClientAddress", "Client: Remote sync server address", true))
         formComponents.add(
             NumberFormInput<Long>(
-                "obsReconnectionTimeout",
+                "remoteSyncClientReconnectionTimeout",
                 "Client: Connection retry interval (millisec.)",
                 0,
                 null
