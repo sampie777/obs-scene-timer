@@ -11,6 +11,7 @@ import remotesync.client.TimerClient
 import remotesync.objects.ConnectionState
 import themes.Theme
 import java.awt.*
+import java.awt.event.KeyEvent
 import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -49,6 +50,7 @@ class TimerPanel : JPanel(), Refreshable {
         resetTimerButton.addActionListener {
             OBSSceneTimer.reset()
         }
+        resetTimerButton.mnemonic = KeyEvent.VK_R
 
         val topPanel = JPanel()
         topPanel.background = null

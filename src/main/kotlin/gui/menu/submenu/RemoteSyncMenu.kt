@@ -14,6 +14,7 @@ import remotesync.objects.RemoteSyncRefreshable
 import remotesync.server.ServerStatus
 import remotesync.server.TimerServer
 import themes.Theme
+import java.awt.event.KeyEvent
 import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JMenu
@@ -39,6 +40,11 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         stopServerItem.addActionListener { stopServer() }
         startClientItem.addActionListener { startClient() }
         stopClientItem.addActionListener { stopClient() }
+
+        startServerItem.mnemonic = KeyEvent.VK_S
+        stopServerItem.mnemonic = KeyEvent.VK_S
+        startClientItem.mnemonic = KeyEvent.VK_C
+        stopClientItem.mnemonic = KeyEvent.VK_C
 
         add(startServerItem)
         add(stopServerItem)
