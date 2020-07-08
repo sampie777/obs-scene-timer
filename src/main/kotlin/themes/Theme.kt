@@ -3,8 +3,10 @@ package themes
 import config.Config
 import objects.notifications.Notifications
 import java.awt.Color
+import java.awt.Insets
 import java.util.logging.Logger
 import javax.swing.UIManager
+
 
 object Theme {
     private val logger = Logger.getLogger(Theme::class.java.name)
@@ -66,8 +68,10 @@ object Theme {
         UIManager.put("SplitPane.background", get.BACKGROUND_COLOR)
         UIManager.put("Label.background", get.BACKGROUND_COLOR)
         UIManager.put("Label.foreground", get.FONT_COLOR)
-        UIManager.put("List.background", get.BACKGROUND_COLOR)
+        UIManager.put("List.background", get.LIST_BACKGROUND_COLOR)
         UIManager.put("List.foreground", get.FONT_COLOR)
+        UIManager.put("List.selectionBackground", get.LIST_SELECTION_BACKGROUND_COLOR)
+        UIManager.put("List.selectionForeground", get.LIST_SELECTION_FONT_COLOR_DEFAULT)
         UIManager.put("MenuBar.background", get.BACKGROUND_COLOR)
         UIManager.put("MenuBar.foreground", get.FONT_COLOR)
         UIManager.put("MenuBar.borderColor", get.MENU_BAR_BORDER_COLOR)
@@ -75,6 +79,8 @@ object Theme {
         UIManager.put("Menu.foreground", get.FONT_COLOR)
         UIManager.put("MenuItem.background", get.BACKGROUND_COLOR)
         UIManager.put("MenuItem.foreground", get.FONT_COLOR)
+        UIManager.put("PopupMenu.background", get.BACKGROUND_COLOR)
+        UIManager.put("PopupMenu.foreground", get.FONT_COLOR)
         UIManager.put("ComboBox.background", get.TEXT_FIELD_BACKGROUND_COLOR)
         UIManager.put("ComboBox.foreground", get.FONT_COLOR)
         UIManager.put("ColorChooser.background", get.BACKGROUND_COLOR)
@@ -92,6 +98,9 @@ object Theme {
         UIManager.put("Separator.foreground", get.FONT_COLOR)
         UIManager.put("ScrollPane.background", get.BACKGROUND_COLOR)
         UIManager.put("ScrollPane.foreground", get.FONT_COLOR)
+        UIManager.put("TabbedPane.background", get.LIST_BACKGROUND_COLOR)
+        UIManager.put("TabbedPane.foreground", get.FONT_COLOR)
+        UIManager.put("TabbedPane.selected", get.LIST_SELECTION_BACKGROUND_COLOR)
         UIManager.put("TableHeader.background", get.TABLE_HEADER_BACKGROUND_COLOR)
         UIManager.put("TableHeader.foreground", get.FONT_COLOR)
         UIManager.put("Table.background", get.TABLE_BACKGROUND_COLOR)
@@ -118,6 +127,8 @@ object Theme {
         UIManager.put("Viewport.foreground", get.FONT_COLOR)
         UIManager.put("Spinner.background", get.TEXT_FIELD_BACKGROUND_COLOR)
         UIManager.put("Spinner.foreground", get.FONT_COLOR)
+
+        UIManager.getDefaults()["TabbedPane.contentBorderInsets"] = Insets(1, 0, 0, 0)
     }
 
     @Suppress("DEPRECATION")

@@ -1,10 +1,10 @@
 import config.Config
-import objects.TimerState
-import objects.OBSSceneTimer
 import objects.SceneLogger
+import java.awt.Color
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import java.util.logging.Logger
 import kotlin.system.exitProcess
 
@@ -37,17 +37,35 @@ fun isAddressLocalhost(address: String): Boolean {
 }
 
 fun exitApplication() {
-    logger.info("Shutting down application...")
+    logger.info("Shutting down application")
+
     try {
-        Config.save()
+        logger.info("Shutting down scene logger...")
         SceneLogger.log("")
     } catch (t: Throwable) {
-        logger.warning("Failed to properly shut down the application")
+        logger.warning("Failed to shutdown scene logger")
         t.printStackTrace()
     }
+
+    try {
+        logger.info("Saving configuration...")
+        Config.save()
+    } catch (t: Throwable) {
+        logger.warning("Failed to save configuration")
+        t.printStackTrace()
+    }
+
+    logger.info("Shutdown finished")
     exitProcess(0)
 }
 
+fun brightness(color: Color): Double {
+    return 0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue
+}
+
+fun decodeURI(uri: String): String {
+    return URLDecoder.decode(uri, StandardCharsets.UTF_8.name())
+}
 
 fun getReadableFileSize(file: File): String {
     return when {

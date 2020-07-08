@@ -22,6 +22,7 @@ object OBSClient {
     private var logger = Logger.getLogger(OBSClient::class.java.name)
 
     private var controller: OBSRemoteController? = null
+    fun getController() = controller
     private var reconnecting: Boolean = false
     private var isRunning: Boolean = false
     fun isRunning() = isRunning
@@ -286,13 +287,7 @@ object OBSClient {
         logger.info("Set the OBS Scenes")
         OBSState.scenes.clear()
         for (scene in scenes) {
-            val tScene = TScene(scene.name)
-
-            if (scene.sources != null && Config.autoCalculateSceneLimitsBySources) {
-                val tSources = scene.sources.map { source: Source -> TSource(source.name, source.type) }
-
-                tScene.sources = tSources
-            }
+            val tScene = responseSceneToTScene(scene.name, scene.sources)
 
             OBSState.scenes.add(tScene)
         }
@@ -309,12 +304,24 @@ object OBSClient {
             false
         }
 
-        if (!sourceSettingsAreLoading) {
-            logger.info("Refreshing scenes info")
-            GUI.refreshScenes()
-            OBSState.clientActivityStatus = null
-            GUI.refreshOBSStatus()
+        if (sourceSettingsAreLoading) {
+            return
         }
+
+        logger.info("Refreshing scenes info")
+        GUI.refreshScenes()
+        OBSState.clientActivityStatus = null
+        GUI.refreshOBSStatus()
+    }
+
+    fun responseSceneToTScene(name: String?, sources: List<Source>?): TScene {
+        val tScene = TScene(name)
+
+        if (sources != null && Config.autoCalculateSceneLimitsBySources) {
+            val tSources = sources.map { source: Source -> TSource(source.name, source.type) }
+            tScene.sources = tSources
+        }
+        return tScene
     }
 
     /**

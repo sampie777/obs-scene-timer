@@ -4,6 +4,7 @@ import GUI
 import config.Config
 import gui.notifications.NotificationFrame
 import gui.utils.createImageIcon
+import gui.utils.divider
 import gui.utils.getMainFrameComponent
 import objects.notifications.Notifications
 import themes.Theme
@@ -12,10 +13,7 @@ import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.util.logging.Logger
-import javax.swing.Icon
-import javax.swing.JButton
-import javax.swing.JPanel
-import javax.swing.JSplitPane
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class MainFramePanel : JSplitPane(), Refreshable {
@@ -36,6 +34,9 @@ class MainFramePanel : JSplitPane(), Refreshable {
 
     private fun createGui() {
         border = null
+        val divider = divider()
+        divider.border = BorderFactory.createMatteBorder(0, 0, 0, 1, Theme.get.BORDER_COLOR)
+        divider.dividerSize = 6
 
         notificationsButton.isBorderPainted = false
         notificationsButton.isContentAreaFilled = false
@@ -46,7 +47,7 @@ class MainFramePanel : JSplitPane(), Refreshable {
         }
 
         val leftBottomPanel = JPanel(BorderLayout(10, 10))
-        leftBottomPanel.border = EmptyBorder(10, 10, 10, 10)
+        leftBottomPanel.border = EmptyBorder(0, 10, 10, 10)
         leftBottomPanel.minimumSize = Dimension(0, 0)
         leftBottomPanel.add(OBSStatusPanel(), BorderLayout.LINE_START)
         leftBottomPanel.add(notificationsButton, BorderLayout.LINE_END)

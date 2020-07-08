@@ -2,12 +2,12 @@ package gui.utils
 
 import gui.MainFrame
 import java.awt.*
+import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import java.net.URL
 import java.util.logging.Logger
-import javax.swing.ImageIcon
-import javax.swing.JFrame
-import javax.swing.SwingUtilities
+import javax.swing.*
+import javax.swing.plaf.basic.BasicSplitPaneDivider
 
 private val logger = Logger.getLogger("utils")
 
@@ -74,3 +74,9 @@ fun createImageIcon(path: String): ImageIcon? {
     logger.severe("Couldn't find imageIcon: $path")
     return null
 }
+
+fun isCtrlClick(modifiers: Int): Boolean = modifiers.and(ActionEvent.CTRL_MASK) != 0
+
+fun getMainMenu(menu: JMenu) = (menu.popupMenu.invoker.parent as JPopupMenu).invoker
+
+fun JSplitPane.divider(): BasicSplitPaneDivider = this.components.find { it is BasicSplitPaneDivider} as BasicSplitPaneDivider

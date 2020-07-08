@@ -42,7 +42,9 @@ fun main(args: Array<String>) {
             TimerServer.startServer()
         }
 
-        OBSClient.start()
+        if ("--offline" !in args) {
+            OBSClient.start()
+        }
     }
 }
 

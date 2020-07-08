@@ -72,6 +72,7 @@ object LogService {
         logBuffer.add(LogRecord(Level.FINE, "Current log file size: " + getReadableFileSize(logFile)))
 
         if (logFile.length() < Config.maxLogFileSize) {
+            logFile.appendText("\n\n\n\n")
             return FileHandler(logFile.absolutePath, true)
         }
 
