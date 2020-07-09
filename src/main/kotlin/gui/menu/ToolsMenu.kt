@@ -4,11 +4,13 @@ import gui.menu.submenu.RemoteSyncMenu
 import gui.utils.getMainFrameComponent
 import gui.websocketScanner.WebsocketScannerFrame
 import themes.Theme
+import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JMenu
 import javax.swing.JMenuItem
+import javax.swing.KeyStroke
 
 class ToolsMenu : JMenu("Tools") {
     private val logger = Logger.getLogger(ToolsMenu::class.java.name)
@@ -25,6 +27,7 @@ class ToolsMenu : JMenu("Tools") {
         val remoteSyncItem = RemoteSyncMenu()
 
         scannerItem.mnemonic = KeyEvent.VK_W
+        scannerItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         remoteSyncItem.mnemonic = KeyEvent.VK_R
 
         scannerItem.addActionListener { WebsocketScannerFrame(getMainFrameComponent(this)) }
