@@ -1,8 +1,8 @@
 package gui.menu
 
 import exitApplication
-import gui.MainFrame
 import gui.config.ConfigFrame
+import gui.mainFrame.MainFrame
 import gui.notifications.NotificationFrame
 import gui.utils.getMainFrameComponent
 import themes.Theme

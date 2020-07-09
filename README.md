@@ -74,6 +74,16 @@ When connection to OBS is lost, OBS Scene Timer will continue keeping track of t
 
 OBS Scene Timer will not attempt to reconnect immediately, but during a continuous interval of 3 seconds (as specified in the properties).
 
+#### Hot keys
+
+List of hotkeys:
+
+| Key | Action |
+| --- | ----- |
+| `ALT + R` | Reset timer to 00:00:00 |
+| `F11` | Toggle fullscreen |
+| `CTRL + Q` | Quit application |
+
 #### Logging
 
 Application logging is done to the console and to a file. Location of this file is displayed in the Info window. By default, the log level is INFO. For debug logging, pass the `-v` argument when running the application, like so: 

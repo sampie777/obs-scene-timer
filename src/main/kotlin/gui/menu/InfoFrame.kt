@@ -1,7 +1,7 @@
 package gui.menu
 
+import LogService
 import config.Config
-import gui.MainFrame
 import gui.utils.ClickableLinkComponent
 import objects.ApplicationInfo
 import themes.Theme

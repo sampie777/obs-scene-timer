@@ -1,7 +1,11 @@
-package gui
+package gui.mainFrame
 
 import GUI
 import config.Config
+import gui.OBSStatusPanel
+import gui.Refreshable
+import gui.SceneTablePanel
+import gui.TimerPanel
 import gui.notifications.NotificationFrame
 import gui.utils.createImageIcon
 import gui.utils.divider

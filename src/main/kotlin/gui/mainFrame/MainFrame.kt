@@ -1,8 +1,8 @@
-package gui
+package gui.mainFrame
 
 import GUI
 import config.Config
-import exitApplication
+import gui.Refreshable
 import gui.menu.MenuBar
 import gui.utils.loadIcon
 import objects.ApplicationInfo
@@ -12,18 +12,10 @@ import objects.TimerState
 import objects.notifications.Notifications
 import java.awt.EventQueue
 import java.awt.Image
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.KeyboardFocusManager
 import java.util.logging.Logger
 import javax.swing.JFrame
 
-class MainFrameWindowAdapter(private val frame: MainFrame) : WindowAdapter() {
-    override fun windowClosing(winEvt: WindowEvent) {
-        frame.saveWindowPosition()
-        GUI.windowClosing(frame)
-        exitApplication()
-    }
-}
 
 class MainFrame : JFrame(), Refreshable {
     private val logger = Logger.getLogger(MainFrame::class.java.name)
@@ -55,6 +47,9 @@ class MainFrame : JFrame(), Refreshable {
         applicationIconRed = loadIcon("/icon-red-512.png")
 
         addWindowListener(MainFrameWindowAdapter(this))
+        KeyboardFocusManager
+            .getCurrentKeyboardFocusManager()
+            .addKeyEventDispatcher(MainFrameKeyDispatcher(this))
 
         initGUI()
     }

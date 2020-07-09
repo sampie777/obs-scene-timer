@@ -2,7 +2,7 @@ package gui.menu.submenu
 
 
 import config.Config
-import gui.MainFrame
+import gui.mainFrame.MainFrame
 import objects.ApplicationInfo
 import objects.OBSClient
 import objects.OBSSceneTimer
