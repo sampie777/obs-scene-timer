@@ -12,7 +12,6 @@ import objects.TimerState
 import objects.notifications.Notifications
 import java.awt.EventQueue
 import java.awt.Image
-import java.awt.KeyboardFocusManager
 import java.util.logging.Logger
 import javax.swing.JFrame
 
@@ -47,9 +46,6 @@ class MainFrame : JFrame(), Refreshable {
         applicationIconRed = loadIcon("/icon-red-512.png")
 
         addWindowListener(MainFrameWindowAdapter(this))
-        KeyboardFocusManager
-            .getCurrentKeyboardFocusManager()
-            .addKeyEventDispatcher(MainFrameKeyDispatcher(this))
 
         initGUI()
     }

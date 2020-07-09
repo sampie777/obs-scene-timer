@@ -82,6 +82,8 @@ List of hotkeys:
 | --- | ----- |
 | `ALT + R` | Reset timer to 00:00:00 |
 | `F11` | Toggle fullscreen |
+| `ESC` | Close popup |
+| `CTRL + W` | Close popup |
 | `CTRL + Q` | Quit application |
 
 #### Logging

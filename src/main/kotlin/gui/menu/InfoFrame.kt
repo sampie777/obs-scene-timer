@@ -3,10 +3,12 @@ package gui.menu
 import LogService
 import config.Config
 import gui.utils.ClickableLinkComponent
+import gui.utils.DefaultDialogKeyDispatcher
 import objects.ApplicationInfo
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font
+import java.awt.KeyboardFocusManager
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -23,6 +25,10 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
     }
 
     init {
+        KeyboardFocusManager
+            .getCurrentKeyboardFocusManager()
+            .addKeyEventDispatcher(DefaultDialogKeyDispatcher(this))
+
         createGui()
     }
 
