@@ -15,7 +15,7 @@ class SceneTablePanelTest {
     fun before() {
         Config.sceneLimitValues.clear()
         OBSState.scenes.clear()
-        OBSState.currentSceneName = ""
+        OBSState.currentScene = TScene("")
         OBSSceneTimer.stop()
         OBSSceneTimer.setMaxTimerValue(0)
     }
@@ -140,7 +140,7 @@ class SceneTablePanelTest {
     fun testInputChangeIsHandledForActiveScene() {
         OBSState.scenes.add(TScene("scene1"))
         OBSState.scenes.add(TScene("scene2"))
-        OBSState.currentSceneName = "scene2"
+        OBSState.currentScene = TScene("scene2")
         val panel = SceneTablePanel()
         panel.switchedScenes()
 
@@ -161,7 +161,7 @@ class SceneTablePanelTest {
         Config.sceneLimitValues["scene1"] = 10
         OBSState.scenes.add(TScene("scene1"))
         OBSState.scenes.add(TScene("scene2"))
-        OBSState.currentSceneName = "scene1"
+        OBSState.currentScene = TScene("scene1")
 
         val panel = SceneTablePanel()
         panel.refreshScenes()
@@ -180,7 +180,7 @@ class SceneTablePanelTest {
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
         Config.sceneLimitValues["scene1"] = 10
-        OBSState.currentSceneName = "scene1"
+        OBSState.currentScene = TScene("scene1")
         panel.switchedScenes()
 
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())

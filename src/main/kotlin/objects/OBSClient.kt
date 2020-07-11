@@ -17,6 +17,7 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.logging.Logger
+import kotlin.reflect.KClass
 
 object OBSClient {
     private var logger = Logger.getLogger(OBSClient::class.java.name)
@@ -183,9 +184,9 @@ object OBSClient {
         try {
             controller!!.registerSwitchScenesCallback { responseBase: ResponseBase ->
                 logger.fine("Processing scene switch event")
-                val response = responseBase as SwitchScenesResponse
+                val response = castResponseTo<SwitchScenesResponse>(responseBase) ?: return@registerSwitchScenesCallback
 
-                if (OBSState.currentSceneName == response.sceneName) {
+                if (OBSState.currentScene.name == response.sceneName) {
                     return@registerSwitchScenesCallback
                 }
 
@@ -213,16 +214,9 @@ object OBSClient {
     private fun getCurrentSceneFromOBS() {
         logger.fine("Retrieving current scene")
         controller!!.getCurrentScene { res: ResponseBase ->
-            val currentScene = try {
-                res as GetCurrentSceneResponse
-            } catch (t: Throwable) {
-                logger.severe("Could not cast response to GetCurrentSceneResponse")
-                t.printStackTrace()
-                Notifications.add("Could not process 'GetCurrentSceneResponse' from OBS: ${t.localizedMessage}", "OBS")
-                return@getCurrentScene
-            }
+            val currentScene = castResponseTo<GetCurrentSceneResponse>(res) ?: return@getCurrentScene
 
-            if (OBSState.currentSceneName == currentScene.name) {
+            if (OBSState.currentScene.name == currentScene.name) {
                 return@getCurrentScene
             }
 
@@ -241,15 +235,25 @@ object OBSClient {
      */
     fun processNewScene(sceneName: String) {
         logger.info("New scene: $sceneName")
-        OBSState.currentSceneName = sceneName
 
-        OBSSceneTimer.reset()
+        val newScene: TScene = OBSState.scenes.find { it.name == sceneName } ?: run {
+            logger.warning("New scene is not found in scene list. Creating new scene for it.")
+            TScene(sceneName)
+        }
+
+        val isSameGroup = newScene.isInSameGroupAs(OBSState.currentScene)
+        OBSState.currentScene = newScene
+
+        if (!isSameGroup) {
+            OBSSceneTimer.reset()
+        }
 
         GUI.switchedScenes()
         GUI.refreshTimer()
 
-        SceneLogger.log(OBSState.currentSceneName)
+        SceneLogger.log(OBSState.currentScene.name)
     }
+
 
     private fun loadScenes() {
         logger.info("Retrieving scenes")
@@ -258,14 +262,7 @@ object OBSClient {
 
         try {
             controller!!.getScenes { response: ResponseBase ->
-                val res = try {
-                    response as GetSceneListResponse
-                } catch (t: Throwable) {
-                    logger.severe("Could not cast response to GetSceneListResponse")
-                    t.printStackTrace()
-                    Notifications.add("Could not process 'GetSceneListResponse' from OBS: ${t.localizedMessage}", "OBS")
-                    return@getScenes
-                }
+                val res = castResponseTo<GetSceneListResponse>(response) ?: return@getScenes
                 logger.info("${res.scenes.size} scenes retrieved")
 
                 try {
@@ -283,13 +280,20 @@ object OBSClient {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun processOBSScenesToOBSStateScenes(scenes: List<Scene>) {
         logger.info("Set the OBS Scenes")
+
         OBSState.scenes.clear()
         for (scene in scenes) {
             val tScene = responseSceneToTScene(scene.name, scene.sources)
 
             OBSState.scenes.add(tScene)
+
+            // Reassign pointer from currentScene to scene in new scenes list
+            if (OBSState.currentScene.name == tScene.name) {
+                OBSState.currentScene = tScene
+            }
         }
 
         val sourceSettingsAreLoading = try {
@@ -429,5 +433,19 @@ object OBSClient {
         logger.info("Duration is: $duration")
 
         return duration
+    }
+
+    private inline fun <reified T: ResponseBase> castResponseTo(response: ResponseBase): T? = castResponseTo(response, T::class)
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T: ResponseBase> castResponseTo(response: ResponseBase, cls: KClass<T>): T? {
+        return try {
+            response as T
+        } catch (t: Throwable) {
+            logger.severe("Could not cast response to $cls")
+            t.printStackTrace()
+            Notifications.add("Could not process '$cls' from OBS: ${t.localizedMessage}", "OBS")
+            null
+        }
     }
 }

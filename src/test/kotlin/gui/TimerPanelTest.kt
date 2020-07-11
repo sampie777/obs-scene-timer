@@ -4,6 +4,7 @@ import config.Config
 import objects.OBSClientStatus
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TScene
 import themes.Theme
 import kotlin.test.*
 
@@ -87,12 +88,12 @@ class TimerPanelTest {
         assertEquals("Waiting for connection...", panel.sceneLabel.text)
 
         OBSState.connectionStatus = OBSClientStatus.CONNECTED
-        OBSState.currentSceneName = "scene1"
+        OBSState.currentScene = TScene("scene1")
         panel.switchedScenes()
 
         assertEquals("scene1", panel.sceneLabel.text)
 
-        OBSState.currentSceneName = "scene2"
+        OBSState.currentScene = TScene("scene2")
         panel.switchedScenes()
 
         assertEquals("scene2", panel.sceneLabel.text)

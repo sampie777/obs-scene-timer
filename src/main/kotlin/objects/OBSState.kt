@@ -1,7 +1,7 @@
 package objects
 
 object OBSState {
-    var currentSceneName = "No scene selected"
+    var currentScene: TScene = TScene("No scene selected")
     val scenes: ArrayList<TScene> = ArrayList()
 
     var clientActivityStatus: OBSClientStatus? = null
