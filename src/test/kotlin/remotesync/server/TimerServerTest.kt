@@ -2,6 +2,7 @@ package remotesync.server
 
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TScene
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -11,7 +12,7 @@ class TimerServerTest {
 
     @Test
     fun testGetCurrentTimerMessage() {
-        OBSState.currentSceneName = "scenename"
+        OBSState.currentScene = TScene("scenename")
         OBSSceneTimer.resetValue()
         OBSSceneTimer.increase()    // Set value to 1
         OBSSceneTimer.setMaxTimerValue(100)

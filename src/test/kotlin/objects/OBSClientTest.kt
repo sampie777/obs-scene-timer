@@ -1,8 +1,8 @@
 package objects
 
 import GUI
-import mocks.GuiComponentMock
 import config.Config
+import mocks.GuiComponentMock
 import mocks.SceneMockWithSources
 import net.twasi.obsremotejava.objects.Scene
 import java.io.File
@@ -14,7 +14,7 @@ class OBSClientTest {
     fun before() {
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
-        OBSState.currentSceneName = ""
+        OBSState.currentScene = TScene("")
         OBSState.scenes.clear()
         Config.autoCalculateSceneLimitsBySources = true
     }
@@ -36,7 +36,7 @@ class OBSClientTest {
         assertFalse(panelMock.refreshScenesCalled)
         assertTrue(panelMock.switchedScenesCalled)
         assertTrue(panelMock.refreshTimerCalled)
-        assertEquals("scene1", OBSState.currentSceneName)
+        assertEquals("scene1", OBSState.currentScene.name)
         assertEquals(0, OBSSceneTimer.getValue())
     }
 

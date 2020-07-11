@@ -4,6 +4,7 @@ import GUI
 import com.google.gson.Gson
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TScene
 import objects.notifications.Notifications
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
@@ -82,7 +83,7 @@ class TimerClientSocket(
 
     private fun processTimerMessage(message: TimerMessage) {
         OBSSceneTimer.timerMessage = message
-        OBSState.currentSceneName = message.sceneName
+        OBSState.currentScene = TScene(message.sceneName)
         GUI.switchedScenes()
         GUI.refreshTimer()
     }

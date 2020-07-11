@@ -108,7 +108,7 @@ object TimerServer : Server(), Refreshable {
 
     fun getCurrentTimerMessage(): TimerMessage {
         return TimerMessage(
-            sceneName = OBSState.currentSceneName,
+            sceneName = OBSState.currentScene.name,
             elapsedTime = OBSSceneTimer.getTimerAsClock(),
             elapsedTimeRaw = OBSSceneTimer.getValue(),
             timerState = OBSSceneTimer.getTimerState(),

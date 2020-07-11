@@ -108,7 +108,7 @@ class TimerPanel : JPanel(), Refreshable {
             return
         }
 
-        sceneLabel.text = OBSState.currentSceneName
+        sceneLabel.text = OBSState.currentScene.name
     }
 
     private fun updateLabelsForTimer() {

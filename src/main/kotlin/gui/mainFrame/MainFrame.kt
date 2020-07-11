@@ -98,7 +98,7 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     override fun refreshTimer() {
-        title = "${OBSState.currentSceneName}: ${OBSSceneTimer.getTimerAsClock()}"
+        title = "${OBSState.currentScene.name}: ${OBSSceneTimer.getTimerAsClock()}"
 
         iconImage = when (OBSSceneTimer.getTimerState()) {
             TimerState.EXCEEDED -> applicationIconRed

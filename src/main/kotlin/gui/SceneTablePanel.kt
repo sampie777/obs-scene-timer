@@ -20,7 +20,7 @@ class SceneInputChangeListener(private val scene: String) : ChangeListener {
         val newValue = (p0.source as JSpinner).value as Int
         Config.sceneLimitValues[scene] = newValue
 
-        if (scene == OBSState.currentSceneName) {
+        if (scene == OBSState.currentScene.name) {
             OBSSceneTimer.setMaxTimerValue(newValue.toLong())
         }
     }
@@ -104,7 +104,7 @@ class SceneTablePanel : JPanel(), Refreshable {
                 scene.maxVideoLength() else Config.sceneLimitValues[scene.name] as Int
 
             val sceneLabel = JLabel(scene.name)
-            sceneLabel.font = if (scene.name == OBSState.currentSceneName)
+            sceneLabel.font = if (scene.name == OBSState.currentScene.name)
                 currentSceneLabelFont else labelFont
             sceneLabels[scene.name] = sceneLabel
 
@@ -113,7 +113,7 @@ class SceneTablePanel : JPanel(), Refreshable {
             sceneInput.model = SpinnerNumberModel(sceneValue, 0, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(scene.name))
             sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
-            sceneInput.font = if (scene.name == OBSState.currentSceneName)
+            sceneInput.font = if (scene.name == OBSState.currentScene.name)
                 currentSceneInputFont else inputFont
             sceneInputs[scene.name] = sceneInput
         }
@@ -141,7 +141,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         createSceneTable()
 
         OBSSceneTimer.setMaxTimerValue(
-            getValueForScene(OBSState.currentSceneName)
+            getValueForScene(OBSState.currentScene.name)
                 .toLong()
         )
     }
@@ -154,7 +154,7 @@ class SceneTablePanel : JPanel(), Refreshable {
         createSceneTable()
 
         OBSSceneTimer.setMaxTimerValue(
-            getValueForScene(OBSState.currentSceneName)
+            getValueForScene(OBSState.currentScene.name)
                 .toLong()
         )
     }
