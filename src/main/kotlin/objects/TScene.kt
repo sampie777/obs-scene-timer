@@ -8,6 +8,15 @@ class TScene {
     private val logger = Logger.getLogger(TScene::class.java.name)
     var name = ""
     var sources: List<TSource> = ArrayList()
+    private val groups: MutableSet<Int> = mutableSetOf()
+
+    constructor()
+
+    constructor(name: String?) {
+        this.name = name ?: ""
+    }
+
+    override fun toString(): String = name
 
     fun maxVideoLength(): Int {
         val longestVideoLengthSource = longestVideoLengthSource()
@@ -22,12 +31,35 @@ class TScene {
     private fun longestVideoLengthSource(): Optional<TSource> =
         sources.stream().max(Comparator.comparingInt(TSource::videoLength))
 
-
-    constructor()
-
-    constructor(name: String?) {
-        this.name = name ?: ""
+    fun addToGroup(groupNumber: Int) {
+        logger.fine("Adding scene '$name' to group: $groupNumber")
+        groups.add(groupNumber)
     }
 
-    override fun toString(): String = name
+    fun removeFromGroup(groupNumber: Int) {
+        logger.fine("Removing scene '$name' from group: $groupNumber")
+        groups.remove(groupNumber)
+    }
+
+    fun removeFromAllGroups() {
+        logger.fine("Removing scene '$name' from all groups")
+        groups.clear()
+    }
+
+    fun isInGroup(groupNumber: Int): Boolean {
+        return groups.contains(groupNumber)
+    }
+
+    fun isInSameGroupAs(scene: TScene): Boolean {
+        if (groups.size == 0 || scene.groups.size == 0) {
+            return false
+        }
+
+        return groups.any { scene.isInGroup(it) }
+    }
+
+    fun setGroupsFrom(sourceScene: TScene) {
+        groups.clear()
+        groups.addAll(sourceScene.groups)
+    }
 }

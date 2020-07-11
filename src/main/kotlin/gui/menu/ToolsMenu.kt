@@ -1,5 +1,7 @@
 package gui.menu
 
+import gui.grouping.GroupingFrame
+import gui.mainFrame.MainFrame
 import gui.menu.submenu.RemoteSyncMenu
 import gui.utils.getMainFrameComponent
 import gui.websocketScanner.WebsocketScannerFrame
@@ -23,15 +25,20 @@ class ToolsMenu : JMenu("Tools") {
         popupMenu.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
         mnemonic = KeyEvent.VK_T
 
+        val groupingItem = JMenuItem("Group settings")
         val scannerItem = JMenuItem("Network Scanner")
         val remoteSyncItem = RemoteSyncMenu()
 
+        groupingItem.mnemonic = KeyEvent.VK_G
+        groupingItem.accelerator = KeyStroke.getKeyStroke(groupingItem.mnemonic, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         scannerItem.mnemonic = KeyEvent.VK_W
-        scannerItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
+        scannerItem.accelerator = KeyStroke.getKeyStroke(groupingItem.mnemonic, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         remoteSyncItem.mnemonic = KeyEvent.VK_R
 
+        groupingItem.addActionListener { GroupingFrame.createAndShow(MainFrame.getInstance()) }
         scannerItem.addActionListener { WebsocketScannerFrame(getMainFrameComponent(this)) }
 
+        add(groupingItem)
         add(scannerItem)
         add(remoteSyncItem)
     }

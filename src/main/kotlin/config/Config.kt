@@ -33,6 +33,7 @@ object Config {
     var smallTimeDifferenceForLimitApproaching: Long = 10
 
     var sceneLimitValues: HashMap<String, Int> = HashMap()
+    var maxGroups: Int = 32
 
     // Logging
     var enableSceneTimestampLogger: Boolean = false
