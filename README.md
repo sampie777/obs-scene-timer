@@ -54,7 +54,13 @@ To run an instance as server or client, in the menu go to Tools -> Remote Sync a
 The clients will purely rely on the information they get from the server. The server will send all clients a message when the timer changes (every second). This message includes the elapsed time, remaining time, current scene, and even tell if the client must show the time limit approaching/exceeded warnings. 
 Due to network delays, the clients may be slightly lagging behind. 
 
-When a client instance is started while previously connected to OBS itself, that connection will be closed.   
+When a client instance is started while previously connected to OBS itself, that connection will be closed.
+
+#### Grouping
+
+Scenes can be grouped together. The result of this is that the timer doesn't reset when the new scene from a scene change is in the same group as the previous scene. This may be useful in scenarios where you want the timer to continue counting when switching between multiple camera-angle-scenes, for example.
+
+Scenes can be grouped in numerous groups using the Group Settings window under Tools -> Group Settings. Or by pressing `CTRL + ALT + G`. Add a scene to a group by checking the checkbox in the desired group column and on the same row as the desired scene. (Assigning only one scene to a group is useless.)
 
 #### Themes
 

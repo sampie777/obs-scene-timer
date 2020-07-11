@@ -284,6 +284,7 @@ object OBSClient {
     fun processOBSScenesToOBSStateScenes(scenes: List<Scene>) {
         logger.info("Set the OBS Scenes")
 
+        val oldScenes: List<TScene> = OBSState.scenes.clone() as List<TScene>
         OBSState.scenes.clear()
         for (scene in scenes) {
             val tScene = responseSceneToTScene(scene.name, scene.sources)
@@ -294,6 +295,10 @@ object OBSClient {
             if (OBSState.currentScene.name == tScene.name) {
                 OBSState.currentScene = tScene
             }
+
+            // Copy old scene properties to new scene
+            oldScenes.find { it.name == tScene.name }
+                ?.let { oldScene -> tScene.setGroupsFrom(oldScene) }
         }
 
         val sourceSettingsAreLoading = try {
