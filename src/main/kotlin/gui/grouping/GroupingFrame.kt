@@ -47,8 +47,4 @@ class GroupingFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
     fun rebuildGui() {
         groupingMatrixPanel.rebuildGui()
     }
-
-    fun saveAll(): Boolean {
-        return groupingMatrixPanel.saveAll()
-    }
 }

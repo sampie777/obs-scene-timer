@@ -1,5 +1,7 @@
 package config
 
+import objects.Json
+import objects.OBSState
 import gui.mainFrame.WindowTitle
 import objects.notifications.Notifications
 import java.awt.Color
@@ -37,6 +39,7 @@ object Config {
 
     var sceneLimitValues: HashMap<String, Int> = HashMap()
     var maxGroups: Int = 32
+    var sceneProperties: Json.TScenes = Json.TScenes(ArrayList())
 
     // Logging
     var enableSceneTimestampLogger: Boolean = false
@@ -75,6 +78,11 @@ object Config {
     }
 
     fun save() {
+        OBSState.scenes.forEach {  tScene ->
+            sceneProperties.tScenes.removeIf { it.name == tScene.name }
+            sceneProperties.tScenes.add(tScene.toJson())
+        }
+
         try {
             if (PropertyLoader.saveConfig(this::class.java)) {
                 PropertyLoader.save()

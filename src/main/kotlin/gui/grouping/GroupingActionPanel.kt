@@ -2,9 +2,7 @@ package gui.grouping
 
 
 import config.Config
-import gui.mainFrame.MainFrame
 import objects.OBSState
-import themes.Theme
 import java.awt.Dimension
 import java.awt.event.KeyEvent
 import java.util.logging.Logger
@@ -29,37 +27,21 @@ class GroupingActionPanel(private val frame: GroupingFrame) : JPanel() {
         clearAllButton.addActionListener { clearAllGrouping() }
         clearAllButton.mnemonic = KeyEvent.VK_A
 
-        val saveButton = JButton("Save")
-        saveButton.addActionListener { saveConfigAndClose() }
-        saveButton.mnemonic = KeyEvent.VK_S
-
-        val cancelButton = JButton("Cancel")
-        cancelButton.addActionListener { cancelWindow() }
-        cancelButton.mnemonic = KeyEvent.VK_C
+        val doneButton = JButton("Done")
+        doneButton.addActionListener { saveConfigAndClose() }
+        doneButton.mnemonic = KeyEvent.VK_D
 
         add(Box.createHorizontalGlue())
         add(clearAllButton)
         add(Box.createRigidArea(Dimension(10, 0)))
-        add(saveButton)
-        add(Box.createRigidArea(Dimension(10, 0)))
-        add(cancelButton)
-    }
-
-    private fun cancelWindow() {
-        logger.fine("Exiting configuration window")
-        frame.dispose()
+        add(doneButton)
     }
 
     private fun saveConfigAndClose() {
-        logger.info("Saving configuration changes")
-        if (!frame.saveAll()) {
-            return
-        }
+        logger.info("Closing grouping configuration window")
 
         Config.save()
         frame.dispose()
-        Theme.init()
-        MainFrame.getInstance()?.rebuildGui()
     }
 
     private fun clearAllGrouping() {

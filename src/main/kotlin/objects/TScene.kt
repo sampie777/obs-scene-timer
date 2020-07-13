@@ -1,5 +1,6 @@
 package objects
 
+import config.Config
 import java.util.*
 import java.util.logging.Logger
 
@@ -9,6 +10,20 @@ class TScene {
     var name = ""
     var sources: List<TSource> = ArrayList()
     private val groups: MutableSet<Int> = mutableSetOf()
+
+    companion object {
+        fun fromJson(jsonTScene: Json.TScene): TScene {
+            if (jsonTScene.timeLimit == null) {
+                Config.sceneLimitValues.remove(jsonTScene.name)
+            } else {
+                Config.sceneLimitValues[jsonTScene.name] = jsonTScene.timeLimit
+            }
+
+            return TScene(jsonTScene.name).apply {
+                groups.addAll(jsonTScene.groups)
+            }
+        }
+    }
 
     constructor()
 
@@ -58,8 +73,33 @@ class TScene {
         return groups.any { scene.isInGroup(it) }
     }
 
+    fun setGroups(groups: Set<Int>) {
+        this.groups.clear()
+        this.groups.addAll(groups)
+    }
+
     fun setGroupsFrom(sourceScene: TScene) {
         groups.clear()
         groups.addAll(sourceScene.groups)
     }
+
+    fun toJson(): Json.TScene {
+        return Json.TScene(
+            name = name,
+            timeLimit = Config.sceneLimitValues[name],
+            groups = groups
+        )
+    }
+}
+
+class Json {
+    data class TScenes(
+        val tScenes: ArrayList<TScene>
+    )
+
+    data class TScene(
+        val name: String,
+        val timeLimit: Int?,
+        val groups: Set<Int>
+    )
 }
