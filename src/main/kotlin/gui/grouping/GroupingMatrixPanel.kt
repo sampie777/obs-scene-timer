@@ -112,10 +112,6 @@ class GroupingMatrixPanel : JPanel(), Refreshable {
         }
     }
 
-    fun saveAll(): Boolean {
-        return true
-    }
-
     override fun refreshScenes() {
         rebuildGui()
     }

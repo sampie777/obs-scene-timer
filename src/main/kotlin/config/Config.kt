@@ -1,5 +1,7 @@
 package config
 
+import objects.Json
+import objects.OBSState
 import objects.notifications.Notifications
 import java.awt.Color
 import java.awt.Dimension
@@ -19,8 +21,10 @@ object Config {
     // Timer Style
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var timerBackgroundColor: Color? = null
+
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var approachingLimitColor: Color? = null
+
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var exceededLimitColor: Color? = null
 
@@ -34,6 +38,7 @@ object Config {
 
     var sceneLimitValues: HashMap<String, Int> = HashMap()
     var maxGroups: Int = 32
+    var sceneProperties: Json.TScenes = Json.TScenes(ArrayList())
 
     // Logging
     var enableSceneTimestampLogger: Boolean = false
@@ -68,6 +73,11 @@ object Config {
     }
 
     fun save() {
+        OBSState.scenes.forEach {  tScene ->
+            sceneProperties.tScenes.removeIf { it.name == tScene.name }
+            sceneProperties.tScenes.add(tScene.toJson())
+        }
+
         try {
             if (PropertyLoader.saveConfig(this::class.java)) {
                 PropertyLoader.save()

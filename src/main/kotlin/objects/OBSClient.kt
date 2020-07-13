@@ -296,9 +296,12 @@ object OBSClient {
                 OBSState.currentScene = tScene
             }
 
-            // Copy old scene properties to new scene
+            // Copy old scene properties to new scene, if available
             oldScenes.find { it.name == tScene.name }
                 ?.let { oldScene -> tScene.setGroupsFrom(oldScene) }
+            // Else (if not available), copy properties from config, if available
+                ?: Config.sceneProperties.tScenes.find { it.name == tScene.name }
+                    ?.let { configScene -> tScene.setGroups(configScene.groups) }
         }
 
         val sourceSettingsAreLoading = try {

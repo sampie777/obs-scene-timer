@@ -1,6 +1,9 @@
 package config
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import getCurrentJarDirectory
+import objects.Json
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
@@ -189,6 +192,9 @@ object PropertyLoader {
             }
             return Dimension(values[0].toInt(), values[1].toInt())
         }
+        if (type == Json::class.java || type == Json.TScenes::class.java || type == Json.TScene::class.java) {
+            return Gson().fromJson(value, type)
+        }
 
         throw IllegalArgumentException("Unknown configuration value type: " + type.name)
     }
@@ -225,6 +231,12 @@ object PropertyLoader {
         if (type == Dimension::class.java) {
             val dimension = value as Dimension
             val stringValue = dimension.width.toString() + defaultValueDelimiter + dimension.height
+
+            props.setProperty(name, stringValue)
+            return
+        }
+        if (type == Json::class.java || type == Json.TScenes::class.java || type == Json.TScene::class.java) {
+            val stringValue = GsonBuilder().create().toJson(value)
 
             props.setProperty(name, stringValue)
             return
