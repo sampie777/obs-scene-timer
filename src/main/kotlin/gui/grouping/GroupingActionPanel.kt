@@ -30,6 +30,7 @@ class GroupingActionPanel(private val frame: GroupingFrame) : JPanel() {
         val doneButton = JButton("Done")
         doneButton.addActionListener { saveConfigAndClose() }
         doneButton.mnemonic = KeyEvent.VK_D
+        frame.rootPane.defaultButton = doneButton
 
         add(Box.createHorizontalGlue())
         add(clearAllButton)
