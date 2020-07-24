@@ -32,7 +32,7 @@ class ToolsMenu : JMenu("Tools") {
         groupingItem.mnemonic = KeyEvent.VK_G
         groupingItem.accelerator = KeyStroke.getKeyStroke(groupingItem.mnemonic, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         scannerItem.mnemonic = KeyEvent.VK_W
-        scannerItem.accelerator = KeyStroke.getKeyStroke(groupingItem.mnemonic, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
+        scannerItem.accelerator = KeyStroke.getKeyStroke(scannerItem.mnemonic, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         remoteSyncItem.mnemonic = KeyEvent.VK_R
 
         groupingItem.addActionListener { GroupingFrame.createAndShow(MainFrame.getInstance()) }
