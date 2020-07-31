@@ -39,6 +39,8 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
 
 
+### Features
+
 #### Network Scanner
 
 When using OBS Scene Timer on another computer as OBS projector itself, it can be quite a struggle to figure out the correct IP address of the OBS projector computer. Head to the menu Tools -> Network Scanner to let OBS Scene Timer scan for any possible OBS projector hosts on your local network. This scanning is done by querying the default OBS websocket port 4444 on all possible IP address available on your local network(s). 
@@ -55,6 +57,58 @@ The clients will purely rely on the information they get from the server. The se
 Due to network delays, the clients may be slightly lagging behind. 
 
 When a client instance is started while previously connected to OBS itself, that connection will be closed.
+
+##### API
+
+###### Connection
+
+A client can connect to the Remote Sync websocket connection on `ws://<websocketAddress>:<websocketPort>/`, for example: `ws://localhost:4050/`. 
+
+###### Messages
+
+Messages are sent in JSON format. Currently, only one type of message is sent: 
+
+**TimerMessage**
+
+| Field | Type | Description |
+| --- | --- | --- | 
+| `sceneName` | string | Name of the current active scene. |
+| `elapsedTime` | string | Formatted timestamp of the elapsed time of the current active scene. |
+| `elapsedTimeRaw` | long | Number of elapsed seconds of the current active scene. |
+| `timerState` | TimerState | The current state of the timer. See #TimerState for more info. |
+| `isTimed` | boolean | True if the current active scene has a configured time limit. |
+| `remainingTime` | string | Formatted timestamp of the remaining time (if applicable) of the current active scene. |
+| `remainingTimeRaw` | long | Number of remaining seconds (if applicable) of the current active scene. |
+| `maximumTime` | long | Total number of seconds of the scene, a.k.a. scene time limit. |
+| `timestamp` | datetime | Timestamp of when this message was sent. |
+| `messageType` | string | Specifies the type of the message sent. |
+
+Example message: 
+
+```json
+{
+  "sceneName": "Scene 1",
+  "elapsedTime": "00:00:10",
+  "elapsedTimeRaw": 10,
+  "timerState": "NEUTRAL",
+  "isTimed": true,
+  "remainingTime": "00:00:20",
+  "remainingTimeRaw": 20,
+  "maximumTime": 30,
+  "timestamp": "2020-06-04T16:49:58.670Z",
+  "messageType": "TimerMessage"
+}
+```
+
+**TimerState**
+
+TimerState is an enum with any of the following values:
+
+| Value | Description |
+| --- | --- |
+| NEUTRAL | Timer is just minding it's own business. |
+| APPROACHING | Timer is approaching the configured time limit. (Approaching rules are specified in the settings.) |
+| EXCEEDED | Timer has exceeded the configured time limit. |
 
 #### Grouping
 
