@@ -1,5 +1,6 @@
 package config
 
+import gui.mainFrame.WindowTitle
 import objects.notifications.Notifications
 import java.awt.Color
 import java.awt.Dimension
@@ -19,8 +20,10 @@ object Config {
     // Timer Style
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var timerBackgroundColor: Color? = null
+
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var approachingLimitColor: Color? = null
+
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
     var exceededLimitColor: Color? = null
 
@@ -47,6 +50,10 @@ object Config {
     var mainWindowsIsMaximized: Boolean = false
     var mainWindowsIsFullscreen: Boolean = false
     var mainPanelDividerLocation: Int = 370
+    var mainWindowTitle: String =
+        "${WindowTitle.VARIABLE_IDENTIFIER.format(WindowTitle.SCENE_NAME)}: ${WindowTitle.VARIABLE_IDENTIFIER.format(
+            WindowTitle.TIMER_ELAPSED
+        )}"
 
     // Remote Sync
     var remoteSyncServerEnabled: Boolean = false

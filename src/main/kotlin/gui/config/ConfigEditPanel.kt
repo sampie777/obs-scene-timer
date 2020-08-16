@@ -1,6 +1,7 @@
 package gui.config
 
 import gui.config.formcomponents.*
+import gui.mainFrame.WindowTitle
 import objects.notifications.Notifications
 import themes.Theme
 import java.awt.BorderLayout
@@ -50,6 +51,15 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(HeaderFormComponent("GUI"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
         formComponents.add(BooleanFormInput("windowRestoreLastPosition", "Restore window position on start up"))
+        formComponents.add(
+            StringFormInput("mainWindowTitle",
+                "Window title",
+                true,
+                toolTipText = "You can make use of these variables: " +
+                        WindowTitle.variables()
+                            .joinToString(", ") { WindowTitle.VARIABLE_IDENTIFIER.format(it) }
+            )
+        )
 
         formComponents.add(HeaderFormComponent("Timer styling"))
         formComponents.add(NumberFormInput<Int>("timerCountUpFontSize", "Elapsed time timer font size (pt.)", 0, null))

@@ -109,14 +109,10 @@ _Connection settings_
 * `obsReconnectionTimeout` (milliseconds) (default: `3000`): if connection with OBS failed or is lost, OBS Scene Timer will try to reconnect to OBS after this time in milliseconds.
 * `autoCalculateSceneLimitsBySources` (boolean) (default: `true`): if enabled and OBS Scene Timer is running on the same computer as OBS, OBS Scene Timer will load all video sources to automatically determine each scene max duration.
 
-_Application color settings_
+_GUI settings_
 
-**Note**: these color settings will disappear, because they are included in the Themes. 
-
-* `timerBackgroundColor` (rgb) (default: `192,192,192`): a RGB color, separated by commas, which will be used as the default background color for the timer.
-* `approachingLimitColor` (rgb) (default: `255,200,0`): a RGB color, separated by commas, which will be used as the background color for the timer when it warns that the time limit is being approached (see `smallTimeDifferenceForLimitApproaching` and `largeTimeDifferenceForLimitApproaching`).
-* `exceededLimitColor` (rgb) (default: `255,0,0`): an RGB color, separated by commas, which will be used as the background color for the timer when it warns that the time limit has been reached.
-
+* `mainWindowTitle` (string) (default: `{sceneName}: {timerElapsed}`): On each timer update (every second) the window title of the application will be updated with the title specified in this variable. Plain text can be mixed with variables like `{sceneName}`, `{timerElapsed}`, `{timerRemaining}`, and `{sceneLimit}`. For example: `Timer Application - {sceneName} - {timerElapsed} / {timerRemaining}` will result in a window title like _"Timer Application - Intro scene - 0:00:15 / 0:01:29"_. Note that when no connection is established with OBS, the title will be _"OBS Scene Timer"_, until the connection has been established.
+ 
 _Timer settings_
 
 * `timerStartDelay` (milliseconds) (default: `300`): start the timer with this delay. Decrease this value if the timer value seems to be lagging behind the real scene duration. This is caused by (network) connection delays but mainly by the OBS scene transition delay. 

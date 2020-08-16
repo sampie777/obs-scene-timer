@@ -1,7 +1,6 @@
-package gui
+package gui.mainFrame
 
 import config.Config
-import gui.mainFrame.MainFramePanel
 import objects.notifications.Notifications
 import kotlin.test.Test
 import kotlin.test.assertEquals

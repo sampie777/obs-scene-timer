@@ -7,7 +7,6 @@ import gui.menu.MenuBar
 import gui.utils.loadIcon
 import objects.ApplicationInfo
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TimerState
 import objects.notifications.Notifications
 import java.awt.EventQueue
@@ -98,7 +97,7 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     override fun refreshTimer() {
-        title = "${OBSState.currentSceneName}: ${OBSSceneTimer.getTimerAsClock()}"
+        title = WindowTitle.generateWindowTitle()
 
         iconImage = when (OBSSceneTimer.getTimerState()) {
             TimerState.EXCEEDED -> applicationIconRed
