@@ -5,6 +5,7 @@ import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TScene
 import themes.Theme
 import java.awt.*
 import javax.swing.*
@@ -12,7 +13,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-class SceneInputChangeListener(private val scene: String) : ChangeListener {
+class SceneInputChangeListener(private val scene: TScene) : ChangeListener {
     override fun stateChanged(event: ChangeEvent?) {
         if (event == null) {
             return
@@ -20,11 +21,12 @@ class SceneInputChangeListener(private val scene: String) : ChangeListener {
 
         val spinner = event.source as JSpinner
         val newValue = spinner.value as Int
-        Config.sceneLimitValues[scene] = newValue
+        Config.sceneLimitValues[scene.name] = newValue
+        scene.timeLimit = newValue
 
         spinner.toolTipText = getTimeAsClock(newValue.toLong())
 
-        if (scene == OBSState.currentScene.name) {
+        if (scene.name == OBSState.currentScene.name) {
             OBSSceneTimer.setMaxTimerValue(newValue.toLong())
         }
     }
@@ -115,7 +117,7 @@ class SceneTablePanel : JPanel(), Refreshable {
             val sceneInput = JSpinner()
             sceneInput.preferredSize = Dimension(100, 22)
             sceneInput.model = SpinnerNumberModel(sceneValue, 0, null, 1)
-            sceneInput.addChangeListener(SceneInputChangeListener(scene.name))
+            sceneInput.addChangeListener(SceneInputChangeListener(scene))
             sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
             sceneInput.font = if (scene.name == OBSState.currentScene.name)
                 currentSceneInputFont else inputFont

@@ -1,3 +1,4 @@
+import com.google.gson.GsonBuilder
 import config.Config
 import gui.mainFrame.MainFrame
 import objects.SceneLogger
@@ -6,6 +7,8 @@ import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.logging.Logger
 import kotlin.system.exitProcess
 
@@ -101,3 +104,11 @@ fun getFileNameWithoutExtension(file: File): String {
 fun getFileExtension(file: File): String {
     return file.name.substring(file.name.lastIndexOf('.') + 1)
 }
+
+fun Date.format(format: String): String? = SimpleDateFormat(format).format(this)
+
+internal fun jsonBuilder() =
+    GsonBuilder()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        .serializeNulls()
+        .create()

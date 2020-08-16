@@ -298,10 +298,16 @@ object OBSClient {
 
             // Copy old scene properties to new scene, if available
             oldScenes.find { it.name == tScene.name }
-                ?.let { oldScene -> tScene.setGroupsFrom(oldScene) }
+                ?.let { oldScene ->
+                    tScene.timeLimit = oldScene.timeLimit
+                    tScene.setGroupsFrom(oldScene)
+                }
             // Else (if not available), copy properties from config, if available
                 ?: Config.sceneProperties.tScenes.find { it.name == tScene.name }
-                    ?.let { configScene -> tScene.setGroups(configScene.groups) }
+                    ?.let { configScene ->
+                        tScene.timeLimit = configScene.timeLimit
+                        tScene.setGroups(configScene.groups)
+                    }
         }
 
         val sourceSettingsAreLoading = try {
@@ -443,10 +449,11 @@ object OBSClient {
         return duration
     }
 
-    private inline fun <reified T: ResponseBase> castResponseTo(response: ResponseBase): T? = castResponseTo(response, T::class)
+    private inline fun <reified T : ResponseBase> castResponseTo(response: ResponseBase): T? =
+        castResponseTo(response, T::class)
 
     @Suppress("UNCHECKED_CAST")
-    fun <T: ResponseBase> castResponseTo(response: ResponseBase, cls: KClass<T>): T? {
+    fun <T : ResponseBase> castResponseTo(response: ResponseBase, cls: KClass<T>): T? {
         return try {
             response as T
         } catch (t: Throwable) {
