@@ -1,8 +1,8 @@
 package config
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import getCurrentJarDirectory
+import jsonBuilder
 import objects.Json
 import java.awt.Color
 import java.awt.Dimension
@@ -236,7 +236,7 @@ object PropertyLoader {
             return
         }
         if (type == Json::class.java || type == Json.TScenes::class.java || type == Json.TScene::class.java) {
-            val stringValue = GsonBuilder().create().toJson(value)
+            val stringValue = jsonBuilder().toJson(value)
 
             props.setProperty(name, stringValue)
             return

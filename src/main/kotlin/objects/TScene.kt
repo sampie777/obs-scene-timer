@@ -9,6 +9,7 @@ class TScene {
     private val logger = Logger.getLogger(TScene::class.java.name)
     var name = ""
     var sources: List<TSource> = ArrayList()
+    var timeLimit: Int? = null
     private val groups: MutableSet<Int> = mutableSetOf()
 
     companion object {
@@ -20,6 +21,7 @@ class TScene {
             }
 
             return TScene(jsonTScene.name).apply {
+                timeLimit = jsonTScene.timeLimit
                 groups.addAll(jsonTScene.groups)
             }
         }
@@ -27,8 +29,9 @@ class TScene {
 
     constructor()
 
-    constructor(name: String?) {
+    constructor(name: String?, timeLimit: Int? = null) {
         this.name = name ?: ""
+        this.timeLimit = timeLimit
     }
 
     override fun toString(): String = name
@@ -86,7 +89,7 @@ class TScene {
     fun toJson(): Json.TScene {
         return Json.TScene(
             name = name,
-            timeLimit = Config.sceneLimitValues[name],
+            timeLimit = timeLimit,
             groups = groups
         )
     }
