@@ -2,6 +2,7 @@ package gui
 
 import GUI
 import config.Config
+import getTimeAsClock
 import objects.OBSSceneTimer
 import objects.OBSState
 import themes.Theme
@@ -12,13 +13,16 @@ import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
 class SceneInputChangeListener(private val scene: String) : ChangeListener {
-    override fun stateChanged(p0: ChangeEvent?) {
-        if (p0 == null) {
+    override fun stateChanged(event: ChangeEvent?) {
+        if (event == null) {
             return
         }
 
-        val newValue = (p0.source as JSpinner).value as Int
+        val spinner = event.source as JSpinner
+        val newValue = spinner.value as Int
         Config.sceneLimitValues[scene] = newValue
+
+        spinner.toolTipText = getTimeAsClock(newValue.toLong())
 
         if (scene == OBSState.currentSceneName) {
             OBSSceneTimer.setMaxTimerValue(newValue.toLong())
@@ -115,6 +119,8 @@ class SceneTablePanel : JPanel(), Refreshable {
             sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
             sceneInput.font = if (scene.name == OBSState.currentSceneName)
                 currentSceneInputFont else inputFont
+            sceneInput.toolTipText = getTimeAsClock(sceneValue.toLong())
+
             sceneInputs[scene.name] = sceneInput
         }
     }
