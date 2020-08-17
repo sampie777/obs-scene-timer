@@ -44,8 +44,6 @@ More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
 
 ### Features
 
-### Features
-
 #### Network Scanner
 
 When using OBS Scene Timer on another computer as OBS projector itself, it can be quite a struggle to figure out the correct IP address of the OBS projector computer. Head to the menu Tools -> Network Scanner to let OBS Scene Timer scan for any possible OBS projector hosts on your local network. This scanning is done by querying the default OBS websocket port 4444 on all possible IP address available on your local network(s). 
