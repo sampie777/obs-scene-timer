@@ -8,21 +8,36 @@ import objects.OBSState
 import objects.TScene
 import themes.Theme
 import java.awt.*
+import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
 class SceneInputChangeListener(private val scene: TScene) : ChangeListener {
-    override fun stateChanged(event: ChangeEvent?) {
-        if (event == null) {
-            return
-        }
+    private val logger = Logger.getLogger(SceneInputChangeListener::class.java.name)
 
+    private var previousWasResetValue = false
+
+    override fun stateChanged(event: ChangeEvent) {
         val spinner = event.source as JSpinner
-        val newValue = spinner.value as Int
-        Config.sceneLimitValues[scene.name] = newValue
-        scene.timeLimit = newValue
+        var newValue = spinner.value as Int
+
+        if (newValue < 0) {
+            logger.info("Resetting scene's time limit")
+            previousWasResetValue = true
+
+            scene.timeLimit = null
+
+            newValue = scene.maxVideoLength()
+            spinner.value = newValue
+        } else if (previousWasResetValue) {
+            // Catch the debounce effect from setting the value to -1 and then automatically set to 0
+            previousWasResetValue = false
+        } else {
+            // Normal behaviour
+            scene.timeLimit = newValue
+        }
 
         spinner.toolTipText = getTimeAsClock(newValue.toLong())
 
@@ -106,8 +121,7 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun createSceneRowComponents() {
         for (scene in OBSState.scenes) {
-            val sceneValue = if (!Config.sceneLimitValues.containsKey(scene.name))
-                scene.maxVideoLength() else Config.sceneLimitValues[scene.name] as Int
+            val sceneValue = scene.getFinalTimeLimit()
 
             val sceneLabel = JLabel(scene.name)
             sceneLabel.font = if (scene.name == OBSState.currentScene.name)
@@ -116,7 +130,7 @@ class SceneTablePanel : JPanel(), Refreshable {
 
             val sceneInput = JSpinner()
             sceneInput.preferredSize = Dimension(100, 22)
-            sceneInput.model = SpinnerNumberModel(sceneValue, 0, null, 1)
+            sceneInput.model = SpinnerNumberModel(sceneValue, -1, null, 1)
             sceneInput.addChangeListener(SceneInputChangeListener(scene))
             sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
             sceneInput.font = if (scene.name == OBSState.currentScene.name)

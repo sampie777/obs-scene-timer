@@ -3,6 +3,7 @@ package gui.mainFrame
 import config.Config
 import objects.OBSSceneTimer
 import objects.OBSState
+import objects.TScene
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -17,21 +18,21 @@ class WindowTitleTest {
     @Test
     fun testTitleWithSceneVariable() {
         Config.mainWindowTitle = "Title scene variable: {${WindowTitle.SCENE_NAME}}"
-        OBSState.currentSceneName = "Scene 1"
+        OBSState.currentScene = TScene("Scene 1")
         assertEquals("Title scene variable: Scene 1", WindowTitle.generateWindowTitle())
     }
 
     @Test
     fun testTitleWithFaultySceneVariable() {
         Config.mainWindowTitle = "Title scene variable: ${WindowTitle.SCENE_NAME}}"
-        OBSState.currentSceneName = "Scene 1"
+        OBSState.currentScene = TScene("Scene 1")
         assertEquals("Title scene variable: ${WindowTitle.SCENE_NAME}}", WindowTitle.generateWindowTitle())
     }
 
     @Test
     fun testTitleWithFaultySceneVariable2() {
         Config.mainWindowTitle = "Title scene variable: {xx}"
-        OBSState.currentSceneName = "Scene 1"
+        OBSState.currentScene = TScene("Scene 1")
         assertEquals("Title scene variable: {xx}", WindowTitle.generateWindowTitle())
     }
 
@@ -91,7 +92,7 @@ class WindowTitleTest {
     @Test
     fun testTitleWithMultipleVariables() {
         Config.mainWindowTitle = "Title variables: {${WindowTitle.SCENE_NAME}} - {${WindowTitle.TIMER_ELAPSED}}"
-        OBSState.currentSceneName = "Scene 1"
+        OBSState.currentScene = TScene("Scene 1")
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSSceneTimer.increase()
@@ -103,7 +104,7 @@ class WindowTitleTest {
     @Test
     fun testTitleWithDuplicateVariables() {
         Config.mainWindowTitle = "Title variables: {${WindowTitle.SCENE_NAME}} - {${WindowTitle.SCENE_NAME}} - {${WindowTitle.TIMER_ELAPSED}}"
-        OBSState.currentSceneName = "Scene 1"
+        OBSState.currentScene = TScene("Scene 1")
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSSceneTimer.increase()

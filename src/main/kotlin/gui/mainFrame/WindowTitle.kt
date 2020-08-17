@@ -24,7 +24,7 @@ object WindowTitle {
 
     fun generateWindowTitle(): String {
         return Config.mainWindowTitle
-            .replace(VARIABLE_IDENTIFIER.format(SCENE_NAME), OBSState.currentSceneName)
+            .replace(VARIABLE_IDENTIFIER.format(SCENE_NAME), OBSState.currentScene.name)
             .replace(VARIABLE_IDENTIFIER.format(TIMER_ELAPSED), OBSSceneTimer.getTimerAsClock())
             .replace(
                 VARIABLE_IDENTIFIER.format(TIMER_REMAINING),

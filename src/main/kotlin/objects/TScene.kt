@@ -7,6 +7,7 @@ import java.util.logging.Logger
 
 class TScene {
     private val logger = Logger.getLogger(TScene::class.java.name)
+
     var name = ""
     var sources: List<TSource> = ArrayList()
     var timeLimit: Int? = null
@@ -14,12 +15,6 @@ class TScene {
 
     companion object {
         fun fromJson(jsonTScene: Json.TScene): TScene {
-            if (jsonTScene.timeLimit == null) {
-                Config.sceneLimitValues.remove(jsonTScene.name)
-            } else {
-                Config.sceneLimitValues[jsonTScene.name] = jsonTScene.timeLimit
-            }
-
             return TScene(jsonTScene.name).apply {
                 timeLimit = jsonTScene.timeLimit
                 groups.addAll(jsonTScene.groups)
@@ -48,6 +43,17 @@ class TScene {
 
     private fun longestVideoLengthSource(): Optional<TSource> =
         sources.stream().max(Comparator.comparingInt(TSource::videoLength))
+
+    /**
+     * Get the time limit to use for a scene. First get the user specified limit from the scene itself.
+     * Else, get the previously user specified limit from the config (something is wrong if this happens to be the case)
+     * Last, get the max video length, if calculated
+     */
+    fun getFinalTimeLimit(): Int {
+        return timeLimit
+            ?: Config.sceneProperties.tScenes.find { it.name == name }?.timeLimit
+            ?: maxVideoLength()
+    }
 
     fun addToGroup(groupNumber: Int) {
         logger.fine("Adding scene '$name' to group: $groupNumber")

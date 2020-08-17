@@ -1,8 +1,8 @@
 package config
 
+import gui.mainFrame.WindowTitle
 import objects.Json
 import objects.OBSState
-import gui.mainFrame.WindowTitle
 import objects.notifications.Notifications
 import java.awt.Color
 import java.awt.Dimension
@@ -37,7 +37,6 @@ object Config {
     var smallMinLimitForLimitApproaching: Long = 20
     var smallTimeDifferenceForLimitApproaching: Long = 10
 
-    var sceneLimitValues: HashMap<String, Int> = HashMap()
     var maxGroups: Int = 32
     var sceneProperties: Json.TScenes = Json.TScenes(ArrayList())
 

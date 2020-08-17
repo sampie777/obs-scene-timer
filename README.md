@@ -38,6 +38,9 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 
 More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
 
+> **Reset time limit input**
+> 
+> If you've adjusted the time limit for a scene for which the time limit was already automatically calculated, your changes will override the automatic calculations. To reset the time limit for the scene (so time limits will be automatically calculated), enter the value `-1` as time limit. The input will then automatically calculate its default value.
 
 ### Features
 
