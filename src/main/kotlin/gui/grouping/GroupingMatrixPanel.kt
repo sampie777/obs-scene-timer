@@ -103,7 +103,7 @@ class GroupingMatrixPanel : JPanel(), Refreshable {
         OBSState.scenes.forEach { scene ->
             (1 until (groupAmount + 1)).forEach { groupNumber ->
                 val checkbox = JCheckBox()
-                checkbox.toolTipText = "Scene ${scene.name} to group $groupNumber"
+                checkbox.toolTipText = "Assign '${scene.name}' to group $groupNumber"
                 checkbox.addActionListener(GroupCheckboxActionListener(scene, groupNumber))
                 checkbox.isSelected = scene.isInGroup(groupNumber)
 
