@@ -119,6 +119,8 @@ Scenes can be grouped together. The result of this is that the timer doesn't res
 
 Scenes can be grouped in numerous groups using the Group Settings window under Tools -> Group Settings. Or by pressing `CTRL + ALT + G`. Add a scene to a group by checking the checkbox in the desired group column and on the same row as the desired scene. (Assigning only one scene to a group is useless.)
 
+Scenes which are assigned to a group, will appear in _Italic_ font (in the list). Also, when hovering above their label, a tool tip text will be shown containing the groups the scene is assigned to.
+
 #### Themes
 
 An application theme can be set in Application menu -> Settings. Currently, only Light theme is available and Dark theme is experimental. You can develop your own theme by extending the BaseTheme class and creating a pull request to the `develop` branch. 

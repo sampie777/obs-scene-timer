@@ -53,7 +53,10 @@ class SceneTablePanel : JPanel(), Refreshable {
     val container = JPanel()
 
     private val labelFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
+    private val groupedLabelFont = Font(labelFont.family, Font.ITALIC, labelFont.size)
     private val currentSceneLabelFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
+    private val currentSceneGroupedLabelFont =
+        Font(currentSceneLabelFont.family, Font.BOLD + Font.ITALIC, currentSceneLabelFont.size)
     private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
     private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
 
@@ -116,6 +119,8 @@ class SceneTablePanel : JPanel(), Refreshable {
                     )
                 )
             }
+
+            refreshGroups()
         }
     }
 
@@ -124,8 +129,6 @@ class SceneTablePanel : JPanel(), Refreshable {
             val sceneValue = scene.getFinalTimeLimit()
 
             val sceneLabel = JLabel(scene.name)
-            sceneLabel.font = if (scene.name == OBSState.currentScene.name)
-                currentSceneLabelFont else labelFont
             sceneLabels[scene.name] = sceneLabel
 
             val sceneInput = JSpinner()
@@ -188,4 +191,32 @@ class SceneTablePanel : JPanel(), Refreshable {
 
         return sceneInputs[scene]?.value as Int
     }
+
+    override fun refreshGroups() {
+        OBSState.scenes.forEach { scene ->
+            val label = sceneLabels[scene.name] ?: return@forEach
+            label.font = getLabelFontForScene(scene)
+
+            if (scene.groups.isEmpty()) {
+                label.toolTipText = null
+            } else {
+                label.toolTipText = "Group(s): " + scene.groups.joinToString(", ")
+            }
+        }
+    }
+
+    private fun getLabelFontForScene(scene: TScene): Font =
+        if (scene.name == OBSState.currentScene.name) {
+            if (scene.groups.isEmpty()) {
+                currentSceneLabelFont
+            } else {
+                currentSceneGroupedLabelFont
+            }
+        } else {
+            if (scene.groups.isEmpty()) {
+                labelFont
+            } else {
+                groupedLabelFont
+            }
+        }
 }

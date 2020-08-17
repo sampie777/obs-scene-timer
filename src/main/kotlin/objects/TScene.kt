@@ -11,7 +11,7 @@ class TScene {
     var name = ""
     var sources: List<TSource> = ArrayList()
     var timeLimit: Int? = null
-    private val groups: MutableSet<Int> = mutableSetOf()
+    val groups: MutableSet<Int> = mutableSetOf()
 
     companion object {
         fun fromJson(jsonTScene: Json.TScene): TScene {

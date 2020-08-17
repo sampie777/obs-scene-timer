@@ -28,6 +28,13 @@ object GUI {
         }
     }
 
+    fun refreshGroups() {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
+            component.refreshGroups()
+        }
+    }
+
     fun refreshOBSStatus() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {

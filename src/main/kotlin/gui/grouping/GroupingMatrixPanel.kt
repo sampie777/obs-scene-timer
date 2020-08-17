@@ -128,5 +128,7 @@ class GroupCheckboxActionListener(private val scene: TScene, private val groupNu
             logger.info("Adding scene ${scene.name} to group $groupNumber")
             scene.addToGroup(groupNumber)
         }
+
+        GUI.refreshGroups()
     }
 }

@@ -1,6 +1,7 @@
 package gui.grouping
 
 
+import GUI
 import config.Config
 import objects.OBSState
 import java.awt.Dimension
@@ -42,6 +43,7 @@ class GroupingActionPanel(private val frame: GroupingFrame) : JPanel() {
         logger.info("Closing grouping configuration window")
 
         Config.save()
+
         frame.dispose()
     }
 
@@ -52,6 +54,7 @@ class GroupingActionPanel(private val frame: GroupingFrame) : JPanel() {
             it.removeFromAllGroups()
         }
 
+        GUI.refreshGroups()
         frame.rebuildGui()
     }
 }
