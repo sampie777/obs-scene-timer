@@ -56,7 +56,14 @@ class MainFrame : JFrame(), Refreshable {
 
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             logger.info("Creating taskbar object")
-            taskbarList = COMRuntime.newInstance(ITaskbarList3::class.java)
+            try {
+                taskbarList = COMRuntime.newInstance(ITaskbarList3::class.java)
+            } catch (t: Throwable) {
+                logger.warning("Could no create tasbkar object for using taskbar progressbar")
+                t.printStackTrace()
+            }
+        } else {
+            logger.info("Cannot create taskbar object because system is not Windows but: ${System.getProperty("os.name")}")
         }
     }
 
@@ -116,6 +123,10 @@ class MainFrame : JFrame(), Refreshable {
             else -> applicationIconDefault
         }
 
+        updateTaskbarProgressbar()
+    }
+
+    private fun updateTaskbarProgressbar() {
         // Check if taskbarlist is ever created (and thus also if system is Windows)
         if (taskbarList == null) {
             return
@@ -123,13 +134,36 @@ class MainFrame : JFrame(), Refreshable {
 
         if (hwnd == null) {
             logger.info("Getting window handle")
-            val hwndVal = JAWTUtils.getNativePeerHandle(this)
-            hwnd = Pointer.pointerToAddress(hwndVal) as Pointer<Int>?
+            try {
+                val hwndVal = JAWTUtils.getNativePeerHandle(this)
+                @Suppress("UNCHECKED_CAST", "DEPRECATION")
+                hwnd = Pointer.pointerToAddress(hwndVal) as Pointer<Int>?
+            } catch (t: Throwable) {
+                logger.warning("Could no get window handle for using taskbar progressbar")
+                t.printStackTrace()
+                return
+            }
         }
 
-        logger.info("Setting taskbar progress value")
-        taskbarList?.SetProgressValue(hwnd, 50, 100)
-        taskbarList?.SetProgressState(hwnd, ITaskbarList3.TbpFlag.TBPF_NORMAL)
+        try {
+            taskbarList?.SetProgressValue(hwnd, OBSSceneTimer.getValue(), OBSSceneTimer.getMaxTimerValue())
+            taskbarList?.SetProgressState(hwnd, getTaskbarProgressbarFlag())
+        } catch (t: Throwable) {
+            logger.warning("Could no update taskbar progressbar")
+            t.printStackTrace()
+        }
+    }
+
+    private fun getTaskbarProgressbarFlag(): ITaskbarList3.TbpFlag {
+        if (OBSSceneTimer.getMaxTimerValue() == 0L) {
+            return ITaskbarList3.TbpFlag.TBPF_NOPROGRESS
+        }
+
+        return when (OBSSceneTimer.getTimerState()) {
+            TimerState.EXCEEDED -> ITaskbarList3.TbpFlag.TBPF_ERROR // Red
+            TimerState.APPROACHING -> ITaskbarList3.TbpFlag.TBPF_PAUSED // Orange
+            else -> ITaskbarList3.TbpFlag.TBPF_NORMAL   // Green
+        }
     }
 
     fun toggleFullscreen() {
