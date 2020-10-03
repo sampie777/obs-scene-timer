@@ -3,6 +3,7 @@ package objects
 import GUI
 import com.google.gson.Gson
 import config.Config
+import jsonBuilder
 import mocks.GuiComponentMock
 import mocks.SceneMockWithSources
 import net.twasi.obsremotejava.objects.Scene
@@ -250,7 +251,7 @@ class OBSClientTest {
             {
                 "hidden": false,
                 "selected": false,
-                "value": "$filename"
+                "value": ${jsonBuilder().toJson(filename)}
             }
         ]
     }
@@ -277,7 +278,7 @@ class OBSClientTest {
     "sourceName": "Media source 1",
     "sourceType": "ffmpeg_source",
     "sourceSettings": {
-        "local_file": "$filename"
+        "local_file": ${jsonBuilder().toJson(filename)}
     }
 }
         """.trimIndent(), GetSourceSettingsResponse::class.java
