@@ -16,7 +16,7 @@ class BooleanFormInputTest {
 
     @Test
     fun testBooleanFormInputWithTrueValue() {
-        val input = BooleanFormInput("enableApplicationLoggingToFile", "label")
+        val input = BooleanFormInput("enableApplicationLoggingToFile", "label", onSave = null)
         Config.enableApplicationLoggingToFile = true
         input.component()
 
@@ -31,7 +31,7 @@ class BooleanFormInputTest {
 
     @Test
     fun testBooleanFormInputWithFalseValue() {
-        val input = BooleanFormInput("enableApplicationLoggingToFile", "label")
+        val input = BooleanFormInput("enableApplicationLoggingToFile", "label", onSave = null)
         Config.enableApplicationLoggingToFile = false
         input.component()
 

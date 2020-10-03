@@ -1,10 +1,13 @@
 package objects
 
 import GUI
+import com.google.gson.Gson
 import config.Config
 import mocks.GuiComponentMock
 import mocks.SceneMockWithSources
 import net.twasi.obsremotejava.objects.Scene
+import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse
+import objects.notifications.Notifications
 import java.io.File
 import kotlin.test.*
 
@@ -17,6 +20,7 @@ class OBSClientTest {
         OBSState.currentScene = TScene("")
         OBSState.scenes.clear()
         Config.autoCalculateSceneLimitsBySources = true
+        Notifications.clear()
     }
 
     @Test
@@ -121,5 +125,170 @@ class OBSClientTest {
         OBSClient.start()
 
         assertFalse(OBSClient.isRunning())
+    }
+
+    @Test
+    fun testGetSourceLengthForVLCSourceWithValidSource() {
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("VLC source 1", "vlc_source")
+        source.settings = mapOf(
+            "playlist" to listOf(
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false,
+                    "value" to filename
+                )
+            )
+        )
+
+        OBSClient.getSourceLengthForVLCSource(source)
+
+        assertEquals(filename, source.fileName)
+        assertEquals(2, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
+    fun testGetSourceLengthForVLCSourceWithMultipleFilesAndChooseLongest() {
+        Config.sumVlcPlaylistSourceLengths = false
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("VLC source 1", "vlc_source")
+        source.settings = mapOf(
+            "playlist" to listOf(
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false,
+                    "value" to filename
+                ),
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false,
+                    "value" to filename
+                )
+            )
+        )
+
+        OBSClient.getSourceLengthForVLCSource(source)
+
+        assertEquals(filename, source.fileName)
+        assertEquals(2, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
+    fun testGetSourceLengthForVLCSourceWithMultipleFilesAndSumVideos() {
+        Config.sumVlcPlaylistSourceLengths = true
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("VLC source 1", "vlc_source")
+        source.settings = mapOf(
+            "playlist" to listOf(
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false,
+                    "value" to filename
+                ),
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false,
+                    "value" to filename
+                )
+            )
+        )
+
+        OBSClient.getSourceLengthForVLCSource(source)
+
+        assertEquals(filename, source.fileName)
+        assertEquals(4, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
+    fun testGetSourceLengthForVLCSourceWithInvalidPlaylistProperty() {
+        val source = TSource("VLC source 1", "vlc_source")
+        source.settings = mapOf(
+            "playlist" to ""
+        )
+
+        OBSClient.getSourceLengthForVLCSource(source)
+
+        assertEquals("", source.fileName)
+        assertEquals(0, source.videoLength)
+        assertEquals(1, Notifications.list.size)
+        assertEquals("Could not load duration for VLC source 'VLC source 1'", Notifications.list.first().message)
+    }
+
+    @Test
+    fun testGetSourceLengthForVLCSourceWithMissingPlaylistItemValueProperty() {
+        val source = TSource("VLC source 1", "vlc_source")
+        source.settings = mapOf(
+            "playlist" to listOf(
+                mapOf(
+                    "hidden" to false,
+                    "selected" to false
+                )
+            )
+        )
+
+        OBSClient.getSourceLengthForVLCSource(source)
+
+        assertEquals("", source.fileName)
+        assertEquals(0, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
+    fun testAssignSourceSettingsFromOBSResponseWithVLCSource() {
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("VLC source 1")
+        val response = Gson().fromJson(
+            """
+{
+    "sourceName": "VLC source 1",
+    "sourceType": "vlc_source",
+    "sourceSettings": {
+        "playlist": [
+            {
+                "hidden": false,
+                "selected": false,
+                "value": "$filename"
+            }
+        ]
+    }
+}
+        """.trimIndent(), GetSourceSettingsResponse::class.java
+        )
+
+        OBSClient.assignSourceSettingsFromOBSResponse(source, response)
+
+        assertEquals("VLC source 1", source.name)   // Doesn't change
+        assertTrue(source.settings.containsKey("playlist"))
+        assertEquals(filename, source.fileName)
+        assertEquals(2, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
+    fun testAssignSourceSettingsFromOBSResponseWithFFMPEGSource() {
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("Media source 1")
+        val response = Gson().fromJson(
+            """
+{
+    "sourceName": "Media source 1",
+    "sourceType": "ffmpeg_source",
+    "sourceSettings": {
+        "local_file": "$filename"
+    }
+}
+        """.trimIndent(), GetSourceSettingsResponse::class.java
+        )
+
+        OBSClient.assignSourceSettingsFromOBSResponse(source, response)
+
+        assertEquals("Media source 1", source.name)   // Doesn't change
+        assertTrue(source.settings.containsKey("local_file"))
+        assertEquals(filename, source.fileName)
+        assertEquals(2, source.videoLength)
+        assertEquals(0, Notifications.list.size)
     }
 }

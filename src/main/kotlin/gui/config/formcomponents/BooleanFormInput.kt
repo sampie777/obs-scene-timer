@@ -15,7 +15,8 @@ import javax.swing.SwingConstants
 class BooleanFormInput(
     override val key: String,
     private val labelText: String,
-    private val toolTipText: String = ""
+    private val toolTipText: String = "",
+    private val onSave: ((newValue: Boolean) -> Unit)? = null
 ) : FormInput {
     private val logger = Logger.getLogger(BooleanFormInput::class.java.name)
 
@@ -47,6 +48,8 @@ class BooleanFormInput(
     }
 
     override fun save() {
+        onSave?.invoke(value())
+
         Config.set(key, value())
     }
 

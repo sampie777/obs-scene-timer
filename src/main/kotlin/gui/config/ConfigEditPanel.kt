@@ -1,7 +1,9 @@
 package gui.config
 
+import config.Config
 import gui.config.formcomponents.*
 import gui.mainFrame.WindowTitle
+import objects.OBSClient
 import objects.notifications.Notifications
 import themes.Theme
 import java.awt.BorderLayout
@@ -44,7 +46,27 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(
             BooleanFormInput(
                 "autoCalculateSceneLimitsBySources",
-                "Automatically calculate scene time limits by scanning video sources"
+                "Automatically calculate scene time limits by scanning video sources",
+                onSave = { newValue ->
+                    if (newValue == Config.autoCalculateSceneLimitsBySources) {
+                        return@BooleanFormInput
+                    }
+
+                    OBSClient.loadScenes()
+                }
+            )
+        )
+        formComponents.add(
+            BooleanFormInput(
+                "sumVlcPlaylistSourceLengths",
+                "Sum VLC playlist source lengths instead of\nusing the longest source in the playlist",
+                onSave = { newValue ->
+                    if (newValue == Config.sumVlcPlaylistSourceLengths) {
+                        return@BooleanFormInput
+                    }
+
+                    OBSClient.loadScenes()
+                }
             )
         )
 

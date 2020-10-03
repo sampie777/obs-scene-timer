@@ -255,7 +255,7 @@ object OBSClient {
     }
 
 
-    private fun loadScenes() {
+    fun loadScenes() {
         logger.info("Retrieving scenes")
         OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENES
         GUI.refreshOBSStatus()
@@ -407,23 +407,72 @@ object OBSClient {
         }
     }
 
-    private fun assignSourceSettingsFromOBSResponse(source: TSource, response: GetSourceSettingsResponse) {
+    fun assignSourceSettingsFromOBSResponse(source: TSource, response: GetSourceSettingsResponse) {
         source.settings = response.sourceSettings
         source.type = response.sourceType
 
         if ("ffmpeg_source" == source.type && source.settings.containsKey("local_file")) {
             source.fileName = source.settings["local_file"] as String
+            source.videoLength = getVideoLengthOrZeroForFile(source.fileName)
 
-            var videoLength = 0
-            try {
-                logger.info("Trying to get video length for: ${source.fileName}")
-                videoLength = getVideoLength(source.fileName).toInt()
-            } catch (t: Throwable) {
-                logger.severe("Failed to get video length: ${t.message}")
-                t.printStackTrace()
-            }
-            source.videoLength = videoLength
+        } else if ("vlc_source" == source.type && source.settings.containsKey("playlist")) {
+            getSourceLengthForVLCSource(source)
         }
+    }
+
+    fun getSourceLengthForVLCSource(source: TSource) {
+        source.fileName = ""
+        source.videoLength = 0
+
+        val playlist = try {
+            @Suppress("UNCHECKED_CAST")
+            (source.settings["playlist"] as List<Map<String, Any>>)
+        } catch (t: Throwable) {
+            logger.warning("Could not get 'playlist' property from vlc_source settings: ${source.settings}")
+            t.printStackTrace()
+            Notifications.add("Could not load duration for VLC source '${source.name}'", "OBS")
+            return
+        }
+
+        playlist.forEach {
+            val fileName = try {
+                it["value"] as String
+            } catch (t: Throwable) {
+                logger.warning("Failed to get 'value' property from vlc_source playlist value: $it")
+                t.printStackTrace()
+                return@forEach
+            }
+
+            val videoLength = getVideoLengthOrZeroForFile(fileName)
+
+            if (Config.sumVlcPlaylistSourceLengths) {
+                // Set first video file as source file name
+                if (source.fileName.isEmpty()) {
+                    source.fileName = fileName
+                }
+
+                source.videoLength += videoLength
+            } else {
+                if (videoLength <= source.videoLength) {
+                    return@forEach
+                }
+
+                source.fileName = fileName
+                source.videoLength = videoLength
+            }
+        }
+    }
+
+    private fun getVideoLengthOrZeroForFile(filename: String): Int {
+        var videoLength = 0
+        try {
+            logger.info("Trying to get video length for: $filename")
+            videoLength = getVideoLength(filename).toInt()
+        } catch (t: Throwable) {
+            logger.severe("Failed to get video length: ${t.message}")
+            t.printStackTrace()
+        }
+        return videoLength
     }
 
     /**
