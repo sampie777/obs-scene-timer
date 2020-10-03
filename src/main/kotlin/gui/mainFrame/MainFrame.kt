@@ -5,9 +5,7 @@ import config.Config
 import gui.Refreshable
 import gui.menu.MenuBar
 import gui.utils.loadIcon
-import objects.ApplicationInfo
-import objects.OBSSceneTimer
-import objects.TimerState
+import objects.*
 import objects.notifications.Notifications
 import org.bridj.Pointer
 import org.bridj.cpp.com.COMRuntime
@@ -126,6 +124,10 @@ class MainFrame : JFrame(), Refreshable {
         updateTaskbarProgressbar()
     }
 
+    override fun refreshOBSStatus() {
+        updateTaskbarProgressbar()
+    }
+
     private fun updateTaskbarProgressbar() {
         // Check if taskbarlist is ever created (and thus also if system is Windows)
         if (taskbarList == null) {
@@ -146,8 +148,17 @@ class MainFrame : JFrame(), Refreshable {
         }
 
         try {
-            taskbarList?.SetProgressValue(hwnd, OBSSceneTimer.getValue(), OBSSceneTimer.getMaxTimerValue())
-            taskbarList?.SetProgressState(hwnd, getTaskbarProgressbarFlag())
+            val progressbarFlag = getTaskbarProgressbarFlag()
+            taskbarList?.SetProgressState(hwnd, progressbarFlag)
+
+            if (progressbarFlag in arrayOf(
+                    ITaskbarList3.TbpFlag.TBPF_ERROR,
+                    ITaskbarList3.TbpFlag.TBPF_PAUSED,
+                    ITaskbarList3.TbpFlag.TBPF_NORMAL
+                )
+            ) {
+                taskbarList?.SetProgressValue(hwnd, OBSSceneTimer.getValue(), OBSSceneTimer.getMaxTimerValue())
+            }
         } catch (t: Throwable) {
             logger.warning("Could no update taskbar progressbar")
             t.printStackTrace()
@@ -155,6 +166,13 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     private fun getTaskbarProgressbarFlag(): ITaskbarList3.TbpFlag {
+        if (OBSState.connectionStatus == OBSClientStatus.CONNECTING
+            || OBSState.connectionStatus == OBSClientStatus.RECONNECTING
+            || OBSState.connectionStatus == OBSClientStatus.CONNECTION_FAILED
+        ) {
+            return ITaskbarList3.TbpFlag.TBPF_INDETERMINATE
+        }
+
         if (OBSSceneTimer.getMaxTimerValue() == 0L) {
             return ITaskbarList3.TbpFlag.TBPF_NOPROGRESS
         }
