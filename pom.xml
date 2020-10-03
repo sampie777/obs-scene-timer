@@ -24,6 +24,7 @@
         <twasi.version>1.0.9-snapshot-increased-message-size</twasi.version>
         <xuggle.version>5.5-20140728</xuggle.version>
         <launch4j.version>1.7.25</launch4j.version>
+        <bridj.version>0.7.0</bridj.version>
     </properties>
 
     <repositories>
@@ -66,6 +67,12 @@
             <artifactId>xuggle-xuggler-lgpl</artifactId>
             <version>${xuggle.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.nativelibs4java</groupId>
+            <artifactId>bridj</artifactId>
+            <version>${bridj.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

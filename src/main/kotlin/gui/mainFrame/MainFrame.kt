@@ -9,6 +9,10 @@ import objects.ApplicationInfo
 import objects.OBSSceneTimer
 import objects.TimerState
 import objects.notifications.Notifications
+import org.bridj.Pointer
+import org.bridj.cpp.com.COMRuntime
+import org.bridj.cpp.com.shell.ITaskbarList3
+import org.bridj.jawt.JAWTUtils
 import java.awt.EventQueue
 import java.awt.Image
 import java.util.logging.Logger
@@ -21,6 +25,8 @@ class MainFrame : JFrame(), Refreshable {
     private val applicationIconDefault: Image?
     private val applicationIconOrange: Image?
     private val applicationIconRed: Image?
+    private var taskbarList: ITaskbarList3? = null
+    private var hwnd: Pointer<Int>? = null
 
     companion object {
         private var instance: MainFrame? = null
@@ -47,6 +53,11 @@ class MainFrame : JFrame(), Refreshable {
         addWindowListener(MainFrameWindowAdapter(this))
 
         initGUI()
+
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            logger.info("Creating taskbar object")
+            taskbarList = COMRuntime.newInstance(ITaskbarList3::class.java)
+        }
     }
 
     private fun initGUI() {
@@ -104,6 +115,21 @@ class MainFrame : JFrame(), Refreshable {
             TimerState.APPROACHING -> applicationIconOrange
             else -> applicationIconDefault
         }
+
+        // Check if taskbarlist is ever created (and thus also if system is Windows)
+        if (taskbarList == null) {
+            return
+        }
+
+        if (hwnd == null) {
+            logger.info("Getting window handle")
+            val hwndVal = JAWTUtils.getNativePeerHandle(this)
+            hwnd = Pointer.pointerToAddress(hwndVal) as Pointer<Int>?
+        }
+
+        logger.info("Setting taskbar progress value")
+        taskbarList?.SetProgressValue(hwnd, 50, 100)
+        taskbarList?.SetProgressState(hwnd, ITaskbarList3.TbpFlag.TBPF_NORMAL)
     }
 
     fun toggleFullscreen() {
