@@ -2,51 +2,15 @@ package gui.sceneTable
 
 import GUI
 import config.Config
-import getTimeAsClock
 import gui.Refreshable
 import objects.OBSSceneTimer
 import objects.OBSState
 import objects.TScene
 import themes.Theme
 import java.awt.*
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
 
-class SceneInputChangeListener(private val scene: TScene) : ChangeListener {
-    private val logger = Logger.getLogger(SceneInputChangeListener::class.java.name)
-
-    private var previousWasResetValue = false
-
-    override fun stateChanged(event: ChangeEvent) {
-        val spinner = event.source as JSpinner
-        var newValue = spinner.value as Int
-
-        if (newValue < 0) {
-            logger.info("Resetting scene's time limit")
-            previousWasResetValue = true
-
-            scene.timeLimit = null
-
-            newValue = scene.maxVideoLength()
-            spinner.value = newValue
-        } else if (previousWasResetValue) {
-            // Catch the debounce effect from setting the value to -1 and then automatically set to 0
-            previousWasResetValue = false
-        } else {
-            // Normal behaviour
-            scene.timeLimit = newValue
-        }
-
-        spinner.toolTipText = getTimeAsClock(newValue.toLong())
-
-        if (scene.name == OBSState.currentScene.name) {
-            OBSSceneTimer.setMaxTimerValue(newValue.toLong())
-        }
-    }
-}
 
 class SceneTablePanel : JPanel(), Refreshable {
     val sceneLabels = HashMap<String, JLabel>()
@@ -173,20 +137,8 @@ class SceneTablePanel : JPanel(), Refreshable {
         )
     }
 
-    private fun getValueForScene(scene: String): Int {
-        if (!sceneInputs.containsKey(scene)) {
-            return 0
-        }
-
-        return sceneInputValueToInt(sceneInputs[scene]?.text)
-    }
-
-    private fun sceneInputValueToInt(value: String?): Int {
-        if (value == null) {
-            return 0
-        }
-
-        return 1
+    private fun getValueForScene(sceneName: String): Int {
+        return OBSState.scenes.find { it.name == sceneName }?.getFinalTimeLimit() ?: 0
     }
 
     override fun refreshGroups() {

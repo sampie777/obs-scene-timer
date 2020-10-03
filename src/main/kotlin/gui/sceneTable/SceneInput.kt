@@ -3,6 +3,7 @@ package gui.sceneTable
 
 import config.Config
 import getTimeAsClock
+import objects.OBSSceneTimer
 import objects.OBSState
 import objects.TScene
 import objects.notifications.Notifications
@@ -45,10 +46,6 @@ class SceneInput(val scene: TScene) : JTextField() {
     }
 
     fun refreshDisplayFromScene() {
-        if (scene.timeLimit != null && scene.timeLimit!! < 0) {
-            resetDuration()
-        }
-
         text = getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)
     }
 
@@ -75,24 +72,38 @@ class SceneInput(val scene: TScene) : JTextField() {
             } catch (e: ParseException) {
                 return@forEach
             } catch (t: Throwable) {
+                logger.warning("Failed to parse duration input for SceneInput: $this")
                 t.printStackTrace()
                 Notifications.add("Failed to parse duration input: '$text'. Error: ${t.localizedMessage}")
                 return@forEach
             }
 
             val seconds = date.time / 1000L
-            scene.timeLimit = seconds.toInt()
-            logger.info("Setting new scene time limit to: $seconds")
+
+            logger.info("Setting new scene time limit to: $seconds (parsed from: $text)")
+            setNewTime(seconds.toInt())
             return
         }
 
-        logger.warning("Failed to parse input at all: no formatters match")
+        logger.warning("No input formatters found for text: $text")
     }
 
-    private fun resetDuration() {
-        logger.info("Resetting scene's time limit")
-        scene.timeLimit = null
-        Config.sceneProperties.tScenes.find { it.name == scene.name }?.timeLimit = scene.maxVideoLength()
+    fun setNewTime(value: Int?) {
+        scene.timeLimit = value
+
+        if (value != null && value < 0) {
+            logger.info("Resetting scene's time limit")
+            scene.timeLimit = null
+            Config.sceneProperties.tScenes.find { it.name == scene.name }?.timeLimit = scene.maxVideoLength()
+        }
+
+        if (scene.name == OBSState.currentScene.name) {
+            OBSSceneTimer.setMaxTimerValue(scene.getFinalTimeLimit().toLong())
+        }
+    }
+
+    override fun toString(): String {
+        return "SceneInput(scene=$scene, text=$text)"
     }
 }
 
@@ -100,6 +111,9 @@ class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
     private val logger = Logger.getLogger(SceneInputKeyListener::class.java.name)
 
     override fun keyTyped(e: KeyEvent) {
+    }
+
+    override fun keyReleased(e: KeyEvent) {
     }
 
     override fun keyPressed(e: KeyEvent) {
@@ -110,16 +124,10 @@ class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
         }
     }
 
-    override fun keyReleased(e: KeyEvent) {
-    }
-
     private fun increaseTimeLimitWith(amount: Int) {
-        if (input.scene.timeLimit == null) {
-            input.scene.timeLimit = input.scene.getFinalTimeLimit()
-        }
+        val currentLimit = input.scene.timeLimit ?: input.scene.getFinalTimeLimit()
 
-        input.scene.timeLimit = input.scene.timeLimit?.plus(amount)
-
+        input.setNewTime(currentLimit + amount)
         input.refreshDisplayFromScene()
     }
 }
@@ -139,7 +147,10 @@ class SceneInputDocumentListener(private val input: SceneInput): DocumentListene
 }
 
 class SceneInputFocusAdapter(private val input: SceneInput): FocusAdapter() {
+    private val logger = Logger.getLogger(SceneInputFocusAdapter::class.java.name)
+
     override fun focusLost(e: FocusEvent) {
+        logger.fine("[focusLost] on SceneInput $input")
         super.focusLost(e)
         input.refreshDisplayFromScene()
     }
