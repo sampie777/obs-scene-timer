@@ -10,6 +10,7 @@ class TScene {
 
     var name = ""
     var sources: List<TSource> = ArrayList()
+    @Volatile
     var timeLimit: Int? = null
     val groups: MutableSet<Int> = mutableSetOf()
 
@@ -108,7 +109,7 @@ class Json {
 
     data class TScene(
         val name: String,
-        val timeLimit: Int?,
+        var timeLimit: Int?,
         val groups: Set<Int>
     )
 }

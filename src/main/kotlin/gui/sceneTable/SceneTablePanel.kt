@@ -1,8 +1,9 @@
-package gui
+package gui.sceneTable
 
 import GUI
 import config.Config
 import getTimeAsClock
+import gui.Refreshable
 import objects.OBSSceneTimer
 import objects.OBSState
 import objects.TScene
@@ -49,7 +50,7 @@ class SceneInputChangeListener(private val scene: TScene) : ChangeListener {
 
 class SceneTablePanel : JPanel(), Refreshable {
     val sceneLabels = HashMap<String, JLabel>()
-    val sceneInputs = HashMap<String, JSpinner>()
+    val sceneInputs = HashMap<String, SceneInput>()
     val container = JPanel()
 
     private val labelFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
@@ -57,8 +58,6 @@ class SceneTablePanel : JPanel(), Refreshable {
     private val currentSceneLabelFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
     private val currentSceneGroupedLabelFont =
         Font(currentSceneLabelFont.family, Font.BOLD + Font.ITALIC, currentSceneLabelFont.size)
-    private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
-    private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
 
     init {
         GUI.register(this)
@@ -115,7 +114,7 @@ class SceneTablePanel : JPanel(), Refreshable {
                 container.add(
                     createSceneTableRow(
                         sceneLabels[it.name] ?: JLabel("[ unregistered scene ]"),
-                        sceneInputs[it.name] ?: JSpinner()
+                        sceneInputs[it.name] ?: JTextField()
                     )
                 )
             }
@@ -126,20 +125,10 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun createSceneRowComponents() {
         for (scene in OBSState.scenes) {
-            val sceneValue = scene.getFinalTimeLimit()
-
             val sceneLabel = JLabel(scene.name)
             sceneLabels[scene.name] = sceneLabel
 
-            val sceneInput = JSpinner()
-            sceneInput.preferredSize = Dimension(100, 22)
-            sceneInput.model = SpinnerNumberModel(sceneValue, -1, null, 1)
-            sceneInput.addChangeListener(SceneInputChangeListener(scene))
-            sceneInput.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
-            sceneInput.font = if (scene.name == OBSState.currentScene.name)
-                currentSceneInputFont else inputFont
-            sceneInput.toolTipText = getTimeAsClock(sceneValue.toLong())
-
+            val sceneInput = SceneInput(scene)
             sceneInputs[scene.name] = sceneInput
         }
     }
@@ -189,7 +178,15 @@ class SceneTablePanel : JPanel(), Refreshable {
             return 0
         }
 
-        return sceneInputs[scene]?.value as Int
+        return sceneInputValueToInt(sceneInputs[scene]?.text)
+    }
+
+    private fun sceneInputValueToInt(value: String?): Int {
+        if (value == null) {
+            return 0
+        }
+
+        return 1
     }
 
     override fun refreshGroups() {

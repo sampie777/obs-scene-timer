@@ -4,9 +4,9 @@ import GUI
 import config.Config
 import gui.OBSStatusPanel
 import gui.Refreshable
-import gui.SceneTablePanel
 import gui.TimerPanel
 import gui.notifications.NotificationFrame
+import gui.sceneTable.SceneTablePanel
 import gui.utils.createImageIcon
 import gui.utils.divider
 import gui.utils.getMainFrameComponent

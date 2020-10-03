@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 
 private val logger: Logger = Logger.getLogger("utils")
 
-fun getTimeAsClock(value: Long): String {
+fun getTimeAsClock(value: Long, looseFormat: Boolean = false): String {
     var positiveValue = value
 
     var signString = ""
@@ -26,7 +26,12 @@ fun getTimeAsClock(value: Long): String {
     val timerHours = positiveValue / 3600
     val timerMinutes = (positiveValue - timerHours * 3600) / 60
     val timerSeconds = positiveValue - timerHours * 3600 - timerMinutes * 60
-    return String.format("%s%d:%02d:%02d", signString, timerHours, timerMinutes, timerSeconds)
+
+    if (!looseFormat || timerHours != 0L) {
+        return String.format("%s%d:%02d:%02d", signString, timerHours, timerMinutes, timerSeconds)
+    }
+
+    return String.format("%s%d:%02d", signString, timerMinutes, timerSeconds)
 }
 
 @Throws(UnsupportedEncodingException::class)
