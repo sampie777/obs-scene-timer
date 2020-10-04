@@ -11,13 +11,17 @@ import org.bridj.Pointer
 import org.bridj.cpp.com.COMRuntime
 import org.bridj.cpp.com.shell.ITaskbarList3
 import org.bridj.jawt.JAWTUtils
+import remotesync.RemoteSyncRefreshableRegister
+import remotesync.client.TimerClient
+import remotesync.objects.ConnectionState
+import remotesync.objects.RemoteSyncRefreshable
 import java.awt.EventQueue
 import java.awt.Image
 import java.util.logging.Logger
 import javax.swing.JFrame
 
 
-class MainFrame : JFrame(), Refreshable {
+class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
     private val logger = Logger.getLogger(MainFrame::class.java.name)
 
     private val applicationIconDefault: Image?
@@ -25,6 +29,17 @@ class MainFrame : JFrame(), Refreshable {
     private val applicationIconRed: Image?
     private var taskbarList: ITaskbarList3? = null
     private var hwnd: Pointer<Int>? = null
+
+    private val remoteSyncIndeterminateStates = arrayOf(
+        ConnectionState.CONNECTING,
+        ConnectionState.RECONNECTING,
+        ConnectionState.CONNECTION_FAILED
+    )
+    private val oBSIndeterminateStates = arrayOf(
+        OBSClientStatus.CONNECTING,
+        OBSClientStatus.RECONNECTING,
+        OBSClientStatus.CONNECTION_FAILED
+    )
 
     companion object {
         private var instance: MainFrame? = null
@@ -43,6 +58,7 @@ class MainFrame : JFrame(), Refreshable {
         instance = this
 
         GUI.register(this)
+        RemoteSyncRefreshableRegister.register(this)
 
         applicationIconDefault = loadIcon("/icon-512.png")
         applicationIconOrange = loadIcon("/icon-orange-512.png")
@@ -128,6 +144,10 @@ class MainFrame : JFrame(), Refreshable {
         updateTaskbarProgressbar()
     }
 
+    override fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
+        updateTaskbarProgressbar()
+    }
+
     private fun updateTaskbarProgressbar() {
         // Check if taskbarlist is ever created (and thus also if system is Windows)
         if (taskbarList == null) {
@@ -166,10 +186,11 @@ class MainFrame : JFrame(), Refreshable {
     }
 
     private fun getTaskbarProgressbarFlag(): ITaskbarList3.TbpFlag {
-        if (OBSState.connectionStatus == OBSClientStatus.CONNECTING
-            || OBSState.connectionStatus == OBSClientStatus.RECONNECTING
-            || OBSState.connectionStatus == OBSClientStatus.CONNECTION_FAILED
-        ) {
+        if (Config.remoteSyncClientEnabled && remoteSyncIndeterminateStates.contains(TimerClient.getConnectionState())) {
+            return ITaskbarList3.TbpFlag.TBPF_INDETERMINATE
+        }
+
+        if (!Config.remoteSyncClientEnabled && oBSIndeterminateStates.contains(OBSState.connectionStatus)) {
             return ITaskbarList3.TbpFlag.TBPF_INDETERMINATE
         }
 
