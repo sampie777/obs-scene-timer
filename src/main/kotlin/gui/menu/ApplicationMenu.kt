@@ -5,6 +5,7 @@ import gui.config.ConfigFrame
 import gui.mainFrame.MainFrame
 import gui.notifications.NotificationFrame
 import gui.utils.getMainFrameComponent
+import objects.OBSClient
 import themes.Theme
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -25,6 +26,7 @@ class ApplicationMenu : JMenu("Application") {
         popupMenu.border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
         mnemonic = KeyEvent.VK_A
 
+        val reloadScenesItem = JMenuItem("Reload scenes")
         val notificationsItem = JMenuItem("Notifications")
         val settingsItem = JMenuItem("Settings")
         val fullscreenItem = JMenuItem("Toggle fullscreen")
@@ -32,6 +34,8 @@ class ApplicationMenu : JMenu("Application") {
         val quitItem = JMenuItem("Quit")
 
         // Set alt keys
+        reloadScenesItem.mnemonic = KeyEvent.VK_R
+        reloadScenesItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         notificationsItem.mnemonic = KeyEvent.VK_N
         notificationsItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK or InputEvent.ALT_MASK)
         settingsItem.mnemonic = KeyEvent.VK_S
@@ -43,6 +47,7 @@ class ApplicationMenu : JMenu("Application") {
         quitItem.mnemonic = KeyEvent.VK_Q
         quitItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK)
 
+        reloadScenesItem.addActionListener { OBSClient.loadScenes() }
         notificationsItem.addActionListener { NotificationFrame(getMainFrameComponent(this)) }
         settingsItem.addActionListener { ConfigFrame(getMainFrameComponent(this)) }
         fullscreenItem.addActionListener {
@@ -51,6 +56,7 @@ class ApplicationMenu : JMenu("Application") {
         infoItem.addActionListener { InfoFrame.createAndShow(getMainFrameComponent(this)) }
         quitItem.addActionListener { exitApplication() }
 
+        add(reloadScenesItem)
         add(notificationsItem)
         add(settingsItem)
         addSeparator()

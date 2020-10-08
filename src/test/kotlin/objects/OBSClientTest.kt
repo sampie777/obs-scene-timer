@@ -129,6 +129,21 @@ class OBSClientTest {
     }
 
     @Test
+    fun testGetSourceLengthForMediaSourceWithValidSource() {
+        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val source = TSource("Media source 1", "ffmpeg_source")
+        source.settings = mapOf(
+            "local_file" to filename
+        )
+
+        OBSClient.getSourceLengthForMediaSource(source)
+
+        assertEquals(filename, source.fileName)
+        assertEquals(2, source.videoLength)
+        assertEquals(0, Notifications.list.size)
+    }
+
+    @Test
     fun testGetSourceLengthForVLCSourceWithValidSource() {
         val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
         val source = TSource("VLC source 1", "vlc_source")
@@ -142,7 +157,7 @@ class OBSClientTest {
             )
         )
 
-        OBSClient.getSourceLengthForVLCSource(source)
+        OBSClient.getSourceLengthForVLCVideoSource(source)
 
         assertEquals(filename, source.fileName)
         assertEquals(2, source.videoLength)
@@ -169,7 +184,7 @@ class OBSClientTest {
             )
         )
 
-        OBSClient.getSourceLengthForVLCSource(source)
+        OBSClient.getSourceLengthForVLCVideoSource(source)
 
         assertEquals(filename, source.fileName)
         assertEquals(2, source.videoLength)
@@ -196,7 +211,7 @@ class OBSClientTest {
             )
         )
 
-        OBSClient.getSourceLengthForVLCSource(source)
+        OBSClient.getSourceLengthForVLCVideoSource(source)
 
         assertEquals(filename, source.fileName)
         assertEquals(4, source.videoLength)
@@ -210,7 +225,7 @@ class OBSClientTest {
             "playlist" to ""
         )
 
-        OBSClient.getSourceLengthForVLCSource(source)
+        OBSClient.getSourceLengthForVLCVideoSource(source)
 
         assertEquals("", source.fileName)
         assertEquals(0, source.videoLength)
@@ -230,7 +245,7 @@ class OBSClientTest {
             )
         )
 
-        OBSClient.getSourceLengthForVLCSource(source)
+        OBSClient.getSourceLengthForVLCVideoSource(source)
 
         assertEquals("", source.fileName)
         assertEquals(0, source.videoLength)

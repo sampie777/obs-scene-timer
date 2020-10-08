@@ -411,16 +411,26 @@ object OBSClient {
         source.settings = response.sourceSettings
         source.type = response.sourceType
 
-        if ("ffmpeg_source" == source.type && source.settings.containsKey("local_file")) {
-            source.fileName = source.settings["local_file"] as String
-            source.videoLength = getVideoLengthOrZeroForFile(source.fileName)
-
-        } else if ("vlc_source" == source.type && source.settings.containsKey("playlist")) {
-            getSourceLengthForVLCSource(source)
+        when (source.type) {
+            "ffmpeg_source" -> getSourceLengthForMediaSource(source)
+            "vlc_source" -> getSourceLengthForVLCVideoSource(source)
         }
     }
 
-    fun getSourceLengthForVLCSource(source: TSource) {
+    fun getSourceLengthForMediaSource(source: TSource) {
+        if (!source.settings.containsKey("local_file")) {
+            return
+        }
+
+        source.fileName = source.settings["local_file"] as String
+        source.videoLength = getVideoLengthOrZeroForFile(source.fileName)
+    }
+
+    fun getSourceLengthForVLCVideoSource(source: TSource) {
+        if (!source.settings.containsKey("playlist")) {
+            return
+        }
+
         source.fileName = ""
         source.videoLength = 0
 
