@@ -6,7 +6,7 @@
 
     <groupId>nl.sajansen</groupId>
     <artifactId>obs-scene-timer</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OBS Scene Timer</name>
