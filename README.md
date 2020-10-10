@@ -25,7 +25,7 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 1. Make sure you have at least Java 8 installed.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
 1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
-1. **Edit the settings** if needed. This can be done using the menu Application menu -> Settings or editing the _user.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after changing the application settings.
+1. **Edit the settings** if needed. This can be done using the menu Application menu -> Settings or editing the _obs-scene-timer.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after changing the application settings.
 
 ## How it works
 
@@ -173,9 +173,11 @@ java -jar obs-scene-timer.jar -v
 
 ### Properties
 
-In the same directory as the _.jar_ file, the _user.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via Application menu -> Settings, the new values will also be saved to this _user.properties_ file. By deleting this file, all properties are reset to default. 
+In the same directory as the _.jar_ file, the _obs-scene-timer.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via Application menu -> Settings, the new values will also be saved to this _obs-scene-timer.properties_ file. By deleting this file, all properties are reset to default. 
 
-Don't run the application while editing the _user.properties_ file (and before saving your changes), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. If you need to edit the properties during application execution, use the GUI: Application menu -> Settings. Note that some settings still require application restart.
+Don't run the application while editing the _obs-scene-timer.properties_ file (and before saving your changes), as your changes won't be loaded until the next launch of the application. Also, the application will overwrite your changes if it is still running. If you need to edit the properties during application execution, use the GUI: Application menu -> Settings. Note that some settings still require application restart.
+
+> Note: if you've been using OBS Scene Timer version 1.5.0 and/or previous versions, the properties file will be named _user.properties_. 
 
 #### Explanation
 
