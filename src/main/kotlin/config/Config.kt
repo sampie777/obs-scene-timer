@@ -37,6 +37,8 @@ object Config {
     var largeTimeDifferenceForLimitApproaching: Long = 30
     var smallMinLimitForLimitApproaching: Long = 20
     var smallTimeDifferenceForLimitApproaching: Long = 10
+    var timerFlashForRemainingTimeLessThan: Long = 10
+    var timerFlashDurationInMilliSeconds: Int = 100
 
     var maxGroups: Int = 32
     var sceneProperties: Json.TScenes = Json.TScenes(ArrayList())

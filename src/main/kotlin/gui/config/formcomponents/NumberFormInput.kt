@@ -23,7 +23,7 @@ class NumberFormInput<T : Number>(
     override fun component(): Component {
         val configValue: T? = Config.get(key) as? T
 
-        val label = JLabel(labelText)
+        val label = JLabel("<html>${labelText.replace("\n", "<br/>&nbsp;")}</html>")
         label.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 12)
 
         input.model = SpinnerNumberModel(configValue, min as? Comparable<T>, max as? Comparable<T>, 1)

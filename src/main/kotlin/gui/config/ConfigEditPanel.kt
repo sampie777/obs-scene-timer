@@ -135,6 +135,14 @@ class ConfigEditPanel : JPanel() {
                 null
             )
         )
+        formComponents.add(
+            NumberFormInput<Long>(
+                "timerFlashForRemainingTimeLessThan",
+                "Flash screen when remaining time becomes less than (sec.)\nSet to 0 to disable flashing",
+                0,
+                null
+            )
+        )
 
         formComponents.add(HeaderFormComponent("Logging"))
         formComponents.add(

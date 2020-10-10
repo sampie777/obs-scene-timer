@@ -200,6 +200,8 @@ _Timer settings_
 * `smallTimeDifferenceForLimitApproaching` (seconds) (default `10`): show the time-limit-approaching warning this amount of seconds before reaching the time limit.
 * `largeMinLimitForLimitApproaching` (seconds) (default `60`): use `largeTimeDifferenceForLimitApproaching` value for time-limit-approaching warning for time limits greater or equal to this value.  
 * `largeTimeDifferenceForLimitApproaching` (seconds) (default `30`): show the time-limit-approaching warning this amount of seconds before reaching the time limit. Only for scene's with a time limit greater or equal than `largeTimeDifferenceForLimitApproaching` value.
+* `timerFlashForRemainingTimeLessThan` (seconds) (default `10`): when the remaining time becomes equal or less than this value, the timer screen starts flashing red.
+* `timerFlashDurationInMilliSeconds` (milliseconds) (default `100`): the duration of the red timer flash before setting the screen back to yellow.
 * `timerCountUpFontSize` (number) (default `80`): the font size of the main timer (which is always visible).
 * `timerCountDownFontSize` (number) (default `100`): the font size of the countdown timer (which is visible when a time limit is set for the current scene).
 

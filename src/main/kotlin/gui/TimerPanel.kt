@@ -127,7 +127,14 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     private fun updateColorsForTimer() {
-        setColorsFor(OBSSceneTimer.getTimerState())
+        val timerState = OBSSceneTimer.getTimerState()
+        setColorsFor(timerState)
+
+        if (timerState == TimerState.APPROACHING
+            && Config.timerFlashForRemainingTimeLessThan > 0
+            && OBSSceneTimer.getRemainingTime() <= Config.timerFlashForRemainingTimeLessThan) {
+            startColorFlashing()
+        }
     }
 
     private fun setColorsFor(state: TimerState) {
@@ -145,6 +152,18 @@ class TimerPanel : JPanel(), Refreshable {
                 background = Theme.getTimerDefaultBackgroundColor()
             }
         }
+    }
+
+    private fun startColorFlashing() {
+        setColorsFor(TimerState.EXCEEDED)
+
+        // Start flash timer to reset background color
+        val flashTimer = Timer(0) {
+            setColorsFor(TimerState.APPROACHING)
+        }
+        flashTimer.initialDelay = Config.timerFlashDurationInMilliSeconds
+        flashTimer.isRepeats = false
+        flashTimer.start()
     }
 
     private fun setLabelsColor(color: Color) {

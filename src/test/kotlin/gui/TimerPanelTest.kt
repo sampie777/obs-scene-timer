@@ -15,6 +15,7 @@ class TimerPanelTest {
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSSceneTimer.setMaxTimerValue(0)
+        Config.timerFlashForRemainingTimeLessThan = 0
     }
 
     @Test
