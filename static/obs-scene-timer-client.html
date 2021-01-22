@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="application/javascript">
+        /*
+            Set this value to the URL OBS Scene Timer is running on. This might be 'localhost'
+            if OBS Scene Timer is running on this computer. Otherwise, it might be an IP address.
+            Also check the port; default is '4050'.
+
+            Not last and also not least, make sure "Remote Sync server" is running in OBS Scene Timer!
+         */
+        const OBS_Scene_Timer_websocket_url = "ws://localhost:4050";
+    </script>
+    <style type="text/css">
+        /*
+            This section is created for you to easy modify the page layout. Default values are
+            already in place so you can adjust them easily. Feel free to add extra properties,
+            you can't break your computer ;) (but keep a copy of the default values).
+         */
+
+
+        #wrapper {
+            /* The overall font size. Adjust this value to scale everything up/down */
+            font-size: 100%;
+        }
+
+        #elapsed-time {
+            /* Relative font size for the elapsed time clock display */
+            font-size: 14em;
+        }
+
+        #remaining-time {
+            /* Relative font size for the remaining time clock display */
+            font-size: 20em;
+        }
+
+        /*
+            For each timer state, you can adjust the font color (`color`) and the background color
+            (`background-color`) using RGB values (`rgb(255, 0, 0)` means red), hexadecimal values,
+            or some names like 'red', 'green', 'lightblue', ...
+         */
+        .NEUTRAL {
+            color: rgb(51, 51, 51); /* light grey */
+            background-color: rgb(238, 238, 238); /* white-ish */
+        }
+
+        .APPROACHING {
+            color: rgb(0, 0, 0);    /* black */
+            background-color: rgb(255, 183, 0); /* orange */
+        }
+
+        .EXCEEDED {
+            color: rgb(0, 0, 0);    /* black */
+            background-color: rgb(255, 0, 0);   /* red */
+        }
+
+
+
+        /*
+            This easy-config section ends here.
+         */
+
+
+    </style>
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #909090;
+        }
+
+        div {
+            font-family: Helvetica, Verdana, "Courier 10 Pitch", monospace;
+        }
+
+        #wrapper {
+            height: 100%;
+            padding: 7px;
+            box-sizing: border-box;
+        }
+
+        #clock-wrapper {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #connection-state {
+            position: absolute;
+        }
+
+        #remaining-time {
+            margin-top: 25px;
+        }
+    </style>
+
+    <meta charset="UTF-8">
+    <title>OBS Scene Timer</title>
+</head>
+<body>
+<div id="wrapper">
+    <noscript><h1>JavaScript is required.</h1></noscript>
+    <div id="connection-state">Not connected...</div>
+
+    <div id="clock-wrapper">
+        <div id="elapsed-time" class="clock"></div>
+        <div id="remaining-time" class="clock"></div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    // Author: Samuel-Anton Jansen
+    // Project: OBS Scene Timer, web client
+    //
+
+    const ConnectionState = Object.freeze({
+        NOT_CONNECTED: "Not connected",
+        CONNECTING: "Connecting...",
+        CONNECTED: "Connected",
+        DISCONNECTED: "Disconnected",
+        CONNECTION_FAILED: "Connection failed",
+        RECONNECTING: "Reconnecting...",
+    });
+
+    const TimerState = Object.freeze({
+        NEUTRAL: "NEUTRAL",
+        APPROACHING: "APPROACHING",
+        EXCEEDED: "EXCEEDED",
+    });
+
+    const Page = (function () {
+        const _wrapperElement = document.getElementById("wrapper");
+        const _connectionStateElement = document.getElementById("connection-state");
+        const _elapsedTimeElement = document.getElementById("elapsed-time");
+        const _remainingTimeElement = document.getElementById("remaining-time");
+
+        return {
+            setConnectionState: (connectionState) => {
+                _connectionStateElement.innerText = connectionState;
+            },
+
+            setConnectionStatePopupText: (text) => {
+                _connectionStateElement.title = text;
+            },
+
+            setDocumentSubtitle: (text) => {
+                document.title = "OBS Scene Timer";
+
+                if (!text) return;
+
+                document.title = text + " - " + document.title;
+            },
+
+            setElapsedTimeText: (text) => {
+                _elapsedTimeElement.innerText = text;
+            },
+
+            setRemainingTimeText: (text) => {
+                _remainingTimeElement.innerText = text;
+            },
+
+            setRemainingTimeVisible: (isVisible) => {
+                _remainingTimeElement.style.display = isVisible ? "block" : "none";
+            },
+
+            setTheme: (themeName) => {
+                _wrapperElement.classList.remove(TimerState.NEUTRAL);
+                _wrapperElement.classList.remove(TimerState.APPROACHING);
+                _wrapperElement.classList.remove(TimerState.EXCEEDED);
+
+                _wrapperElement.classList.add(themeName);
+            },
+        };
+    })();
+
+    class TimerMessage {
+        sceneName = "";
+        elapsedTime = "";
+        timerState = TimerState.NEUTRAL;
+        isTimed = false;
+        remainingTime = "";
+        timestamp = undefined;
+        messageType = "TimerMessage";
+
+        static fromJson(json) {
+            const object = JSON.parse(json);
+            const timerMessage = new TimerMessage();
+            timerMessage.sceneName = object.sceneName;
+            timerMessage.elapsedTime = object.elapsedTime;
+            timerMessage.timerState = TimerState[object.timerState];
+            timerMessage.isTimed = object.isTimed;
+            timerMessage.remainingTime = object.remainingTime;
+            timerMessage.timestamp = object.timestamp;
+            timerMessage.messageType = object.messageType;
+            return timerMessage;
+        }
+    }
+
+    class WebsocketClient {
+        address = 'ws://localhost:4050'
+        connectionRetryTimoutDuration = 5000
+
+        _ws = undefined
+        _connectionRetryTimeout = undefined
+
+        connect() {
+            Page.setConnectionState(ConnectionState.CONNECTING);
+            Page.setConnectionStatePopupText(this.address);
+
+            this._ws = new WebSocket(this.address)
+
+            this._ws.onopen = () => {
+                console.log("Connected to server: " + this.address);
+                window.clearTimeout(this._connectionRetryTimeout);
+
+                Page.setConnectionState(ConnectionState.CONNECTED);
+            }
+
+            this._ws.onclose = () => {
+                let retryTimeoutInSeconds = Math.round(this.connectionRetryTimoutDuration / 1000.0);
+                console.log(`Disconnected with server. Retrying in ${retryTimeoutInSeconds} seconds...`);
+                Page.setConnectionState(ConnectionState.RECONNECTING);
+                Page.setDocumentSubtitle();
+
+                this._connectionRetryTimeout = window.setTimeout(
+                    this.livenessCheck.bind(this),
+                    this.connectionRetryTimoutDuration);
+            }
+
+            this._ws.onmessage = (e) => {
+                let message;
+                try {
+                    message = TimerMessage.fromJson(e.data);
+                } catch (e) {
+                    return console.error("Data is not JSON serializable");
+                }
+
+                this.processTimerMessage(message);
+            }
+        }
+
+        disconnect() {
+            if (this._ws) this._ws.close();
+            Page.setConnectionState(ConnectionState.DISCONNECTED);
+            Page.setDocumentSubtitle();
+        }
+
+        livenessCheck() {
+            if (!this._ws || this._ws.readyState === WebSocket.CLOSED) {
+                this.connect();
+            }
+        }
+
+        processTimerMessage(timerMessage) {
+            if (!(timerMessage instanceof TimerMessage)) return;
+
+            Page.setDocumentSubtitle(timerMessage.sceneName);
+            Page.setRemainingTimeVisible(timerMessage.isTimed);
+            Page.setRemainingTimeText(timerMessage.remainingTime);
+            Page.setElapsedTimeText(timerMessage.elapsedTime);
+            Page.setTheme(timerMessage.timerState);
+        }
+    }
+
+
+    /* ****** INIT ******* */
+
+    Page.setConnectionState(ConnectionState.NOT_CONNECTED);
+    Page.setDocumentSubtitle();
+
+    const websocketClient = new WebsocketClient();
+    if (typeof OBS_Scene_Timer_websocket_url !== "undefined") {
+        websocketClient.address = OBS_Scene_Timer_websocket_url;
+    }
+    websocketClient.connect();
+</script>
+</body>
+</html>
