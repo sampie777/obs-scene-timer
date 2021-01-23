@@ -181,6 +181,8 @@ Don't run the application while editing the _obs-scene-timer.properties_ file (a
 
 #### Explanation
 
+Most of the properties are explained here:
+
 _Connection settings_
 
 * `obsAddress` (string) (default: `ws://localhost:4444`): holds the full address of the OBS websocket server. This server can be on any computer in the same network of even over internet, as long as it can be reached by the obs-scene-timer application.

@@ -97,6 +97,8 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
             setSize(900, 600)
         }
 
+        isAlwaysOnTop = Config.mainWindowAlwaysOnTop
+
         jMenuBar = MenuBar()
         title = ApplicationInfo.name
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -105,6 +107,9 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
 
     fun rebuildGui() {
         logger.info("Rebuilding main GUI")
+
+        isAlwaysOnTop = Config.mainWindowAlwaysOnTop
+
         EventQueue.invokeLater {
             contentPane.removeAll()
 

@@ -74,6 +74,7 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(HeaderFormComponent("GUI"))
         formComponents.add(ThemeSelectFormInput("theme", "Theme", Theme.availableThemes()))
         formComponents.add(BooleanFormInput("windowRestoreLastPosition", "Restore window position on start up"))
+        formComponents.add(BooleanFormInput("mainWindowAlwaysOnTop", "Keep window always on top"))
         formComponents.add(
             StringFormInput("mainWindowTitle",
                 "Window title",

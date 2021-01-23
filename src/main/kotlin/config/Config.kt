@@ -60,6 +60,7 @@ object Config {
         "${WindowTitle.VARIABLE_IDENTIFIER.format(WindowTitle.SCENE_NAME)}: ${WindowTitle.VARIABLE_IDENTIFIER.format(
             WindowTitle.TIMER_ELAPSED
         )}"
+    var mainWindowAlwaysOnTop: Boolean = false
 
     // Remote Sync
     var remoteSyncServerEnabled: Boolean = false
