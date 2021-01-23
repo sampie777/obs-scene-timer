@@ -3,8 +3,11 @@ import config.Config
 import gui.mainFrame.MainFrame
 import objects.SceneLogger
 import java.awt.Color
+import java.awt.Desktop
 import java.io.File
+import java.io.IOException
 import java.io.UnsupportedEncodingException
+import java.net.URI
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
@@ -117,3 +120,18 @@ internal fun jsonBuilder() =
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         .serializeNulls()
         .create()
+
+fun openWebURL(url: String): Boolean {
+    if (!Desktop.isDesktopSupported()) {
+        logger.warning("Cannot open link '$url': not supported by host")
+        return false
+    }
+    try {
+        Desktop.getDesktop().browse(URI(url))
+        return true
+    } catch (e: IOException) {
+        logger.severe("Error during opening link '$url'")
+        e.printStackTrace()
+    }
+    return false
+}

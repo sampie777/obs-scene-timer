@@ -7,6 +7,7 @@ import objects.ApplicationInfo
 import objects.OBSClient
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
+import openWebURL
 import remotesync.RemoteSyncRefreshableRegister
 import remotesync.client.TimerClient
 import remotesync.objects.ConnectionState
@@ -23,10 +24,11 @@ import javax.swing.JMenuItem
 class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
     private val logger = Logger.getLogger(RemoteSyncMenu::class.java.name)
 
-    val startServerItem = JMenuItem("Start server")
-    val stopServerItem = JMenuItem("Stop server")
-    val startClientItem = JMenuItem("Start client")
-    val stopClientItem = JMenuItem("Stop client")
+    val startServerItem = JMenuItem("Start as server")
+    val stopServerItem = JMenuItem("Stop as server")
+    val startClientItem = JMenuItem("Start as client")
+    val stopClientItem = JMenuItem("Stop as client")
+    private val htmlClientItem = JMenuItem("Download HTML client")
 
     init {
         RemoteSyncRefreshableRegister.register(this)
@@ -40,6 +42,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         stopServerItem.addActionListener { stopServer() }
         startClientItem.addActionListener { startClient() }
         stopClientItem.addActionListener { stopClient() }
+        htmlClientItem.addActionListener { downloadHTMLClient() }
 
         startServerItem.mnemonic = KeyEvent.VK_S
         stopServerItem.mnemonic = KeyEvent.VK_S
@@ -50,6 +53,8 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         add(stopServerItem)
         add(startClientItem)
         add(stopClientItem)
+        addSeparator()
+        add(htmlClientItem)
 
         updateMenuItems()
     }
@@ -141,5 +146,10 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
         updateMenuItems()
         Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
+    }
+
+    private fun downloadHTMLClient() {
+        logger.info("Opening HTML remote sync client")
+        openWebURL(ApplicationInfo.url)
     }
 }
