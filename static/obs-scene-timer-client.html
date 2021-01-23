@@ -1,18 +1,36 @@
 <!DOCTYPE html>
+<!--
+
+# CONFIGURATION
+
+Query parameters can be used to set some settings:
+- 'address=...' overrides the hard-coded address for the websocket to connect to (the address of
+   the master OBS Scene Timer)
+- 'scale=...' scales the text in percentage: 100 is normal scale
+- 'alignment=...' specifies how the two clocks must be aligned: "horizontal" or "vertical" (default). Note that
+   if the page size gets to small, the clocks will auto realign themself to fit in the page.
+
+For example:
+- http://obs-scene-timer-client.html?address=ws://localhost:4050&scale=150 lets this client
+connect to localhost:4050 (which is also the default value) and scales the text to 150%.
+- http://obs-scene-timer-client.html?scale=50 uses the default address but scales the text to 50%.
+- http://obs-scene-timer-client.html?alignment=horizontal&scale=50 the clocks will be displayed next to each other.
+
+Setting the address/scale by query parameter (URL) overrules the values below set by script.
+
+
+Not last and also not least, make sure "Remote Sync server" is running in OBS Scene Timer!
+
+
+Good luck!
+
+
+-->
 <html lang="en">
 <head>
     <script type="application/javascript">
-        /*
-            Set this value to the URL OBS Scene Timer is running on. This might be 'localhost'
-            if OBS Scene Timer is running on this computer. Otherwise, it might be an IP address.
-            Also check the port; default is '4050'.
-
-            This address can also be set using the query parameter 'address='. For example:
-            http://obs-scene-timer-client.html?address=ws://localhost:40
-            Setting the address by query parameter (URL) overrules the value below. set by script.
-
-            Not last and also not least, make sure "Remote Sync server" is running in OBS Scene Timer!
-         */
+        /* The address of the OBS Scene Timer server to connect to. This value will be overruled
+        by a present query parameter. */
         const OBS_Scene_Timer_websocket_url = "ws://localhost:4050";
     </script>
     <style type="text/css">
@@ -24,7 +42,8 @@
 
 
         #wrapper {
-            /* The overall font size. Adjust this value to scale everything up/down */
+            /* The overall font size / scale. Adjust this value to scale everything up/down.
+            This value will be overruled by a present query parameter. */
             font-size: 100%;
         }
 
@@ -67,9 +86,7 @@
         }
 
 
-        /*
-            This easy-config section ends here.
-         */
+        /* ******** ******** This easy-config section ends here. ******** ******** */
 
 
     </style>
@@ -102,6 +119,11 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            flex-wrap: wrap;
+        }
+
+        #clock-wrapper > div:not(:first-child) {
+            margin: 2% 6% 0;
         }
 
         #connection-state {
@@ -109,15 +131,16 @@
         }
 
         #remaining-time {
-            margin-top: 25px;
         }
 
         .clock-titles {
             opacity: 0.3;
+            text-align: center;
         }
     </style>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS Scene Timer</title>
 </head>
 <body>
@@ -126,11 +149,15 @@
     <div id="connection-state">Not connected...</div>
 
     <div id="clock-wrapper">
-        <div id="elapsed-time-title" class="clock-titles">Elapsed</div>
-        <div id="elapsed-time" class="clock" title="Elapsed time"></div>
+        <div>
+            <div id="elapsed-time-title" class="clock-titles">Elapsed</div>
+            <div id="elapsed-time" class="clock" title="Elapsed time"></div>
+        </div>
 
-        <div id="remaining-time-title" class="clock-titles">Remaining</div>
-        <div id="remaining-time" class="clock" title="Remaining time"></div>
+        <div>
+            <div id="remaining-time-title" class="clock-titles">Remaining</div>
+            <div id="remaining-time" class="clock" title="Remaining time"></div>
+        </div>
     </div>
 </div>
 
@@ -157,6 +184,7 @@
     const Page = (function () {
         const _wrapperElement = document.getElementById("wrapper");
         const _connectionStateElement = document.getElementById("connection-state");
+        const _clockWrapperElement = document.getElementById("clock-wrapper");
         const _elapsedTimeElement = document.getElementById("elapsed-time");
         const _elapsedTimeTitleElement = document.getElementById("elapsed-time-title");
         const _remainingTimeElement = document.getElementById("remaining-time");
@@ -198,6 +226,14 @@
                 _wrapperElement.classList.remove(TimerState.EXCEEDED);
 
                 _wrapperElement.classList.add(themeName);
+            },
+
+            setFontSize: (percentage) => {
+                _wrapperElement.style.fontSize = percentage + "%";
+            },
+
+            setClockAlignment: (alignment) => {
+                _clockWrapperElement.style.flexDirection = alignment;
             },
         };
     })();
@@ -326,6 +362,13 @@
 
     Page.setConnectionState(ConnectionState.NOT_CONNECTED);
     Page.setDocumentSubtitle();
+    if (getQueryParameter("scale")) {
+        Page.setFontSize(getQueryParameter("scale"));
+    }
+    if (getQueryParameter("alignment")) {
+        let alignment = getQueryParameter("alignment") === "horizontal" ? "row" : "column";
+        Page.setClockAlignment(alignment);
+    }
 
     const websocketClient = new WebsocketClient();
     websocketClient.address = getWebsocketUrl();
