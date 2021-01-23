@@ -10,3 +10,4 @@ obs-scene-timer.properties
 dependency-reduced-pom.xml
 out/
 releases/
+scratch/
