@@ -1,6 +1,7 @@
 import com.google.gson.GsonBuilder
 import config.Config
 import gui.mainFrame.MainFrame
+import objects.OBSClient
 import objects.SceneLogger
 import java.awt.Color
 import java.awt.Desktop
@@ -52,6 +53,14 @@ fun exitApplication() {
     logger.info("Shutting down application")
 
     MainFrame.getInstance()?.saveWindowPosition()
+
+    try {
+        logger.info("Stopping OBS client...")
+        OBSClient.stop()
+    } catch (t: Throwable) {
+        logger.warning("Failed to correctly stop OBS client")
+        t.printStackTrace()
+    }
 
     try {
         logger.info("Closing windows...")
