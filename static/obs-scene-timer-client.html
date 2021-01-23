@@ -7,6 +7,10 @@
             if OBS Scene Timer is running on this computer. Otherwise, it might be an IP address.
             Also check the port; default is '4050'.
 
+            This address can also be set using the query parameter 'address='. For example:
+            http://obs-scene-timer-client.html?address=ws://localhost:40
+            Setting the address by query parameter (URL) overrules the value below. set by script.
+
             Not last and also not least, make sure "Remote Sync server" is running in OBS Scene Timer!
          */
         const OBS_Scene_Timer_websocket_url = "ws://localhost:4050";
@@ -45,15 +49,14 @@
         }
 
         .APPROACHING {
-            color: rgb(0, 0, 0);    /* black */
+            color: rgb(0, 0, 0); /* black */
             background-color: rgb(255, 183, 0); /* orange */
         }
 
         .EXCEEDED {
-            color: rgb(0, 0, 0);    /* black */
-            background-color: rgb(255, 0, 0);   /* red */
+            color: rgb(0, 0, 0); /* black */
+            background-color: rgb(255, 0, 0); /* red */
         }
-
 
 
         /*
@@ -71,6 +74,7 @@
         }
 
         body {
+            /* Background color when client isn't connected */
             background-color: #909090;
         }
 
@@ -269,6 +273,36 @@
         }
     }
 
+    function getQueryParameter(name, url = window.location.search) {
+        if (typeof URLSearchParams !== "undefined") {
+            const queryParams = new URLSearchParams(url);
+            return queryParams.get(name);
+        }
+
+        // IE rubbish. See https://stackoverflow.com/a/901144/2806723
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        const results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    function getWebsocketUrl() {
+        const queryParam = getQueryParameter("address");
+        if (queryParam) {
+            console.debug("Using query parameter: address=" + queryParam);
+            return queryParam;
+        }
+
+        if (typeof OBS_Scene_Timer_websocket_url !== "undefined") {
+            console.debug("Using address set by script: " + OBS_Scene_Timer_websocket_url);
+            return OBS_Scene_Timer_websocket_url;
+        }
+
+        return "ws://localhost:4050";
+    }
+
 
     /* ****** INIT ******* */
 
@@ -276,9 +310,7 @@
     Page.setDocumentSubtitle();
 
     const websocketClient = new WebsocketClient();
-    if (typeof OBS_Scene_Timer_websocket_url !== "undefined") {
-        websocketClient.address = OBS_Scene_Timer_websocket_url;
-    }
+    websocketClient.address = getWebsocketUrl();
     websocketClient.connect();
 </script>
 </body>
