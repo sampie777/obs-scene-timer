@@ -2,6 +2,7 @@ package themes
 
 import config.Config
 import mocks.ThemeMock
+import org.junit.After
 import java.awt.Color
 import javax.swing.UIManager
 import kotlin.test.Test
@@ -11,6 +12,14 @@ import kotlin.test.assertNull
 
 @Suppress("DEPRECATION")
 class ThemeTest {
+
+    @After
+    fun after() {
+        Config.timerBackgroundColor = null
+        Config.approachingLimitColor = null
+        Config.exceededLimitColor = null
+        Config.theme = "LightTheme"
+    }
 
     @Test
     fun testSetAndApplyTheme() {
