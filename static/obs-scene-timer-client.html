@@ -38,6 +38,14 @@
             font-size: 20em;
         }
 
+        .clock-titles {
+            /* Remove/comment the next line to show the clock titles */
+            display: none !important;
+
+            /* Relative font size for the clock titles */
+            font-size: 2em;
+        }
+
         /*
             For each timer state, you can adjust the font color (`color`) and the background color
             (`background-color`) using RGB values (`rgb(255, 0, 0)` means red), hexadecimal values,
@@ -103,6 +111,10 @@
         #remaining-time {
             margin-top: 25px;
         }
+
+        .clock-titles {
+            opacity: 0.3;
+        }
     </style>
 
     <meta charset="UTF-8">
@@ -114,8 +126,11 @@
     <div id="connection-state">Not connected...</div>
 
     <div id="clock-wrapper">
-        <div id="elapsed-time" class="clock"></div>
-        <div id="remaining-time" class="clock"></div>
+        <div id="elapsed-time-title" class="clock-titles">Elapsed</div>
+        <div id="elapsed-time" class="clock" title="Elapsed time"></div>
+
+        <div id="remaining-time-title" class="clock-titles">Remaining</div>
+        <div id="remaining-time" class="clock" title="Remaining time"></div>
     </div>
 </div>
 
@@ -143,14 +158,16 @@
         const _wrapperElement = document.getElementById("wrapper");
         const _connectionStateElement = document.getElementById("connection-state");
         const _elapsedTimeElement = document.getElementById("elapsed-time");
+        const _elapsedTimeTitleElement = document.getElementById("elapsed-time-title");
         const _remainingTimeElement = document.getElementById("remaining-time");
+        const _remainingTimeTitleElement = document.getElementById("remaining-time-title");
 
         return {
             setConnectionState: (connectionState) => {
                 _connectionStateElement.innerText = connectionState;
             },
 
-            setConnectionStatePopupText: (text) => {
+            setConnectionAddress: (text) => {
                 _connectionStateElement.title = text;
             },
 
@@ -172,6 +189,7 @@
 
             setRemainingTimeVisible: (isVisible) => {
                 _remainingTimeElement.style.display = isVisible ? "block" : "none";
+                _remainingTimeTitleElement.style.display = isVisible ? "block" : "none";
             },
 
             setTheme: (themeName) => {
@@ -216,7 +234,7 @@
 
         connect() {
             Page.setConnectionState(ConnectionState.CONNECTING);
-            Page.setConnectionStatePopupText(this.address);
+            Page.setConnectionAddress(this.address);
 
             this._ws = new WebSocket(this.address)
 
