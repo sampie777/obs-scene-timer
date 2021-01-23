@@ -4,9 +4,9 @@ _Friendly basic application to keep track of time during your live streams_
 
 _Author: Samuel-Anton Jansen_
 
-![Screenshot 1](img/screenshot1.png)
+![Screenshot](img/screenshot4_v1.6.1-SNAPSHOT.png)
 
-_Screenshot with 28 seconds left on the countdown_
+_Screenshot with 2 minutes and 44 seconds left on the countdown_
 
 Use cases:
 
@@ -60,7 +60,13 @@ This plugin only calculates source lengths for the following OBS sources:
 
 There's a simple web client available which act as a child node for OBS Scene Timer.  This file is downloadable at [Downloads](https://bitbucket.org/sajansen/obs-scene-timer/downloads/).
 
-This client is one single HTML file, which can be opened by most modern web browsers. Configuring this client can be done by modifying the source code, or by passing query parameters. The latter are arguments passed inside the URL. The following parameters are available:
+This client is one single HTML file, which can be opened by most modern web browsers. As a matter of fact, it can also be opened by **OBS Browser source** or opened as a **custom OBS panel** (Views / Docks / Custom Browser Docks...). 
+
+> Remember to use the URL (starting with `file:///` following by the file's location). For this, you can open the HTML file in your browser and copy the URL in the address bar.  
+
+##### Configuration
+
+Configuring this client can be done by modifying the source code, or by passing query parameters. The latter are arguments passed inside the URL. The following parameters are available:
 
 - `address` sets the address for the websocket to connect to (the address of the master OBS Scene Timer). Default is "ws://localhost:4050". 
 - `scale` scales the text in percentage. Default is `100`, normal scale.
@@ -69,9 +75,9 @@ This client is one single HTML file, which can be opened by most modern web brow
 The first parameters starts with `?` and the next parameters are stitched together with `&`.
 
 For example:
-- `file://path/to/file/obs-scene-timer-client.html?scale=50` uses the default address but scales the text to `50`%.
-- `file://path/to/file/obs-scene-timer-client.html?address=ws://localhost:4050&scale=150` lets this client connect to `localhost:4050` (which is also the default value) and scales the text to `150`%.
-- `file://path/to/file/obs-scene-timer-client.html?alignment=horizontal&scale=50` the clocks will be displayed next to each other and are scaled to `50`%.
+- `file:///path/to/file/obs-scene-timer-client.html?scale=50` uses the default address but scales the text to `50`%.
+- `file:///path/to/file/obs-scene-timer-client.html?address=ws://localhost:4050&scale=150` lets this client connect to `localhost:4050` (which is also the default value) and scales the text to `150`%.
+- `file:///path/to/file/obs-scene-timer-client.html?alignment=horizontal&scale=50` the clocks will be displayed next to each other and are scaled to `50`%.
 
 Setting the address/scale by query parameter (URL) overrules the values below set by script.
 
