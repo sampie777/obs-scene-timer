@@ -1,6 +1,7 @@
 package updater
 
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import config.Config
 import gui.updater.UpdatePopup
 import objects.ApplicationInfo
@@ -65,12 +66,48 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
     }
 
     fun getRemoteTags(): List<String> {
-        val jsonResponse = getRemoteTagResponse()
-        val versionsResponse = Gson().fromJson(jsonResponse, VersionsResponseJson::class.java)
-        return versionsResponse.values.map(VersionsResponseVersionsJson::name)
+        val jsonResponse = getRemoteTagResponse() ?: return emptyList()
+
+        return try {
+            val versionsResponse = Gson().fromJson(jsonResponse, VersionsResponseJson::class.java)
+            versionsResponse.values.map(VersionsResponseVersionsJson::name)
+        } catch (e: JsonParseException) {
+            logger.severe("Failed to parse versions JSON response: '${jsonResponse}'")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to check for updates: invalid JSON response. " +
+                        "Please inform the developer of this application. More detailed: ${e.localizedMessage}.",
+                "Updater"
+            )
+            emptyList()
+        } catch (t: Throwable) {
+            logger.severe("Failed to retrieve latest application versions: invalid response")
+            t.printStackTrace()
+            Notifications.add(
+                "Failed to check for updates: invalid response. " +
+                        "Please inform the developer of this application. More detailed: ${t.localizedMessage}.",
+                "Updater"
+            )
+            emptyList()
+        }
     }
 
-    private fun getRemoteTagResponse(): String {
-        return urlProvider.readText(latestVersionsUrl)
+    fun getRemoteTagResponse(): String? {
+        return try {
+            urlProvider.readText(ApplicationInfo.latestVersionsUrl)
+        } catch (e: MalformedURLException) {
+            logger.severe("Failed to retrieve latest application versions: invalid URL: '${ApplicationInfo.latestVersionsUrl}'")
+            e.printStackTrace()
+            Notifications.add(
+                "Failed to check for updates: invalid URL. " +
+                        "Please inform the developer of this application. More detailed: ${e.localizedMessage}.",
+                "Updater"
+            )
+            null
+        } catch (t: Throwable) {
+            logger.severe("Failed to retrieve latest application versions")
+            t.printStackTrace()
+            null
+        }
     }
 }

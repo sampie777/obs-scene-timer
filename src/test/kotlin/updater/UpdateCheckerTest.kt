@@ -1,13 +1,61 @@
 package updater
 
 import objects.ApplicationInfo
+import objects.notifications.Notifications
 import org.junit.Test
 import org.mockito.Mockito.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import java.net.MalformedURLException
+import kotlin.test.*
 
 class UpdateCheckerTest {
+
+    @BeforeTest
+    fun before() {
+        Notifications.clear()
+    }
+
+    @Test
+    fun `test getRemoteTagResponse creates notification when URL is malformed and returns null`() {
+        val urlMock = mock(wURL::class.java)
+        val updateChecker = UpdateChecker(urlMock)
+        `when`(urlMock.readText(anyString())).then { throw MalformedURLException("errormessage") }
+
+        assertNull(updateChecker.getRemoteTagResponse())
+
+        assertEquals(1, Notifications.unreadNotifications)
+        assertEquals(
+            "Failed to check for updates: invalid URL. Please inform the developer of this application. More detailed: errormessage.",
+            Notifications.list.first().message
+        )
+    }
+
+    @Test
+    fun `test getRemoteTagResponse creates no notifications on another error and returns null`() {
+        val urlMock = mock(wURL::class.java)
+        val updateChecker = UpdateChecker(urlMock)
+        `when`(urlMock.readText(anyString())).then { throw Exception("errormessage") }
+
+        assertNull(updateChecker.getRemoteTagResponse())
+
+        assertEquals(0, Notifications.unreadNotifications)
+    }
+
+    @Test
+    fun `test getRemoteTags creates notification on JSON error and returns empty list`() {
+        val urlMock = mock(wURL::class.java)
+        val updateChecker = UpdateChecker(urlMock)
+        `when`(urlMock.readText(anyString())).thenReturn("invalid json message")
+
+        val list = updateChecker.getRemoteTags()
+
+        assertTrue(list.isEmpty())
+        assertEquals(1, Notifications.unreadNotifications)
+        assertEquals(
+            "Failed to check for updates: invalid JSON response. Please inform the developer of this application. More detailed: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \$.",
+            Notifications.list.first().message
+        )
+    }
+
     @Test
     fun `test getRemoteTags returns a list of tags from a JSON response`() {
         val urlMock = mock(wURL::class.java)
@@ -149,5 +197,16 @@ class UpdateCheckerTest {
         )
 
         assertFalse(updateChecker.isNewUpdateAvailable())
+    }
+
+    @Test
+    fun `test isNewUpdateAvailable returns false when API returns invalid data`() {
+        val urlMock = mock(wURL::class.java)
+        val updateChecker = UpdateChecker(urlMock)
+        `when`(urlMock.readText(anyString())).thenReturn("invalid json message")
+
+        assertFalse(updateChecker.isNewUpdateAvailable())
+        assertEquals(1, Notifications.unreadNotifications)
+        assertTrue(Notifications.list.first().message.contains("Failed to check for updates"))
     }
 }
