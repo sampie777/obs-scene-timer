@@ -19,5 +19,4 @@ object ApplicationInfo {
         author = properties.getProperty("author")
         url = properties.getProperty("url")
     }
-
 }
