@@ -58,9 +58,9 @@ This plugin only calculates source lengths for the following OBS sources:
 
 #### Web client
 
-There's a simple web client available which act as a child node for OBS Scene Timer.  This file is downloadable at [Downloads](https://bitbucket.org/sajansen/obs-scene-timer/downloads/).
+There's a simple web client available which act as a child node for OBS Scene Timer. This file is downloadable at [Downloads](https://bitbucket.org/sajansen/obs-scene-timer/downloads/).
 
-This client is one single HTML file, which can be opened by most modern web browsers. As a matter of fact, it can also be opened by **OBS Browser source** or opened as a **custom OBS panel** (Views / Docks / Custom Browser Docks...). 
+This client is one single HTML file, which can be opened by most modern web browsers. As a matter of fact, it can also be opened by **OBS Browser source** (for display in multiview) or opened as a **custom OBS panel** (Views / Docks / Custom Browser Docks...). 
 
 > Remember to use the URL (starting with `file:///` following by the file's location). For this, you can open the HTML file in your browser and copy the URL in the address bar.  
 
@@ -81,13 +81,15 @@ For example:
 
 Setting the address/scale by query parameter (URL) overrules the values below set by script.
 
+I found that using a scale of 40% works perfectly fine for using the client as OBS dock, and 100% (and 1080 x 1920 px) for a OBS Browser source.
+
 Make sure "Remote Sync server" is running in OBS Scene Timer! See below.
 
 #### Network Scanner
 
 When using OBS Scene Timer on another computer as OBS projector itself, it can be quite a struggle to figure out the correct IP address of the OBS projector computer. Head to the menu Tools -> Network Scanner to let OBS Scene Timer scan for any possible OBS projector hosts on your local network. This scanning is done by querying the default OBS websocket port 4444 on all possible IP address available on your local network(s). 
 
-The default timeout used for the scanning progress is 200 ms. This value can be increased in the Network Scanner window if no OBS websockets are detected. Users of slow local networks may need do increase this value. 
+The default timeout used for the scanning progress is 200 ms. This value can be increased in the Network Scanner window if no OBS websockets are detected. Users of slow local networks may need to increase this value. 
 
 #### Remote sync
 
