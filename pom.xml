@@ -14,6 +14,9 @@
 
     <properties>
         <author>Samuel-Anton Jansen</author>
+        <latestVersionsUrl>https://api.bitbucket.org/2.0/repositories/sajansen/obs-scene-timer/refs/tags?sort=-name</latestVersionsUrl>
+        <updatesInfoUrl>https://obsproject.com/forum/resources/obs-scene-timer.920/updates</updatesInfoUrl>
+        <downloadsUrl>https://bitbucket.org/sajansen/obs-scene-timer/downloads/</downloadsUrl>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.70</kotlin.version>
@@ -25,6 +28,7 @@
         <xuggle.version>5.5-20140728</xuggle.version>
         <launch4j.version>1.7.25</launch4j.version>
         <bridj.version>0.7.0</bridj.version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <repositories>
@@ -71,6 +75,12 @@
             <groupId>com.nativelibs4java</groupId>
             <artifactId>bridj</artifactId>
             <version>${bridj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

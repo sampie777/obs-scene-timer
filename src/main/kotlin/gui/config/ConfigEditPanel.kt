@@ -167,6 +167,9 @@ class ConfigEditPanel : JPanel() {
                 null
             )
         )
+
+        formComponents.add(HeaderFormComponent("Other"))
+        formComponents.add(BooleanFormInput("updatesCheckForUpdates", "Check for updates"))
     }
 
     private fun createGui() {

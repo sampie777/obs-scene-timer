@@ -6,6 +6,7 @@ import objects.notifications.Notifications
 import remotesync.client.TimerClient
 import remotesync.server.TimerServer
 import themes.Theme
+import updater.UpdateChecker
 import java.awt.EventQueue
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -32,6 +33,8 @@ fun main(args: Array<String>) {
     EventQueue.invokeLater {
         MainFrame.createAndShow()
     }
+
+    UpdateChecker().checkForUpdates()
 
     if (Config.remoteSyncClientEnabled) {
         logger.info("Start up with remote sync client enabled")

@@ -69,6 +69,9 @@ object Config {
     var remoteSyncClientAddress: String = obsAddress.replace(":4444", ":4050")
     var remoteSyncClientReconnectionTimeout: Long = 3000
 
+    // Other
+    var updatesCheckForUpdates: Boolean = true
+
     fun load() {
         try {
             PropertyLoader.load()
