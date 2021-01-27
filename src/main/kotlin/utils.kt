@@ -3,6 +3,7 @@ import config.Config
 import gui.mainFrame.MainFrame
 import objects.OBSClient
 import objects.SceneLogger
+import objects.notifications.Notifications
 import java.awt.Color
 import java.awt.Desktop
 import java.io.File
@@ -130,7 +131,7 @@ internal fun jsonBuilder() =
         .serializeNulls()
         .create()
 
-fun openWebURL(url: String): Boolean {
+fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
     if (!Desktop.isDesktopSupported()) {
         logger.warning("Cannot open link '$url': not supported by host")
         return false
@@ -141,6 +142,7 @@ fun openWebURL(url: String): Boolean {
     } catch (e: IOException) {
         logger.severe("Error during opening link '$url'")
         e.printStackTrace()
+        Notifications.popup("Failed to open link: $url", subject)
     }
     return false
 }

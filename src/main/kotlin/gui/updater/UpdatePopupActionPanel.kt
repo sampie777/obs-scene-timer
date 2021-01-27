@@ -2,14 +2,11 @@ package gui.updater
 
 import config.Config
 import objects.ApplicationInfo
-import objects.notifications.Notifications
+import openWebURL
 import themes.Theme
-import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.KeyEvent
-import java.io.IOException
-import java.net.URI
 import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
@@ -63,17 +60,7 @@ class UpdatePopupActionPanel(private val frame: UpdatePopup) : JPanel() {
     private fun downloadUpdate() {
         logger.info("Opening update download website")
 
-        val url = ApplicationInfo.downloadsUrl
-        if (!Desktop.isDesktopSupported()) {
-            logger.warning("Cannot open link '$url': not supported by host")
-        }
-        try {
-            Desktop.getDesktop().browse(URI(url))
-        } catch (e: IOException) {
-            logger.severe("Error during opening link '$url'")
-            e.printStackTrace()
-            Notifications.popup("Failed to open link: $url", "Download update")
-        }
+        openWebURL(ApplicationInfo.downloadsUrl, "Download update")
 
         closePopup()
     }

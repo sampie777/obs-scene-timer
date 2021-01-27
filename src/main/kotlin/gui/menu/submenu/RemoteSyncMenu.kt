@@ -150,6 +150,6 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
     private fun downloadHTMLClient() {
         logger.info("Opening HTML remote sync client")
-        openWebURL(ApplicationInfo.url)
+        openWebURL(ApplicationInfo.url, "Download remote client")
     }
 }
