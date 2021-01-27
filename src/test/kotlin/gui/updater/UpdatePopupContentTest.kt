@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 class UpdatePopupContentTest {
 
     @Test
-    fun testInfoFrameContents() {
+    fun `test panel content contains version and release notes`() {
         val contentPanel = UpdatePopupContent("v1.2.3")
 
         assertEquals(3, contentPanel.componentCount)
@@ -20,6 +20,6 @@ class UpdatePopupContentTest {
         assertTrue(infoLabel.text.contains("new version is available"))
 
         val releaseNotesLink = contentPanel.components[2] as ClickableLinkComponent
-        assertTrue(releaseNotesLink.text == "Release notes")
+        assertEquals("Release notes", releaseNotesLink.text)
     }
 }

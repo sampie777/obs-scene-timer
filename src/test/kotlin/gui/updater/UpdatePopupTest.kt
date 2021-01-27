@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class UpdatePopupTest {
 
     @Test
-    fun testInfoFrameContents() {
+    fun `test frame content contains version and content panel`() {
         val dialog = UpdatePopup.create("v1.2.3", null)
 
         assertEquals("New update available", dialog.title)

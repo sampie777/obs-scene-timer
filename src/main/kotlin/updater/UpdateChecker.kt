@@ -9,10 +9,13 @@ import objects.notifications.Notifications
 import java.awt.EventQueue
 import java.net.MalformedURLException
 import java.util.logging.Logger
+import java.util.prefs.Preferences
 
 
 class UpdateChecker(private val urlProvider: wURL = wURL()) {
     private val logger = Logger.getLogger(UpdateChecker::class.java.name)
+    private val persistentSettings = Preferences.userRoot().node(UpdateChecker::class.java.name)
+    private val persistentSettingsVersionReference = "latestKnownVersion"
 
     private var latestVersion: String? = null
 
@@ -62,7 +65,19 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
 
         latestVersion = versions.first()
         logger.fine("Latest version from remote: $latestVersion")
-        return latestVersion != ApplicationInfo.version
+
+        if (latestVersion == ApplicationInfo.version) {
+            logger.info("Application up to date")
+            return false
+        }
+
+        if (latestVersion == getLatestKnownVersion()) {
+            logger.info("Latest version hasn't changed")
+            return false
+        }
+        updateLatestKnownVersion(latestVersion!!)
+
+        return true
     }
 
     fun getRemoteTags(): List<String> {
@@ -109,5 +124,14 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             t.printStackTrace()
             null
         }
+    }
+
+    fun updateLatestKnownVersion(version: String) = persistentSettings.put(persistentSettingsVersionReference, version)
+
+    fun getLatestKnownVersion(): String {
+        if (persistentSettings.get(persistentSettingsVersionReference, null) == null) {
+            updateLatestKnownVersion(ApplicationInfo.version)
+        }
+        return persistentSettings.get(persistentSettingsVersionReference, "")
     }
 }
