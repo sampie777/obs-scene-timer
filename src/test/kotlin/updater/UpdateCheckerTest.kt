@@ -152,7 +152,7 @@ class UpdateCheckerTest {
         updateChecker.updateLatestKnownVersion(ApplicationInfo.version)
 
         assertTrue(updateChecker.isNewUpdateAvailable())
-        assertEquals("v999.6.0", updateChecker.getLatestKnownVersion())
+        assertEquals("999.6.0", updateChecker.getLatestKnownVersion())
     }
 
     @Test
@@ -198,10 +198,10 @@ class UpdateCheckerTest {
             }
         """.trimIndent()
         )
-        updateChecker.updateLatestKnownVersion("v999.6.0")
+        updateChecker.updateLatestKnownVersion("999.6.0")
 
         assertFalse(updateChecker.isNewUpdateAvailable())
-        assertEquals("v999.6.0", updateChecker.getLatestKnownVersion())
+        assertEquals("999.6.0", updateChecker.getLatestKnownVersion())
     }
 
     @Test
@@ -215,7 +215,7 @@ class UpdateCheckerTest {
               "size": 11,
               "values": [
                 {
-                  "name": "${ApplicationInfo.version}",
+                  "name": "v${ApplicationInfo.version}",
                   "links": {},
                   "tagger": null,
                   "date": null,
@@ -264,7 +264,7 @@ class UpdateCheckerTest {
               "size": 11,
               "values": [
                 {
-                  "name": "${ApplicationInfo.version}",
+                  "name": "v${ApplicationInfo.version}",
                   "links": {},
                   "tagger": null,
                   "date": null,

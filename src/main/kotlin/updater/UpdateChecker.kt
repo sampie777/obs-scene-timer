@@ -63,7 +63,7 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             return false
         }
 
-        latestVersion = versions.first()
+        latestVersion = versions.first().trimStart('v')
         logger.fine("Latest version from remote: $latestVersion")
 
         if (latestVersion == ApplicationInfo.version) {
