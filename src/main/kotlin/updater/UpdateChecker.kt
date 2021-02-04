@@ -128,10 +128,10 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
 
     fun updateLatestKnownVersion(version: String) = persistentSettings.put(persistentSettingsVersionReference, version)
 
-    fun getLatestKnownVersion(): String {
-        if (persistentSettings.get(persistentSettingsVersionReference, null) == null) {
-            updateLatestKnownVersion(ApplicationInfo.version)
-        }
-        return persistentSettings.get(persistentSettingsVersionReference, "")
+    fun getLatestKnownVersion(): String = persistentSettings.get(persistentSettingsVersionReference, "")
+
+    fun clearUpdateHistory() {
+        logger.info("Clearing update history")
+        persistentSettings.put(persistentSettingsVersionReference, "")
     }
 }

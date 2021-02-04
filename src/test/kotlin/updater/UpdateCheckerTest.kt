@@ -16,6 +16,17 @@ class UpdateCheckerTest {
     }
 
     @Test
+    fun `test clearUpdateHistory clears the latest known version`() {
+        val updateChecker = UpdateChecker()
+
+        updateChecker.updateLatestKnownVersion("now")
+        assertEquals("now", updateChecker.getLatestKnownVersion())
+
+        updateChecker.clearUpdateHistory()
+        assertEquals("", updateChecker.getLatestKnownVersion())
+    }
+
+    @Test
     fun `test getRemoteTagResponse creates notification when URL is malformed and returns null`() {
         val urlMock = mock(wURL::class.java)
         val updateChecker = UpdateChecker(urlMock)

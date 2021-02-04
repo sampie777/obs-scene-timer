@@ -50,7 +50,7 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         val sourceCodeLabel = ClickableLinkComponent("Source code (BitBucket)", ApplicationInfo.url)
         sourceCodeLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
-        val donationLabel = ClickableLinkComponent("Donate to OBS Scene Timer", ApplicationInfo.donationUrl)
+        val donationLabel = ClickableLinkComponent("Donate to ${ApplicationInfo.name}", ApplicationInfo.donationUrl)
         donationLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
         val applicationLoggingInfoLabel = JLabel("<html>Application log file location: ${LogService.getLogFile()?.absolutePath}</html>")

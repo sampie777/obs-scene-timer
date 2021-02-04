@@ -34,6 +34,9 @@ fun main(args: Array<String>) {
         MainFrame.createAndShow()
     }
 
+    if ("--clear-update-history" in args) {
+        UpdateChecker().clearUpdateHistory()
+    }
     UpdateChecker().checkForUpdates()
 
     if (Config.remoteSyncClientEnabled) {
