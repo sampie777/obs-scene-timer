@@ -17,6 +17,7 @@
         <latestVersionsUrl>https://api.bitbucket.org/2.0/repositories/sajansen/obs-scene-timer/refs/tags?sort=-name</latestVersionsUrl>
         <updatesInfoUrl>https://obsproject.com/forum/resources/obs-scene-timer.920/updates</updatesInfoUrl>
         <downloadsUrl>https://bitbucket.org/sajansen/obs-scene-timer/downloads/</downloadsUrl>
+        <donationUrl>https://www.buymeacoffee.com/sajansen</donationUrl>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.70</kotlin.version>

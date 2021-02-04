@@ -13,6 +13,7 @@ object ApplicationInfo {
     val latestVersionsUrl: String
     val updatesInfoUrl: String
     val downloadsUrl: String
+    val donationUrl: String
 
     init {
         properties.load(MainFrame::class.java.getResourceAsStream("/application.properties"))
@@ -24,5 +25,6 @@ object ApplicationInfo {
         latestVersionsUrl = properties.getProperty("latestVersionsUrl")
         updatesInfoUrl = properties.getProperty("updatesInfoUrl")
         downloadsUrl = properties.getProperty("downloadsUrl")
+        donationUrl = properties.getProperty("donationUrl")
     }
 }

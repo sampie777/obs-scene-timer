@@ -7,7 +7,6 @@ import objects.notifications.Notifications
 import java.awt.Color
 import java.awt.Desktop
 import java.io.File
-import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URLDecoder
@@ -139,9 +138,9 @@ fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
     try {
         Desktop.getDesktop().browse(URI(url))
         return true
-    } catch (e: IOException) {
+    } catch (t: Throwable) {
         logger.severe("Error during opening link '$url'")
-        e.printStackTrace()
+        t.printStackTrace()
         Notifications.popup("Failed to open link: $url", subject)
     }
     return false
