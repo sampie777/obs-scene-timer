@@ -252,6 +252,14 @@ _Remote sync_
 
 ---
 
+### Hidden features
+
+Use the following command line arguments for:
+
+* `-v`: Enable verbose logging.
+* `--offline`: Start OBS Scene Timer without connecting to OBS.
+* `--clear-update-history`: Clear the update history in order to force display new updates.
+
 ## Contribution
 
 Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
