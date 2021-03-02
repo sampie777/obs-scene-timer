@@ -29,7 +29,7 @@ class UpdatePopupActionPanel(private val frame: UpdatePopup) : JPanel() {
         disableUpdateCheckerCheckbox.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 12)
         disableUpdateCheckerCheckbox.isSelected = !Config.updatesCheckForUpdates
 
-        val closeButton = JButton("Close")
+        val closeButton = JButton("Skip")
         closeButton.addActionListener { closePopup() }
         closeButton.mnemonic = KeyEvent.VK_C
 
