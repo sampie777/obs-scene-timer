@@ -13,7 +13,7 @@ object Config {
     private val logger = Logger.getLogger(Config.toString())
 
     // OBS Connection
-    var obsAddress: String = "ws://localhost:4444"
+    var obsAddress: String = "ws://localhost:4455"
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
     var timerStartDelay: Long = -300
