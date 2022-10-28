@@ -1,8 +1,8 @@
 package gui.menu
 
-import config.Config
+import ApplicationInfo
 import gui.utils.ClickableLinkComponent
-import objects.ApplicationInfo
+import resetConfig
 import javax.swing.JLabel
 import javax.swing.JPanel
 import kotlin.test.BeforeTest
@@ -15,7 +15,7 @@ class InfoFrameTest {
 
     @BeforeTest
     fun before() {
-        Config.enableApplicationLoggingToFile = false
+        resetConfig()
     }
 
     @Test

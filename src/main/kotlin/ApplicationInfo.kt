@@ -1,5 +1,3 @@
-package objects
-
 import gui.mainFrame.MainFrame
 import java.util.*
 

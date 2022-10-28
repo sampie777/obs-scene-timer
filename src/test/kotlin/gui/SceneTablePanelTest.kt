@@ -6,6 +6,7 @@ import gui.sceneTable.SceneInputFocusAdapter
 import gui.sceneTable.SceneTablePanel
 import objects.*
 import obs.OBSState
+import resetConfig
 import java.awt.event.FocusEvent
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -15,7 +16,7 @@ class SceneTablePanelTest {
 
     @BeforeTest
     fun before() {
-        Config.sceneProperties.tScenes.clear()
+        resetConfig()
         OBSState.scenes.clear()
         OBSState.currentScene = TScene("")
         OBSSceneTimer.stop()

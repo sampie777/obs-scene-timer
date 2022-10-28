@@ -10,6 +10,7 @@ import mocks.GuiComponentMock
 import mocks.SceneMock
 import objects.*
 import objects.notifications.Notifications
+import resetConfig
 import java.io.File
 import kotlin.test.*
 
@@ -17,12 +18,11 @@ class ObsSceneProcessorTest {
 
     @BeforeTest
     fun before() {
+        resetConfig()
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSState.currentScene = TScene("")
         OBSState.scenes.clear()
-        Config.autoCalculateSceneLimitsBySources = true
-        Config.remoteSyncClientEnabled = false
         Notifications.clear()
     }
 

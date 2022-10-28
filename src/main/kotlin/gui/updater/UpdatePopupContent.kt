@@ -1,7 +1,7 @@
 package gui.updater
 
+import ApplicationInfo
 import gui.utils.ClickableLinkComponent
-import objects.ApplicationInfo
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font

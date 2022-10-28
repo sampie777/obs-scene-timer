@@ -5,6 +5,7 @@ import objects.OBSSceneTimer
 import objects.TScene
 import obs.OBSConnectionStatus
 import obs.OBSState
+import resetConfig
 import themes.Theme
 import kotlin.test.*
 
@@ -12,6 +13,7 @@ class TimerPanelTest {
 
     @BeforeTest
     fun before() {
+        resetConfig()
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSSceneTimer.setMaxTimerValue(0)

@@ -1,12 +1,14 @@
 package config
 
 import objects.notifications.Notifications
+import resetConfig
 import kotlin.test.*
 
 class ConfigTest {
 
     @BeforeTest
     fun before() {
+        resetConfig()
         Notifications.clear()
     }
 

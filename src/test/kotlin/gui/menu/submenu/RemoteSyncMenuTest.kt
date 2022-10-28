@@ -4,6 +4,7 @@ import config.Config
 import objects.notifications.Notifications
 import org.eclipse.jetty.websocket.api.*
 import remotesync.server.ServerStatus
+import resetConfig
 import java.net.InetSocketAddress
 import kotlin.test.*
 
@@ -12,8 +13,7 @@ class RemoteSyncMenuTest {
 
     @BeforeTest
     fun before() {
-        Config.remoteSyncServerEnabled = false
-        Config.remoteSyncClientEnabled = false
+        resetConfig()
         Notifications.clear()
     }
 

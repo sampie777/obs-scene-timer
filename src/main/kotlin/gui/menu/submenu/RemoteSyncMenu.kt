@@ -1,9 +1,9 @@
 package gui.menu.submenu
 
 
+import ApplicationInfo
 import config.Config
 import gui.mainFrame.MainFrame
-import objects.ApplicationInfo
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
 import obs.OBSClient

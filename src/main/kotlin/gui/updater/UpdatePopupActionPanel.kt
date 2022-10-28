@@ -1,7 +1,7 @@
 package gui.updater
 
+import ApplicationInfo
 import config.Config
-import objects.ApplicationInfo
 import openWebURL
 import themes.Theme
 import java.awt.Dimension

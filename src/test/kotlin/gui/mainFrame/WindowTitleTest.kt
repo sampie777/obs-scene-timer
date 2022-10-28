@@ -4,10 +4,16 @@ import config.Config
 import objects.OBSSceneTimer
 import objects.TScene
 import obs.OBSState
+import org.junit.Before
+import resetConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WindowTitleTest {
+    @Before
+    fun before() {
+        resetConfig()
+    }
 
     @Test
     fun testTitleWithoutVariables() {

@@ -1,6 +1,5 @@
 import config.Config
 import gui.mainFrame.MainFrame
-import objects.ApplicationInfo
 import objects.notifications.Notifications
 import obs.OBSClient
 import remotesync.client.TimerClient

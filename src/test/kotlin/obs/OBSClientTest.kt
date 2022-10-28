@@ -4,6 +4,7 @@ import config.Config
 import objects.OBSSceneTimer
 import objects.TScene
 import objects.notifications.Notifications
+import resetConfig
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -12,11 +13,11 @@ class OBSClientTest {
 
     @BeforeTest
     fun before() {
+        resetConfig()
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSState.currentScene = TScene("")
         OBSState.scenes.clear()
-        Config.autoCalculateSceneLimitsBySources = true
         Notifications.clear()
     }
 

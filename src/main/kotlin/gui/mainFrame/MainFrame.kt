@@ -1,11 +1,11 @@
 package gui.mainFrame
 
+import ApplicationInfo
 import GUI
 import config.Config
 import gui.Refreshable
 import gui.menu.MenuBar
 import gui.utils.loadIcon
-import objects.ApplicationInfo
 import objects.OBSSceneTimer
 import objects.TimerState
 import objects.notifications.Notifications

@@ -4,13 +4,14 @@ import config.Config
 import obs.OBSClientStatus
 import obs.OBSConnectionStatus
 import obs.OBSState
+import resetConfig
 import kotlin.test.*
 
 class OBSStatusPanelTest {
 
     @BeforeTest
     fun before() {
-        Config.obsAddress = "ws://localhost:4444"
+        resetConfig()
         OBSState.clientActivityStatus = null
         OBSState.connectionStatus = OBSConnectionStatus.UNKNOWN
     }

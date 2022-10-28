@@ -1,6 +1,7 @@
 package gui.mainFrame
 
 import config.Config
+import resetConfig
 import java.awt.Dimension
 import java.awt.Point
 import javax.swing.JFrame
@@ -10,8 +11,7 @@ class MainFrameTest {
 
     @BeforeTest
     fun before() {
-        Config.mainWindowsIsMaximized = false
-        Config.mainWindowAlwaysOnTop = false
+        resetConfig()
     }
 
     @Test
