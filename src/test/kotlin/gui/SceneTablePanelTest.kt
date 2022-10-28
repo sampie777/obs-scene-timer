@@ -5,6 +5,7 @@ import gui.sceneTable.SceneInput
 import gui.sceneTable.SceneInputFocusAdapter
 import gui.sceneTable.SceneTablePanel
 import objects.*
+import obs.OBSState
 import java.awt.event.FocusEvent
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -74,14 +75,14 @@ class SceneTablePanelTest {
 
         // When
         val sources2s1 = TSource()
-        sources2s1.videoLength = 20
+        sources2s1.file = TVideoFile(duration = 20)
         val sources2 = ArrayList<TSource>()
         sources2.add(sources2s1)
         val scene2 = TScene("scene2_with_maxvideo", timeLimit = null)
         scene2.sources = sources2
 
         val sources4s1 = TSource()
-        sources4s1.videoLength = 14
+        sources4s1.file = TVideoFile(duration = 14)
         val sources4 = ArrayList<TSource>()
         sources4.add(sources4s1)
         val scene4 = TScene("scene4_with_maxvideo_but_value_set_in_config")

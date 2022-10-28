@@ -1,7 +1,6 @@
 package objects
 
 import config.Config
-import java.util.*
 import java.util.logging.Logger
 
 
@@ -9,10 +8,13 @@ class TScene {
     private val logger = Logger.getLogger(TScene::class.java.name)
 
     var name = ""
-    var sources: List<TSource> = ArrayList()
+    var sources: ArrayList<TSource> = ArrayList()
+
     @Volatile
     var timeLimit: Int? = null
     val groups: MutableSet<Int> = mutableSetOf()
+
+    var sourcesAreLoaded = false
 
     companion object {
         fun fromJson(jsonTScene: Json.TScene): TScene {
@@ -34,16 +36,17 @@ class TScene {
 
     fun maxVideoLength(): Int {
         val longestVideoLengthSource = longestVideoLengthSource()
-        if (!longestVideoLengthSource.isPresent) {
+        if (longestVideoLengthSource == null) {
             logger.info("No longest video source found for TScene $name")
         } else {
-            logger.info("Longest video source for TScene '" + name + "' has length = " + longestVideoLengthSource.get().videoLength)
+            logger.info("Longest video source for TScene '" + name + "' has length = " + longestVideoLengthSource.file?.duration)
         }
-        return longestVideoLengthSource.map(TSource::videoLength).orElse(0)
+        return longestVideoLengthSource?.file?.duration ?: 0
     }
 
-    private fun longestVideoLengthSource(): Optional<TSource> =
-        sources.stream().max(Comparator.comparingInt(TSource::videoLength))
+    private fun longestVideoLengthSource(): TSource? =
+        sources.filter { it.file != null }
+            .maxByOrNull { it.file?.duration ?: 0 }
 
     /**
      * Get the time limit to use for a scene. First get the user specified limit from the scene itself.

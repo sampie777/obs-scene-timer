@@ -3,8 +3,8 @@ package gui.grouping
 import GUI
 import config.Config
 import gui.Refreshable
-import objects.OBSState
 import objects.TScene
+import obs.OBSState
 import themes.Theme
 import java.awt.BorderLayout
 import java.awt.EventQueue

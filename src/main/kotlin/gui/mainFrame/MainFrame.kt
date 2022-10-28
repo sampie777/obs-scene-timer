@@ -5,8 +5,12 @@ import config.Config
 import gui.Refreshable
 import gui.menu.MenuBar
 import gui.utils.loadIcon
-import objects.*
+import objects.ApplicationInfo
+import objects.OBSSceneTimer
+import objects.TimerState
 import objects.notifications.Notifications
+import obs.OBSConnectionStatus
+import obs.OBSState
 import org.bridj.Pointer
 import org.bridj.cpp.com.COMRuntime
 import org.bridj.cpp.com.shell.ITaskbarList3
@@ -36,9 +40,9 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
         ConnectionState.CONNECTION_FAILED
     )
     private val oBSIndeterminateStates = arrayOf(
-        OBSClientStatus.CONNECTING,
-        OBSClientStatus.RECONNECTING,
-        OBSClientStatus.CONNECTION_FAILED
+        OBSConnectionStatus.CONNECTING,
+        OBSConnectionStatus.RECONNECTING,
+        OBSConnectionStatus.CONNECTION_FAILED
     )
 
     companion object {

@@ -1,14 +1,12 @@
 package objects
 
-import java.util.*
-
 
 class TSource {
     var name = ""
-    var type = "unknown"
-    var settings: Map<String, Any> = HashMap()
-    var fileName = ""
-    var videoLength = 0
+    var kind = "unknown"
+    var file: TVideoFile? = null
+    var playlist: TPlayList? = null
+    var settingsLoaded = false
 
     constructor()
 
@@ -16,8 +14,15 @@ class TSource {
         this.name = name
     }
 
-    constructor(name: String, type: String) {
+    constructor(name: String, kind: String) {
         this.name = name
-        this.type = type
+        this.kind = kind
+    }
+
+    fun copyTo(source: TSource) {
+        source.name = this.name
+        source.kind = this.kind
+        source.file = this.file
+        source.settingsLoaded = this.settingsLoaded
     }
 }

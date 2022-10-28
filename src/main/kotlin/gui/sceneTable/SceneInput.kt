@@ -4,9 +4,9 @@ package gui.sceneTable
 import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
 import objects.notifications.Notifications
+import obs.OBSState
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font

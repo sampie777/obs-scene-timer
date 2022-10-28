@@ -4,9 +4,9 @@ package gui.menu.submenu
 import config.Config
 import gui.mainFrame.MainFrame
 import objects.ApplicationInfo
-import objects.OBSClient
 import objects.OBSSceneTimer
 import objects.notifications.Notifications
+import obs.OBSClient
 import openWebURL
 import remotesync.RemoteSyncRefreshableRegister
 import remotesync.client.TimerClient

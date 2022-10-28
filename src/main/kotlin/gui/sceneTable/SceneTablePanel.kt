@@ -4,8 +4,8 @@ import GUI
 import config.Config
 import gui.Refreshable
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
+import obs.OBSState
 import themes.Theme
 import java.awt.*
 import javax.swing.*

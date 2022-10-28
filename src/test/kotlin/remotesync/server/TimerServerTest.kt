@@ -1,8 +1,8 @@
 package remotesync.server
 
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
+import obs.OBSState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

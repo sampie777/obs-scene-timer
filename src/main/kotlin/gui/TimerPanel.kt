@@ -3,10 +3,10 @@ package gui
 import GUI
 import config.Config
 import getTimeAsClock
-import objects.OBSClientStatus
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TimerState
+import obs.OBSConnectionStatus
+import obs.OBSState
 import remotesync.client.TimerClient
 import remotesync.objects.ConnectionState
 import themes.Theme
@@ -102,7 +102,7 @@ class TimerPanel : JPanel(), Refreshable {
 
     override fun switchedScenes() {
         if ((Config.remoteSyncClientEnabled && TimerClient.getConnectionState() != ConnectionState.CONNECTED)
-            || (!Config.remoteSyncClientEnabled && OBSState.connectionStatus != OBSClientStatus.CONNECTED)
+            || (!Config.remoteSyncClientEnabled && OBSState.connectionStatus != OBSConnectionStatus.CONNECTED)
         ) {
             sceneLabel.text = "Waiting for connection..."
             return

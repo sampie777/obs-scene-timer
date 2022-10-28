@@ -2,8 +2,8 @@ package config
 
 import gui.mainFrame.WindowTitle
 import objects.Json
-import objects.OBSState
 import objects.notifications.Notifications
+import obs.OBSState
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
@@ -13,7 +13,9 @@ object Config {
     private val logger = Logger.getLogger(Config.toString())
 
     // OBS Connection
-    var obsAddress: String = "ws://localhost:4455"
+    var obsAddress: String = "ws://localhost:4455"  // Deprecated
+    var obsHost: String = "localhost"
+    var obsPort: Int = 4455
     var obsPassword: String = ""
     var obsReconnectionTimeout: Long = 3000
     var timerStartDelay: Long = -300
@@ -84,7 +86,7 @@ object Config {
     }
 
     fun save() {
-        OBSState.scenes.forEach {  tScene ->
+        OBSState.scenes.forEach { tScene ->
             sceneProperties.tScenes.removeIf { it.name == tScene.name }
             sceneProperties.tScenes.add(tScene.toJson())
         }

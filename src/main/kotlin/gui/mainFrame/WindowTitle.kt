@@ -3,7 +3,7 @@ package gui.mainFrame
 import config.Config
 import getTimeAsClock
 import objects.OBSSceneTimer
-import objects.OBSState
+import obs.OBSState
 
 
 object WindowTitle {

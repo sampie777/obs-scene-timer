@@ -1,8 +1,8 @@
 import config.Config
 import gui.mainFrame.MainFrame
 import objects.ApplicationInfo
-import objects.OBSClient
 import objects.notifications.Notifications
+import obs.OBSClient
 import remotesync.client.TimerClient
 import remotesync.server.TimerServer
 import themes.Theme
@@ -25,6 +25,7 @@ fun main(args: Array<String>) {
 
     Config.enableWriteToFile(true)
     Config.load()
+    setObsParametersFromObsAddress()
     setupLogging(args)  // Setup logging as soon as possible, but because it depends on Config, just let Config load first
     Config.save()
 
@@ -51,6 +52,18 @@ fun main(args: Array<String>) {
         if ("--offline" !in args) {
             OBSClient.start()
         }
+    }
+}
+
+fun setObsParametersFromObsAddress() {
+    if (Config.obsAddress == "ws://${Config.obsHost}:${Config.obsPort}" || Config.obsAddress.isEmpty()) return
+
+    Config.obsHost = Config.obsAddress.substringAfter("://").substringBeforeLast(":")
+    val obsPort = Config.obsAddress.substringAfterLast(":")
+    if (obsPort == Config.obsHost) {
+        Config.obsPort = 4455   // Default port
+    } else {
+        Config.obsPort = obsPort.toIntOrNull() ?: 4455
     }
 }
 

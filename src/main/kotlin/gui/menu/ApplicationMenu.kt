@@ -5,7 +5,7 @@ import gui.config.ConfigFrame
 import gui.mainFrame.MainFrame
 import gui.notifications.NotificationFrame
 import gui.utils.getMainFrameComponent
-import objects.OBSClient
+import obs.ObsSceneProcessor
 import themes.Theme
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -47,7 +47,7 @@ class ApplicationMenu : JMenu("Application") {
         quitItem.mnemonic = KeyEvent.VK_Q
         quitItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK)
 
-        reloadScenesItem.addActionListener { OBSClient.loadScenes() }
+        reloadScenesItem.addActionListener { ObsSceneProcessor.loadScenes() }
         notificationsItem.addActionListener { NotificationFrame(getMainFrameComponent(this)) }
         settingsItem.addActionListener { ConfigFrame(getMainFrameComponent(this)) }
         fullscreenItem.addActionListener {

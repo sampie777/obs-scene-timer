@@ -4,8 +4,8 @@ import config.Config
 import config.PropertyLoader
 import gui.config.formcomponents.*
 import gui.mainFrame.WindowTitle
-import objects.OBSClient
 import objects.notifications.Notifications
+import obs.ObsSceneProcessor
 import themes.Theme
 import java.awt.BorderLayout
 import java.awt.GridLayout
@@ -53,7 +53,7 @@ class ConfigEditPanel : JPanel() {
                         return@BooleanFormInput
                     }
 
-                    OBSClient.loadScenes()
+                    ObsSceneProcessor.loadScenes()
                 }
             )
         )
@@ -66,7 +66,7 @@ class ConfigEditPanel : JPanel() {
                         return@BooleanFormInput
                     }
 
-                    OBSClient.loadScenes()
+                    ObsSceneProcessor.loadScenes()
                 }
             )
         )
