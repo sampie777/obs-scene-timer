@@ -74,7 +74,7 @@ object ObsSceneProcessor {
                 logger.info("${response.scenes.size} scenes retrieved")
 
                 try {
-                    processOBSScenesToOBSStateScenes(response.scenes)
+                    processOBSScenesToOBSStateScenes(if (Config.reverseSceneOrder) response.scenes else response.scenes.reversed())
                 } catch (t: Throwable) {
                     logger.severe("Failed to process scenes")
                     t.printStackTrace()
@@ -211,6 +211,7 @@ object ObsSceneProcessor {
     }
 
     private fun addSceneItemToTScene(scene: TScene, item: SceneItem) {
+        logger.info("Adding item '${item.sourceName}' to scene: '${scene.name}'")
         scene.sources.add(TSource(name = item.sourceName, kind = item.inputKind))
     }
 
@@ -285,7 +286,7 @@ object ObsSceneProcessor {
     private fun loadSourceSettingsForSource(source: TSource, callback: (() -> Unit)? = null) {
         // First check our scenes for matching sources
         val existingSourceFound = OBSState.scenes.any { scene ->
-            val sameSource = scene.sources.find { it.name == source.name }
+            val sameSource = scene.sources.find { it != source && it.name == source.name }
                 ?: return@any false
 
             logger.info("Copying existing settings from matching source '${source.name}'.")

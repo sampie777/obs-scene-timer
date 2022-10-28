@@ -21,6 +21,7 @@ object Config {
     var timerStartDelay: Long = -300
     var autoCalculateSceneLimitsBySources: Boolean = true
     var sumVlcPlaylistSourceLengths: Boolean = true
+    var reverseSceneOrder: Boolean = false
 
     // Timer Style
     @Deprecated("This value won't be of any use in future releases. Please use a Theme to specify a custom color")
