@@ -5,6 +5,9 @@ import config.Config
 import gui.Refreshable
 import isAddressLocalhost
 import objects.TScene
+import obs.OBSClientStatus
+import obs.OBSState
+import utils.FAIcon
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.EventQueue
@@ -12,7 +15,7 @@ import javax.swing.JPanel
 
 class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
     val sceneInput = SceneInput(scene)
-    private val reloadPanel = JPanel()
+    val reloadPanel = JPanel()
 
     init {
         GUI.register(this)
@@ -41,8 +44,10 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
             if (scene.timeLimit != null) {
                 reloadPanel.add(SceneVideoReloadButton(scene), BorderLayout.CENTER)
             }
-        } else {
+        } else if (OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENES || OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENE_SOURCES) {
             reloadPanel.add(SceneVideoLoadingIcon(), BorderLayout.CENTER)
+        } else {
+            reloadPanel.add(FAIcon("\uf00d", fontSize = 12f).also { it.toolTipText = "Scene's items not loaded"})
         }
 
         reloadPanel.revalidate()
