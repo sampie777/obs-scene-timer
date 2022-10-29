@@ -7,6 +7,7 @@ import isAddressLocalhost
 import objects.TScene
 import obs.OBSClientStatus
 import obs.OBSState
+import themes.Theme
 import utils.FAIcon
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -47,7 +48,10 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
         } else if (OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENES || OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENE_SOURCES) {
             reloadPanel.add(SceneVideoLoadingIcon(), BorderLayout.CENTER)
         } else {
-            reloadPanel.add(FAIcon("\uf00d", fontSize = 12f).also { it.toolTipText = "Scene's items not loaded"})
+            reloadPanel.add(FAIcon("\uf071", fontSize = 12f).also {
+                it.toolTipText = "Scene's items not loaded"
+                it.foreground = Theme.get.WARNING_FONT_COLOR
+            })
         }
 
         reloadPanel.revalidate()

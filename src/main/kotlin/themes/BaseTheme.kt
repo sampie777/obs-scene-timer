@@ -6,6 +6,7 @@ abstract class BaseTheme {
     open val FONT_FAMILY = "Dialog"
     open val FONT_COLOR = Color(51, 51, 51)
     open val LINK_FONT_COLOR = Color(25, 90, 244)
+    open val WARNING_FONT_COLOR = Color(255, 102, 0)
     open val BACKGROUND_COLOR = Color(238, 238, 238)
     open val TEXT_FIELD_BACKGROUND_COLOR = Color(255, 255, 255)
     open val LIST_BACKGROUND_COLOR = Color(248, 248, 248)
