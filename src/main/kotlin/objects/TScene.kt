@@ -34,6 +34,12 @@ class TScene {
 
     override fun toString(): String = name
 
+    fun resetTimeLimit() {
+        logger.info("Resetting scene's time limit")
+        timeLimit = null
+        Config.sceneProperties.tScenes.find { it.name == name }?.timeLimit = maxVideoLength()
+    }
+
     fun maxVideoLength(): Int {
         val longestVideoLengthSource = longestVideoLengthSource()
         if (longestVideoLengthSource == null) {

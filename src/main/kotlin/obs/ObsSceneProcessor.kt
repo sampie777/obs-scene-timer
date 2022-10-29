@@ -121,21 +121,10 @@ object ObsSceneProcessor {
                     }
         }
 
-        loadSceneItems { loadSourceSettingsForAllScenes(::refreshGuiWithNewScenes) }
+        loadSceneItems { loadSourceSettingsForAllScenes(callback = ::refreshGuiWithNewScenes) }
     }
 
     private fun loadSceneItems(callback: (() -> Unit)? = null) {
-        if (!Config.autoCalculateSceneLimitsBySources) {
-            logger.info("Auto calculation of scene time limits by source files is disabled")
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback when skipping loadSceneItems")
-                t.printStackTrace()
-            }
-            return
-        }
-
         if (!isAddressLocalhost(Config.obsAddress)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
             try {
@@ -185,7 +174,7 @@ object ObsSceneProcessor {
         }
     }
 
-    private fun loadItemsForScene(scene: TScene, callback: (() -> Unit)? = null) {
+    fun loadItemsForScene(scene: TScene, callback: (() -> Unit)? = null) {
         OBSClient.getController()?.getSceneItemList(scene.name) { response: GetSceneItemListResponse ->
             response.sceneItems.forEach { item ->
                 if (item.sourceType == "OBS_SOURCE_TYPE_INPUT" && videoSources.contains(item.inputKind)) {
@@ -215,8 +204,8 @@ object ObsSceneProcessor {
         scene.sources.add(TSource(name = item.sourceName, kind = item.inputKind))
     }
 
-    fun loadSourceSettingsForAllScenes(callback: (() -> Unit)? = null): Boolean {
-        if (!Config.autoCalculateSceneLimitsBySources) {
+    fun loadSourceSettingsForAllScenes(forceAutoCalculation: Boolean = false, callback: (() -> Unit)? = null): Boolean {
+        if (!forceAutoCalculation && !Config.autoCalculateSceneLimitsBySources) {
             logger.info("Auto calculation of scene time limits by source files is disabled")
             try {
                 callback?.invoke()
@@ -270,7 +259,7 @@ object ObsSceneProcessor {
         }
 
         try {
-            loadSourceSettingsForSource(sourceToLoad) { loadSourceSettingsForAllScenes(callback) }
+            loadSourceSettingsForSource(sourceToLoad) { loadSourceSettingsForAllScenes(callback = callback) }
         } catch (t: Throwable) {
             logger.severe("Failed to load scene item sources settings for item '${sourceToLoad.name}'")
             t.printStackTrace()
@@ -346,7 +335,7 @@ object ObsSceneProcessor {
         getSourceVideoLength(source)
     }
 
-    fun responsePlaylistToTPlaylist(playlist: JsonArray): TPlayList {
+    private fun responsePlaylistToTPlaylist(playlist: JsonArray): TPlayList {
         val videos = playlist
             .map { it.asJsonObject }
             .filter { it.has("value") }

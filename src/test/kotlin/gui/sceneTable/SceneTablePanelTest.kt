@@ -1,9 +1,6 @@
-package gui
+package gui.sceneTable
 
 import config.Config
-import gui.sceneTable.SceneInput
-import gui.sceneTable.SceneInputFocusAdapter
-import gui.sceneTable.SceneTablePanel
 import objects.*
 import obs.OBSState
 import resetConfig
@@ -48,7 +45,7 @@ class SceneTablePanelTest {
 
         assertEquals(1, panel.sceneInputs.size)
         assertTrue(panel.sceneInputs.containsKey("scene1"), "SceneValues doesn't contain key 'scene1'")
-        assertEquals("0:10", panel.sceneInputs["scene1"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
         assertEquals(1, panel.sceneLabels.size)
 
         // When
@@ -69,9 +66,9 @@ class SceneTablePanelTest {
 
         assertEquals(2, panel.sceneInputs.size)
         assertTrue(panel.sceneInputs.containsKey("scene1_value_set_in_config"), "Missing key in SceneInputs")
-        assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.sceneInput.text)
         assertTrue(panel.sceneInputs.containsKey("scene4_with_maxvideo_but_value_set_in_config"), "Missing key in SceneValues")
-        assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.text)
+        assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.sceneInput.text)
         assertEquals(2, panel.sceneLabels.size)
 
         // When
@@ -97,10 +94,10 @@ class SceneTablePanelTest {
         panel.refreshScenes()
 
         assertEquals(4, panel.sceneInputs.size)
-        assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.text)
-        assertEquals("0:20", panel.sceneInputs["scene2_with_maxvideo"]!!.text)
-        assertEquals("0:00", panel.sceneInputs["scene3"]!!.text)
-        assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.sceneInput.text)
+        assertEquals("0:20", panel.sceneInputs["scene2_with_maxvideo"]!!.sceneInput.text)
+        assertEquals("0:00", panel.sceneInputs["scene3"]!!.sceneInput.text)
+        assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.sceneInput.text)
         assertEquals(4, panel.sceneLabels.size)
     }
 
@@ -128,14 +125,14 @@ class SceneTablePanelTest {
         OBSState.scenes.add(scene1)
         val panel = SceneTablePanel()
 
-        assertEquals("0:00", panel.sceneInputs["scene1"]!!.text)
+        assertEquals("0:00", panel.sceneInputs["scene1"]!!.sceneInput.text)
         assertEquals(0, Config.sceneProperties.tScenes.size)
 
         // When
-        panel.sceneInputs["scene1"]!!.text = "0:10"
+        panel.sceneInputs["scene1"]!!.sceneInput.text = "0:10"
         Config.save()
 
-        assertEquals("0:10", panel.sceneInputs["scene1"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
         assertEquals(10, scene1.timeLimit)
         assertEquals("scene1", Config.sceneProperties.tScenes[0].name)
         assertEquals(10, Config.sceneProperties.tScenes[0].timeLimit)
@@ -151,14 +148,14 @@ class SceneTablePanelTest {
         val panel = SceneTablePanel()
         panel.switchedScenes()
 
-        assertEquals("0:00", panel.sceneInputs["scene2"]!!.text)
+        assertEquals("0:00", panel.sceneInputs["scene2"]!!.sceneInput.text)
         assertEquals(0, Config.sceneProperties.tScenes.size)
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
         // When
-        panel.sceneInputs["scene2"]!!.text = "0:10"
+        panel.sceneInputs["scene2"]!!.sceneInput.text = "0:10"
 
-        assertEquals("0:10", panel.sceneInputs["scene2"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene2"]!!.sceneInput.text)
         assertEquals(10, scene2.timeLimit)
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
@@ -173,7 +170,7 @@ class SceneTablePanelTest {
         val panel = SceneTablePanel()
         panel.refreshScenes()
 
-        assertEquals("0:10", panel.sceneInputs["scene1"]!!.text)
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
         assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 
@@ -184,7 +181,7 @@ class SceneTablePanelTest {
         OBSState.scenes.add(TScene("scene2"))
         val panel = SceneTablePanel()
 
-        assertNotEquals("0:10", panel.sceneInputs["scene1"]!!.text)
+        assertNotEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
         assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
         scene1.timeLimit = 10
