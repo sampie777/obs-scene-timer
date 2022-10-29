@@ -20,6 +20,7 @@ object OBSClient {
     private var isRunning: Boolean = false
     fun isRunning() = isRunning
     private var isForceStopped: Boolean = false
+    private var connectionRetryTimer: Timer? = null
 
     fun start() {
         if (Config.remoteSyncClientEnabled || isForceStopped) {
@@ -70,6 +71,7 @@ object OBSClient {
 
     private fun processFailedConnection(message: String, reconnect: Boolean = true) {
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTION_FAILED
+        OBSState.clientActivityStatus = null
         GUI.refreshOBSStatus()
 
         if (!reconnecting) {
@@ -87,10 +89,15 @@ object OBSClient {
             return
         }
 
-        val connectionRetryTimer = Timer()
-        connectionRetryTimer.schedule(object : TimerTask() {
+        if (connectionRetryTimer != null) {
+            return
+        }
+
+        connectionRetryTimer = Timer()
+        connectionRetryTimer?.schedule(object : TimerTask() {
             override fun run() {
                 reconnecting = true
+                connectionRetryTimer = null
                 start()
             }
         }, Config.obsReconnectionTimeout)
@@ -129,7 +136,7 @@ object OBSClient {
 
         if (isForceStopped) return
 
-        processFailedConnection("OBS Connection module gave an unexpected error: ${throwable.reason}", reconnect = true)
+        processFailedConnection("OBS connection gave an unexpected error: ${throwable.reason}", reconnect = true)
     }
 
     private fun onCommunicatorError(throwable: ReasonThrowable) {
@@ -138,7 +145,7 @@ object OBSClient {
 
         if (isForceStopped) return
 
-        processFailedConnection("OBS Connection module gave an unexpected error: ${throwable.reason}", reconnect = true)
+        processFailedConnection("OBS connection gave an unexpected error: ${throwable.reason}", reconnect = true)
     }
 
     private fun onConnectionFailed(code: WebSocketCloseCode) {
@@ -149,6 +156,7 @@ object OBSClient {
         logger.severe("Failed to connect to OBS: $code (WebSocketCloseCode)")
 
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTION_FAILED
+        OBSState.clientActivityStatus = null
         Notifications.add(
             "Failed to connect to OBS: $code (WebSocketCloseCode)",
             "OBS"
@@ -163,6 +171,7 @@ object OBSClient {
         if (isForceStopped) return
 
         OBSState.connectionStatus = OBSConnectionStatus.DISCONNECTED
+        OBSState.clientActivityStatus = null
         GUI.refreshOBSStatus()
 
         Notifications.add("Disconnected from OBS", "OBS")
