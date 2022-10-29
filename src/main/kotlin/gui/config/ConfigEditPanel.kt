@@ -27,7 +27,17 @@ class ConfigEditPanel : JPanel() {
 
     private fun createFormInputs() {
         formComponents.add(HeaderFormComponent("OBS"))
-        formComponents.add(StringFormInput("obsAddress", "OBS websocket address", false))
+        formComponents.add(StringFormInput("obsHost",
+            "OBS websocket host address",
+            false,
+            onSave = { newValue -> Config.obsAddress = "ws://${newValue}:${Config.obsPort}" }
+        ))
+        formComponents.add(NumberFormInput("obsPort",
+            "OBS websocket port",
+            min = 0,
+            max = 65535,
+            onSave = { newValue -> Config.obsAddress = "ws://${Config.obsHost}:${newValue}" }
+        ))
         formComponents.add(
             StringFormInput(
                 "obsPassword",

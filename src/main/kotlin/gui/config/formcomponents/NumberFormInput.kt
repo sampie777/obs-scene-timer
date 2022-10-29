@@ -13,7 +13,8 @@ class NumberFormInput<T : Number>(
     override val key: String,
     private val labelText: String,
     private val min: T?,
-    private val max: T?
+    private val max: T?,
+    private val onSave: ((newValue: T) -> Unit)? = null
 ) : FormInput {
     private val logger = Logger.getLogger(NumberFormInput::class.java.name)
 
@@ -51,6 +52,8 @@ class NumberFormInput<T : Number>(
     }
 
     override fun save() {
+        onSave?.invoke(value())
+
         Config.set(key, value())
     }
 

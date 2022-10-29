@@ -16,7 +16,8 @@ class StringFormInput(
     override val key: String,
     private val labelText: String,
     private val allowEmpty: Boolean,
-    private val toolTipText: String = ""
+    private val toolTipText: String = "",
+    private val onSave: ((newValue: String) -> Unit)? = null
 ) : FormInput {
     private val logger = Logger.getLogger(StringFormInput::class.java.name)
 
@@ -53,6 +54,8 @@ class StringFormInput(
     }
 
     override fun save() {
+        onSave?.invoke(value())
+
         Config.set(key, value())
     }
 
