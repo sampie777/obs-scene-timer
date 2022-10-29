@@ -121,3 +121,24 @@ fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
     }
     return false
 }
+
+fun <R> (() -> R).invokeWithCatch(
+    logger: Logger? = null,
+    logMessage: ((t: Throwable) -> String)? = null,
+    notificationMessage: ((t: Throwable) -> String)? = null,
+    notificationTitle: String = "OBS"
+) {
+    try {
+        this.invoke()
+    } catch (t: Throwable) {
+        if (logger != null && logMessage != null) {
+            logger.severe(logMessage.invoke(t))
+        }
+
+        t.printStackTrace()
+
+        if (notificationMessage != null) {
+            Notifications.add(notificationMessage.invoke(t), notificationTitle)
+        }
+    }
+}

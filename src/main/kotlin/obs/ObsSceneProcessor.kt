@@ -3,6 +3,7 @@ package obs
 import GUI
 import com.google.gson.JsonArray
 import config.Config
+import invokeWithCatch
 import io.obswebsocket.community.client.message.response.inputs.GetInputSettingsResponse
 import io.obswebsocket.community.client.message.response.sceneitems.GetSceneItemListResponse
 import io.obswebsocket.community.client.message.response.scenes.GetCurrentProgramSceneResponse
@@ -13,6 +14,7 @@ import isAddressLocalhost
 import objects.*
 import objects.notifications.Notifications
 import utils.getVideoLengthOrZeroForFile
+import java.net.ConnectException
 import java.util.logging.Logger
 
 object ObsSceneProcessor {
@@ -131,12 +133,7 @@ object ObsSceneProcessor {
     private fun loadSceneItems(callback: (() -> Unit)? = null) {
         if (!isAddressLocalhost(Config.obsAddress)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback when skipping loadSceneItems")
-                t.printStackTrace()
-            }
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSceneItems" })
             return
         }
 
@@ -153,16 +150,10 @@ object ObsSceneProcessor {
         }
 
         if (sceneToLoad == null) {
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback during loadSceneItems")
-                t.printStackTrace()
-                Notifications.add(
-                    "Something went wrong after loading scene items: ${t.localizedMessage}",
-                    "OBS"
-                )
-            }
+            callback?.invokeWithCatch(logger,
+                { "Failed to invoke callback during loadSceneItems" },
+                { "Something went wrong after loading scene items: ${it.localizedMessage}" }
+            )
             return
         }
 
@@ -172,13 +163,19 @@ object ObsSceneProcessor {
             logger.severe("Failed to load scene items for scene '${sceneToLoad.name}'")
             t.printStackTrace()
             Notifications.add(
-                "Something went wrong while loading scene items for scene '${sceneToLoad.name}': ${t.localizedMessage}",
+                "Could not load scene items for scene '${sceneToLoad.name}': ${t.localizedMessage}",
                 "OBS"
             )
+
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadItemsForScene failed" })
         }
     }
 
-    fun loadItemsForScene(scene: TScene, callback: (() -> Unit)? = null) {
+    private fun loadItemsForScene(scene: TScene, callback: (() -> Unit)? = null) {
+        if (OBSState.connectionStatus != OBSConnectionStatus.CONNECTED) {
+            throw ConnectException("OBS not connected")
+        }
+
         OBSClient.getController()?.getSceneItemList(scene.name) { response: GetSceneItemListResponse ->
             response.sceneItems.forEach { item ->
                 if (item.sourceType == "OBS_SOURCE_TYPE_INPUT" && videoSources.contains(item.inputKind)) {
@@ -194,16 +191,10 @@ object ObsSceneProcessor {
                 GUI.onSceneTimeLimitUpdated(scene)
             }
 
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback after loading scene items for scene '${scene.name}'")
-                t.printStackTrace()
-                Notifications.add(
-                    "Something went wrong while loading scene items: ${t.localizedMessage}",
-                    "OBS"
-                )
-            }
+            callback?.invokeWithCatch(logger,
+                { "Failed to invoke callback after loading scene items for scene '${scene.name}'" },
+                { "Something went wrong while loading scene items: ${it.localizedMessage}" }
+            )
         }
     }
 
@@ -215,23 +206,13 @@ object ObsSceneProcessor {
     fun loadSourceSettingsForAllScenes(forceAutoCalculation: Boolean = false, callback: (() -> Unit)? = null): Boolean {
         if (!forceAutoCalculation && !Config.autoCalculateSceneLimitsBySources) {
             logger.info("Auto calculation of scene time limits by source files is disabled")
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback when skipping loadSourceSettingsForAllScenes")
-                t.printStackTrace()
-            }
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSourceSettingsForAllScenes" })
             return false
         }
 
         if (!isAddressLocalhost(Config.obsAddress)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback when skipping loadSourceSettingsForAllScenes")
-                t.printStackTrace()
-            }
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSourceSettingsForAllScenes" })
             return false
         }
 
@@ -246,23 +227,16 @@ object ObsSceneProcessor {
             logger.severe("Failed to get next source for loading source settings")
             t.printStackTrace()
             Notifications.add(
-                "Something went wrong while loading scene items source settings: ${t.localizedMessage}",
+                "Could not load scene items source settings: ${t.localizedMessage}",
                 "OBS"
             )
             null
         }
 
         if (sourceToLoad == null) {
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback during loadSourceSettingsForAllScenes")
-                t.printStackTrace()
-                Notifications.add(
-                    "Something went wrong after loading scene item sources: ${t.localizedMessage}",
-                    "OBS"
-                )
-            }
+            callback?.invokeWithCatch(logger,
+                { "Failed to invoke callback during loadSourceSettingsForAllScenes" },
+                { "Something went wrong after loading scene item sources: ${it.localizedMessage}" })
             return true
         }
 
@@ -272,17 +246,18 @@ object ObsSceneProcessor {
             logger.severe("Failed to load scene item sources settings for item '${sourceToLoad.name}'")
             t.printStackTrace()
             Notifications.add(
-                "Something went wrong while processing scene item sources settings for item '${sourceToLoad.name}': ${t.localizedMessage}",
+                "Could not process scene item sources settings for item '${sourceToLoad.name}': ${t.localizedMessage}",
                 "OBS"
             )
-            callback?.invoke()
+
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadSourceSettingsForSource failed" })
         }
         return true
     }
 
     private fun loadSourceSettingsForSource(source: TSource, callback: (() -> Unit)? = null) {
         // First check our scenes for matching sources
-        val existingSource = OBSState.scenes.flatMap {it.sources}
+        val existingSource = OBSState.scenes.flatMap { it.sources }
             .find { it.settingsLoaded && it != source && it.name == source.name }
 
         if (existingSource != null) {
@@ -295,17 +270,14 @@ object ObsSceneProcessor {
                 GUI.onSceneTimeLimitUpdated(scene)
             }
 
-            try {
-                callback?.invoke()
-            } catch (t: Throwable) {
-                logger.severe("Failed to invoke callback after copying source settings for source '${source.name}'")
-                t.printStackTrace()
-                Notifications.add(
-                    "Something went wrong while loading scene items source settings: ${t.localizedMessage}",
-                    "OBS"
-                )
-            }
+            callback?.invokeWithCatch(logger,
+                { "Failed to invoke callback after copying source settings for source '${source.name}'" },
+                { "Something went wrong while loading scene items source settings: ${it.localizedMessage}" })
             return
+        }
+
+        if (OBSState.connectionStatus != OBSConnectionStatus.CONNECTED) {
+            throw ConnectException("OBS not connected")
         }
 
         OBSClient.getController()?.getInputSettings(source.name) { response: GetInputSettingsResponse ->
@@ -329,16 +301,9 @@ object ObsSceneProcessor {
             }
         }
 
-        try {
-            callback?.invoke()
-        } catch (t: Throwable) {
-            logger.severe("Failed to invoke callback after loading source settings for source '${source.name}'")
-            t.printStackTrace()
-            Notifications.add(
-                "Something went wrong while loading scene items source settings: ${t.localizedMessage}",
-                "OBS"
-            )
-        }
+        callback?.invokeWithCatch(logger,
+            { "Failed to invoke callback after loading source settings for source '${source.name}'" },
+            { "Something went wrong while loading scene items source settings: ${it.localizedMessage}" })
 
         getSourceVideoLength(source)
 
