@@ -19,9 +19,10 @@ object OBSClient {
     private var reconnecting: Boolean = false
     private var isRunning: Boolean = false
     fun isRunning() = isRunning
+    private var isForceStopped: Boolean = false
 
     fun start() {
-        if (Config.remoteSyncClientEnabled) {
+        if (Config.remoteSyncClientEnabled || isForceStopped) {
             isRunning = false
             return
         }
@@ -31,7 +32,7 @@ object OBSClient {
         OBSState.connectionStatus = if (!reconnecting) OBSConnectionStatus.CONNECTING else OBSConnectionStatus.RECONNECTING
         GUI.refreshOBSStatus()
 
-        val obsPassword: String? = if (Config.obsPassword.isEmpty()) null else Config.obsPassword
+        val obsPassword: String? = Config.obsPassword.ifEmpty { null }
 
         val builder = OBSRemoteController.builder()
             .host(Config.obsHost)
@@ -57,9 +58,12 @@ object OBSClient {
         }
     }
 
-    fun stop() {
-        logger.info("Disconnecting with OBS")
+    fun stop(force: Boolean = false) {
+        logger.info("Disconnecting with OBS (force stop=$force)")
+        isForceStopped = force
+
         controller?.disconnect()
+        controller?.stop()
 
         isRunning = false
     }
@@ -78,7 +82,7 @@ object OBSClient {
     }
 
     private fun startReconnectingTimeout() {
-        if (Config.remoteSyncClientEnabled) {
+        if (Config.remoteSyncClientEnabled || isForceStopped) {
             reconnecting = false
             return
         }
@@ -93,6 +97,8 @@ object OBSClient {
     }
 
     private fun onCurrentProgramSceneChanged(event: CurrentProgramSceneChangedEvent) {
+        if (isForceStopped) return
+
         logger.fine("Processing scene switch event to: ${event.sceneName}")
 
         if (OBSState.currentScene.name == event.sceneName) {
@@ -109,7 +115,11 @@ object OBSClient {
     }
 
     private fun onSceneListChanged(event: SceneListChangedEvent) {
+        if (isForceStopped) return
+
         logger.fine("Processing scenes changed event for ${event.scenes.size} scenes")
+        if (isForceStopped) return
+
         ObsSceneProcessor.loadScenes()
     }
 
@@ -117,18 +127,27 @@ object OBSClient {
         logger.severe("OBS Controller gave an error: ${throwable.reason}")
         throwable.throwable.printStackTrace()
 
-        Notifications.add("OBS Connection module gave an unexpected error: ${throwable.reason}", "OBS")
+        if (isForceStopped) return
+
+        processFailedConnection("OBS Connection module gave an unexpected error: ${throwable.reason}", reconnect = true)
     }
 
     private fun onCommunicatorError(throwable: ReasonThrowable) {
         logger.severe("OBS Communicator gave an error: ${throwable.reason}")
         throwable.throwable.printStackTrace()
 
-        Notifications.add("OBS Connection module gave an unexpected error: ${throwable.reason}", "OBS")
+        if (isForceStopped) return
+
+        processFailedConnection("OBS Connection module gave an unexpected error: ${throwable.reason}", reconnect = true)
     }
 
     private fun onConnectionFailed(code: WebSocketCloseCode) {
+        if (isForceStopped) {
+            logger.info("Failed to connect to OBS: $code (WebSocketCloseCode)")
+            return
+        }
         logger.severe("Failed to connect to OBS: $code (WebSocketCloseCode)")
+
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTION_FAILED
         Notifications.add(
             "Failed to connect to OBS: $code (WebSocketCloseCode)",
@@ -140,6 +159,9 @@ object OBSClient {
 
     private fun onDisconnected() {
         logger.info("Disconnected from OBS")
+
+        if (isForceStopped) return
+
         OBSState.connectionStatus = OBSConnectionStatus.DISCONNECTED
         GUI.refreshOBSStatus()
 

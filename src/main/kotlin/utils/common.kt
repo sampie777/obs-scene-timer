@@ -56,7 +56,7 @@ fun exitApplication() {
 
     try {
         logger.info("Stopping OBS client...")
-        OBSClient.stop()
+        OBSClient.stop(true)
     } catch (t: Throwable) {
         logger.warning("Failed to correctly stop OBS client")
         t.printStackTrace()
