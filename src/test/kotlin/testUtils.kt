@@ -14,4 +14,6 @@ fun resetConfig() {
     Config.smallMinLimitForLimitApproaching = 20
     Config.smallTimeDifferenceForLimitApproaching = 10
     Config.timerFlashForRemainingTimeLessThan = 10
+    Config.timerCountUpFontSize = 80
+    Config.timerCountDownFontSize = 100
 }
