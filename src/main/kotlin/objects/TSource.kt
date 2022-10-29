@@ -12,6 +12,7 @@ data class TSource(
         source.name = this.name
         source.kind = this.kind
         source.file = this.file
+        source.playlist = this.playlist
         source.settingsLoaded = this.settingsLoaded
     }
 }

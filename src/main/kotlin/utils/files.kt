@@ -60,7 +60,7 @@ fun getVideoLength(filename: String): Long {
     val container = IContainer.make()
     container.open(filename, IContainer.Type.READ, null)
     val duration = TimeUnit.MICROSECONDS.toSeconds(container.duration)
-    logger.fine("Duration is: $duration")
+    logger.info("Duration is: $duration for $filename")
 
     return duration
 }

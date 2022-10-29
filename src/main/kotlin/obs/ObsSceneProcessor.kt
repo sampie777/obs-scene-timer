@@ -121,7 +121,11 @@ object ObsSceneProcessor {
                     }
         }
 
-        loadSceneItems { loadSourceSettingsForAllScenes(callback = ::refreshGuiWithNewScenes) }
+        GUI.refreshScenes()
+
+        loadSceneItems {
+            loadSourceSettingsForAllScenes(callback = ::refreshGuiWithNewScenes)
+        }
     }
 
     private fun loadSceneItems(callback: (() -> Unit)? = null) {
@@ -185,6 +189,10 @@ object ObsSceneProcessor {
 //                }
             }
             scene.sourcesAreLoaded = true
+
+            if (scene.sources.isEmpty()) {
+                GUI.onSceneTimeLimitUpdated(scene)
+            }
 
             try {
                 callback?.invoke()
@@ -274,17 +282,19 @@ object ObsSceneProcessor {
 
     private fun loadSourceSettingsForSource(source: TSource, callback: (() -> Unit)? = null) {
         // First check our scenes for matching sources
-        val existingSourceFound = OBSState.scenes.any { scene ->
-            val sameSource = scene.sources.find { it != source && it.name == source.name }
-                ?: return@any false
+        val existingSource = OBSState.scenes.flatMap {it.sources}
+            .find { it.settingsLoaded && it != source && it.name == source.name }
 
+        if (existingSource != null) {
             logger.info("Copying existing settings from matching source '${source.name}'.")
-            sameSource.copyTo(source)
+            existingSource.copyTo(source)
             source.settingsLoaded = true
-            true
-        }
 
-        if (existingSourceFound) {
+            val scene = OBSState.scenes.firstOrNull { it.sources.contains(source) }
+            if (scene != null) {
+                GUI.onSceneTimeLimitUpdated(scene)
+            }
+
             try {
                 callback?.invoke()
             } catch (t: Throwable) {
@@ -319,8 +329,6 @@ object ObsSceneProcessor {
             }
         }
 
-        source.settingsLoaded = true
-
         try {
             callback?.invoke()
         } catch (t: Throwable) {
@@ -333,6 +341,13 @@ object ObsSceneProcessor {
         }
 
         getSourceVideoLength(source)
+
+        source.settingsLoaded = true
+
+        val scene = OBSState.scenes.firstOrNull { it.sources.contains(source) }
+        if (scene != null) {
+            GUI.onSceneTimeLimitUpdated(scene)
+        }
     }
 
     private fun responsePlaylistToTPlaylist(playlist: JsonArray): TPlayList {
@@ -393,8 +408,8 @@ object ObsSceneProcessor {
 
     private fun refreshGuiWithNewScenes() {
         logger.info("Refreshing GUI with new scenes")
-        GUI.refreshScenes()
         OBSState.clientActivityStatus = null
+        GUI.refreshScenes()
         GUI.refreshOBSStatus()
     }
 }
