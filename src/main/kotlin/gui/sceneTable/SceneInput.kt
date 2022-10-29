@@ -1,12 +1,13 @@
 package gui.sceneTable
 
 
-import config.Config
+import GUI
 import getTimeAsClock
+import gui.Refreshable
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
 import objects.notifications.Notifications
+import obs.OBSState
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font
@@ -26,13 +27,15 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 
-class SceneInput(val scene: TScene) : JTextField() {
+class SceneInput(val scene: TScene) : JTextField(), Refreshable {
     private val logger = Logger.getLogger(SceneInput::class.java.name)
 
     private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
     private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
     
     init {
+        GUI.register(this)
+
         preferredSize = Dimension(100, 22)
         border = BorderFactory.createLineBorder(Theme.get.BORDER_COLOR)
         font = if (scene.name == OBSState.currentScene.name) currentSceneInputFont else inputFont
@@ -92,14 +95,19 @@ class SceneInput(val scene: TScene) : JTextField() {
         scene.timeLimit = value
 
         if (value != null && value < 0) {
-            logger.info("Resetting scene's time limit")
-            scene.timeLimit = null
-            Config.sceneProperties.tScenes.find { it.name == scene.name }?.timeLimit = scene.maxVideoLength()
+            scene.resetTimeLimit()
         }
 
         if (scene.name == OBSState.currentScene.name) {
             OBSSceneTimer.setMaxTimerValue(scene.getFinalTimeLimit().toLong())
         }
+
+        GUI.onSceneTimeLimitUpdated(scene)
+    }
+
+    override fun onSceneTimeLimitUpdated(scene: TScene) {
+        if (scene != this.scene) return
+        refreshDisplayFromScene()
     }
 
     override fun toString(): String {
@@ -128,7 +136,6 @@ class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
         val currentLimit = input.scene.timeLimit ?: input.scene.getFinalTimeLimit()
 
         input.setNewTime(currentLimit + amount)
-        input.refreshDisplayFromScene()
     }
 }
 

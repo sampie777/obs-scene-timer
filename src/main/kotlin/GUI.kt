@@ -1,4 +1,5 @@
 import gui.Refreshable
+import objects.TScene
 import java.awt.Component
 import java.util.logging.Logger
 
@@ -10,49 +11,96 @@ object GUI {
     fun refreshTimer() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.refreshTimer()
+            try {
+                component.refreshTimer()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute refreshTimer() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun switchedScenes() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.switchedScenes()
+            try {
+                component.switchedScenes()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute switchedScenes() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun refreshScenes() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.refreshScenes()
+            try {
+                component.refreshScenes()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute refreshScenes() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun refreshGroups() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.refreshGroups()
+            try {
+                component.refreshGroups()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute refreshGroups() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
+        }
+    }
+
+    fun onSceneTimeLimitUpdated(scene: TScene) {
+        val componentsCopy = components.toTypedArray()
+        for (component in componentsCopy) {
+            try {
+                component.onSceneTimeLimitUpdated(scene)
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun refreshOBSStatus() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.refreshOBSStatus()
+            try {
+                component.refreshOBSStatus()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute refreshOBSStatus() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun refreshNotifications() {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.refreshNotifications()
+            try {
+                component.refreshNotifications()
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute refreshNotifications() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 
     fun windowClosing(window: Component?) {
         val componentsCopy = components.toTypedArray()
         for (component in componentsCopy) {
-            component.windowClosing(window)
+            try {
+                component.windowClosing(window)
+            } catch (t: Throwable) {
+                logger.severe("Failed to execute window() for component ${component.javaClass}")
+                t.printStackTrace()
+            }
         }
     }
 

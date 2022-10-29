@@ -20,14 +20,14 @@
         <donationUrl>https://www.buymeacoffee.com/sajansen</donationUrl>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.3.70</kotlin.version>
+        <kotlin.version>1.7.20</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>4.12</junit.version>
-        <jetty.version>9.4.29.v20200521</jetty.version>
-        <gson.version>2.8.6</gson.version>
-        <twasi.version>1.0.9-snapshot-increased-message-size-1</twasi.version>
+        <jetty.version>9.4.49.v20220914</jetty.version>
+        <gson.version>2.9.0</gson.version>
+        <twasi.version>2.0.0</twasi.version>
         <xuggle.version>5.5-20140728</xuggle.version>
-        <launch4j.version>1.7.25</launch4j.version>
+        <launch4j.version>2.1.3</launch4j.version>
         <bridj.version>0.7.0</bridj.version>
         <mockito.version>1.10.19</mockito.version>
     </properties>
@@ -35,7 +35,7 @@
     <repositories>
         <repository>
             <id>ECS Soton repository</id>
-            <url>http://maven.ecs.soton.ac.uk/content/repositories/thirdparty/</url>
+            <url>https://maven.ecs.soton.ac.uk/content/repositories/thirdparty/</url>
         </repository>
     </repositories>
 
@@ -63,8 +63,8 @@
             <version>${gson.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.twasi</groupId>
-            <artifactId>obs-websocket-java</artifactId>
+            <groupId>io.obs-websocket.community</groupId>
+            <artifactId>client</artifactId>
             <version>${twasi.version}</version>
         </dependency>
         <dependency>
@@ -90,10 +90,21 @@
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
+        <!-- Only apply filtering to *.properties files -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
             </resource>
         </resources>
 
@@ -102,7 +113,7 @@
                 <!-- Plugin to create a project base version (without -SNAPSHOT) for use in launch4j plugin -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>set-project-base-version</id>
@@ -146,7 +157,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -156,7 +167,7 @@
                 <!-- Build an executable JAR -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifestFile>${project.build.sourceDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -166,7 +177,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

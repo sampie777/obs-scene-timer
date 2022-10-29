@@ -1,9 +1,9 @@
 import com.google.gson.GsonBuilder
 import config.Config
 import gui.mainFrame.MainFrame
-import objects.OBSClient
 import objects.SceneLogger
 import objects.notifications.Notifications
+import obs.OBSClient
 import java.awt.Color
 import java.awt.Desktop
 import java.io.File
@@ -16,7 +16,7 @@ import java.util.*
 import java.util.logging.Logger
 import kotlin.system.exitProcess
 
-private val logger: Logger = Logger.getLogger("utils")
+private val logger: Logger = Logger.getLogger("utils.common")
 
 fun getTimeAsClock(value: Long, looseFormat: Boolean = false): String {
     var positiveValue = value
@@ -56,7 +56,7 @@ fun exitApplication() {
 
     try {
         logger.info("Stopping OBS client...")
-        OBSClient.stop()
+        OBSClient.stop(true)
     } catch (t: Throwable) {
         logger.warning("Failed to correctly stop OBS client")
         t.printStackTrace()
@@ -98,30 +98,6 @@ fun decodeURI(uri: String): String {
     return URLDecoder.decode(uri, StandardCharsets.UTF_8.name())
 }
 
-fun getReadableFileSize(file: File): String {
-    return when {
-        file.length() > 1024 * 1024 -> {
-            val fileSize = file.length().toDouble() / (1024 * 1024)
-            String.format("%.2f MB", fileSize)
-        }
-        file.length() > 1024 -> {
-            val fileSize = file.length().toDouble() / 1024
-            String.format("%.2f kB", fileSize)
-        }
-        else -> {
-            String.format("%d bytes", file.length())
-        }
-    }
-}
-
-fun getFileNameWithoutExtension(file: File): String {
-    return file.name.substring(0, file.name.lastIndexOf('.'))
-}
-
-fun getFileExtension(file: File): String {
-    return file.name.substring(file.name.lastIndexOf('.') + 1)
-}
-
 fun Date.format(format: String): String? = SimpleDateFormat(format).format(this)
 
 internal fun jsonBuilder() =
@@ -144,4 +120,25 @@ fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
         Notifications.popup("Failed to open link: $url", subject)
     }
     return false
+}
+
+fun <R> (() -> R).invokeWithCatch(
+    logger: Logger? = null,
+    logMessage: ((t: Throwable) -> String)? = null,
+    notificationMessage: ((t: Throwable) -> String)? = null,
+    notificationTitle: String = "OBS"
+) {
+    try {
+        this.invoke()
+    } catch (t: Throwable) {
+        if (logger != null && logMessage != null) {
+            logger.severe(logMessage.invoke(t))
+        }
+
+        t.printStackTrace()
+
+        if (notificationMessage != null) {
+            Notifications.add(notificationMessage.invoke(t), notificationTitle)
+        }
+    }
 }

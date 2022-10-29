@@ -2,15 +2,20 @@ package objects
 
 import config.Config
 import objects.notifications.Notifications
-import themes.Theme
+import resetConfig
 import kotlin.test.*
 
 class OBSSceneTimerTest {
 
     @BeforeTest
     fun before() {
-        Config.remoteSyncClientEnabled = false
+        resetConfig()
         Notifications.clear()
+        OBSSceneTimer.stop()
+    }
+
+    @AfterTest
+    fun after() {
         OBSSceneTimer.stop()
     }
 

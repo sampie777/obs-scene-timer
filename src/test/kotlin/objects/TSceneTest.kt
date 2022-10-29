@@ -28,9 +28,9 @@ class TSceneTest {
         sources.add(TSource())
         sources.add(TSource())
 
-        sources[0].videoLength = 15
-        sources[1].videoLength = 91
-        sources[2].videoLength = 0
+        sources[0].file = TVideoFile(duration = 15)
+        sources[1].file = TVideoFile(duration = 91)
+        sources[2].file = TVideoFile(duration = 0)
 
         assertEquals(91, scene.maxVideoLength())
     }

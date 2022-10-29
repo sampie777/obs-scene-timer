@@ -1,8 +1,9 @@
-package gui
+package gui.config
 
 import config.Config
-import gui.config.ConfigEditPanel
 import objects.notifications.Notifications
+import org.junit.Before
+import resetConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -10,24 +11,29 @@ import kotlin.test.assertTrue
 
 class ConfigEditPanelTest {
 
+    @Before
+    fun before() {
+        resetConfig()
+    }
+
     @Test
     fun testSaveAllValid() {
-        Config.obsAddress = "someaddress"
+        Config.obsPassword = "somevalue"
         val panel = ConfigEditPanel()
 
-        Config.obsAddress = ""
+        Config.obsPassword = ""
         assertTrue(panel.saveAll())
-        assertEquals("someaddress", Config.obsAddress)
+        assertEquals("somevalue", Config.obsPassword)
     }
 
     @Test
     fun testSaveAllInvalid() {
-        Config.obsAddress = ""
+        Config.obsHost = ""
         val panel = ConfigEditPanel()
 
-        Config.obsAddress = "someaddress"
+        Config.obsHost = "somevalue"
         assertFalse(panel.saveAll())
-        assertEquals("someaddress", Config.obsAddress)
+        assertEquals("somevalue", Config.obsHost)
     }
 
     @Test

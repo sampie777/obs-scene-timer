@@ -1,10 +1,10 @@
 package updater
 
+import ApplicationInfo
 import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import config.Config
 import gui.updater.UpdatePopup
-import objects.ApplicationInfo
 import objects.notifications.Notifications
 import java.awt.EventQueue
 import java.net.MalformedURLException

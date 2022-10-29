@@ -4,8 +4,8 @@ import GUI
 import config.Config
 import gui.Refreshable
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
+import obs.OBSState
 import themes.Theme
 import java.awt.*
 import javax.swing.*
@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder
 
 class SceneTablePanel : JPanel(), Refreshable {
     val sceneLabels = HashMap<String, JLabel>()
-    val sceneInputs = HashMap<String, SceneInput>()
+    val sceneInputs = HashMap<String, SceneInputPanel>()
     val container = JPanel()
 
     private val labelFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
@@ -89,11 +89,8 @@ class SceneTablePanel : JPanel(), Refreshable {
 
     private fun createSceneRowComponents() {
         for (scene in OBSState.scenes) {
-            val sceneLabel = JLabel(scene.name)
-            sceneLabels[scene.name] = sceneLabel
-
-            val sceneInput = SceneInput(scene)
-            sceneInputs[scene.name] = sceneInput
+            sceneLabels[scene.name] = JLabel(scene.name)
+            sceneInputs[scene.name] = SceneInputPanel(scene)
         }
     }
 

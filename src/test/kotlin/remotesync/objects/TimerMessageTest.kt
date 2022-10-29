@@ -1,6 +1,8 @@
 package remotesync.objects
 
 import objects.TimerState
+import org.junit.Before
+import resetConfig
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import kotlin.test.Test
@@ -10,6 +12,11 @@ import kotlin.test.assertTrue
 
 
 class TimerMessageTest {
+
+    @Before
+    fun before() {
+        resetConfig()
+    }
 
     @Test
     fun testDefaultConstructor() {

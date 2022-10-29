@@ -1,6 +1,6 @@
 package updater
 
-import objects.ApplicationInfo
+import ApplicationInfo
 import objects.notifications.Notifications
 import org.junit.Test
 import org.mockito.Mockito.*

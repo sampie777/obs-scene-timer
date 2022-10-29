@@ -3,7 +3,7 @@ package gui.grouping
 
 import GUI
 import config.Config
-import objects.OBSState
+import obs.OBSState
 import java.awt.Dimension
 import java.awt.event.KeyEvent
 import java.util.logging.Logger

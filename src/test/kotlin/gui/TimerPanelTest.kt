@@ -1,10 +1,11 @@
 package gui
 
 import config.Config
-import objects.OBSClientStatus
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
+import obs.OBSConnectionStatus
+import obs.OBSState
+import resetConfig
 import themes.Theme
 import kotlin.test.*
 
@@ -12,6 +13,7 @@ class TimerPanelTest {
 
     @BeforeTest
     fun before() {
+        resetConfig()
         OBSSceneTimer.stop()
         OBSSceneTimer.resetValue()
         OBSSceneTimer.setMaxTimerValue(0)
@@ -82,13 +84,13 @@ class TimerPanelTest {
 
     @Test
     fun testTimerPanelDisplaysCorrectScene() {
-        OBSState.connectionStatus = OBSClientStatus.DISCONNECTED
+        OBSState.connectionStatus = OBSConnectionStatus.DISCONNECTED
         val panel = TimerPanel()
 
         assertTrue(panel.sceneLabel.isVisible)
         assertEquals("Waiting for connection...", panel.sceneLabel.text)
 
-        OBSState.connectionStatus = OBSClientStatus.CONNECTED
+        OBSState.connectionStatus = OBSConnectionStatus.CONNECTED
         OBSState.currentScene = TScene("scene1")
         panel.switchedScenes()
 

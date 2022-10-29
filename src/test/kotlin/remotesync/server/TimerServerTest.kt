@@ -1,14 +1,21 @@
 package remotesync.server
 
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
+import obs.OBSState
+import org.junit.Before
+import resetConfig
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 
 class TimerServerTest {
+
+    @Before
+    fun before() {
+        resetConfig()
+    }
 
     @Test
     fun testGetCurrentTimerMessage() {

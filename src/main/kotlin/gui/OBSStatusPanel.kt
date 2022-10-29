@@ -3,8 +3,8 @@ package gui
 import GUI
 import config.Config
 import config.PropertyLoader
-import objects.OBSClientStatus
-import objects.OBSState
+import obs.OBSConnectionStatus
+import obs.OBSState
 import remotesync.RemoteSyncRefreshableRegister
 import remotesync.objects.ConnectionState
 import remotesync.objects.RemoteSyncRefreshable
@@ -47,8 +47,8 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
     override fun refreshOBSStatus() {
         messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
 
-        if (OBSState.connectionStatus == OBSClientStatus.CONNECTED) {
-            messageLabel.toolTipText = "Connected to ${Config.obsAddress}. ${settingsFileString()}"
+        if (OBSState.connectionStatus == OBSConnectionStatus.CONNECTED) {
+            messageLabel.toolTipText = "<html>Connected to ${Config.obsAddress}.<br/>${settingsFileString()}</html>"
         } else {
             messageLabel.toolTipText = settingsFileString()
         }
@@ -56,11 +56,10 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
     }
 
     fun getOBSStatusRepresentation(): String {
-        val obsDisplayStatus = if (OBSState.clientActivityStatus != null)
-            OBSState.clientActivityStatus else OBSState.connectionStatus
+        var obsDisplayStatusString = if (OBSState.clientActivityStatus != null)
+            OBSState.clientActivityStatus?.status ?: "" else OBSState.connectionStatus.status
 
-        var obsDisplayStatusString = obsDisplayStatus!!.status
-        if (obsDisplayStatus == OBSClientStatus.CONNECTING) {
+        if (OBSState.clientActivityStatus == null && OBSState.connectionStatus == OBSConnectionStatus.CONNECTING) {
             obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
         }
 

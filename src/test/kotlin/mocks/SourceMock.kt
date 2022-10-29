@@ -1,9 +1,9 @@
 package mocks
 
-
-import net.twasi.obsremotejava.objects.Source
+import io.obswebsocket.community.client.model.Source
 
 class SourceMock(private val name: String) : Source() {
-    override fun getName(): String = name
-    override fun getType(): String = ""
+    override fun getSourceName(): String = name
+    override fun getSourceType(): String = "OBS_SOURCE_TYPE_INPUT"
+    override fun getInputKind(): String = ""
 }

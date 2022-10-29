@@ -1,10 +1,10 @@
 package gui.menu
 
+import ApplicationInfo
 import LogService
 import config.Config
 import gui.utils.ClickableLinkComponent
 import gui.utils.DefaultDialogKeyDispatcher
-import objects.ApplicationInfo
 import themes.Theme
 import java.awt.Dimension
 import java.awt.Font

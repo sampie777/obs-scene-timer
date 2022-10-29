@@ -1,4 +1,4 @@
-package gui.forminputs
+package gui.config.forminputs
 
 import config.Config
 import gui.config.formcomponents.BooleanFormInput

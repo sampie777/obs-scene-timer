@@ -1,12 +1,13 @@
-package objects
+package obs
 
-enum class OBSClientStatus(val status: String) {
+enum class OBSConnectionStatus(val status: String) {
     UNKNOWN("Unknown"),
     CONNECTED("Connected"),
     DISCONNECTED("Disconnected"),
-    LOADING_SCENE_SOURCES("Loading scene sources..."),
     CONNECTING("Connecting..."),
     RECONNECTING("Reconnecting..."),
     CONNECTION_FAILED("Connection failed!"),
+
     LOADING_SCENES("Loading scenes..."),
+    LOADING_SCENE_SOURCES("Loading scene sources..."),
 }

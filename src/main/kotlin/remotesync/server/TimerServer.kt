@@ -6,8 +6,8 @@ import config.Config
 import getTimeAsClock
 import gui.Refreshable
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.notifications.Notifications
+import obs.OBSState
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.ServletContextHandler

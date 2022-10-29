@@ -3,9 +3,9 @@ package remotesync.client
 import GUI
 import com.google.gson.Gson
 import objects.OBSSceneTimer
-import objects.OBSState
 import objects.TScene
 import objects.notifications.Notifications
+import obs.OBSState
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
 import remotesync.objects.TimerMessage
