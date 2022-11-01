@@ -125,9 +125,10 @@ object ObsSceneProcessor {
 
         GUI.refreshScenes()
 
-        loadSceneItems {
-            loadSourceSettingsForAllScenes(callback = ::refreshGuiWithNewScenes)
-        }
+        loadSceneItems(callback = {
+            OBSState.clientActivityStatus = null
+            GUI.refreshOBSStatus()
+        })
     }
 
     private fun loadSceneItems(callback: (() -> Unit)? = null) {
@@ -137,19 +138,7 @@ object ObsSceneProcessor {
             return
         }
 
-        val sceneToLoad = try {
-            OBSState.scenes.firstOrNull { !it.sourcesAreLoaded }
-        } catch (t: Throwable) {
-            logger.severe("Failed to get next scene for loading scene items")
-            t.printStackTrace()
-            Notifications.add(
-                "Something went wrong while loading scene items: ${t.localizedMessage}",
-                "OBS"
-            )
-            null
-        }
-
-        if (sceneToLoad == null) {
+        if (OBSState.scenes.isEmpty()) {
             callback?.invokeWithCatch(
                 logger,
                 { "Failed to invoke callback during loadSceneItems" },
@@ -158,17 +147,19 @@ object ObsSceneProcessor {
             return
         }
 
-        try {
-            loadItemsForScene(sceneToLoad) { loadSceneItems(callback) }
-        } catch (t: Throwable) {
-            logger.severe("Failed to load scene items for scene '${sceneToLoad.name}'")
-            t.printStackTrace()
-            Notifications.add(
-                "Could not load scene items for scene '${sceneToLoad.name}': ${t.localizedMessage}",
-                "OBS"
-            )
+        OBSState.scenes.forEach { scene ->
+            try {
+                loadItemsForScene(scene) { loadSourceSettingsForScene(scene = scene, callback = callback) }
+            } catch (t: Throwable) {
+                logger.severe("Failed to load scene items for scene '${scene.name}'")
+                t.printStackTrace()
+                Notifications.add(
+                    "Could not load scene items for scene '${scene.name}': ${t.localizedMessage}",
+                    "OBS"
+                )
 
-            callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadItemsForScene failed" })
+                callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadItemsForScene failed" })
+            }
         }
     }
 
@@ -205,10 +196,10 @@ object ObsSceneProcessor {
         scene.sources.add(TSource(name = item.sourceName, kind = item.inputKind))
     }
 
-    fun loadSourceSettingsForAllScenes(forceAutoCalculation: Boolean = false, callback: (() -> Unit)? = null): Boolean {
+    fun loadSourceSettingsForScene(scene: TScene, forceAutoCalculation: Boolean = false, callback: (() -> Unit)? = null): Boolean {
         if (!forceAutoCalculation && !Config.autoCalculateSceneLimitsBySources) {
             logger.info("Auto calculation of scene time limits by source files is disabled")
-            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSourceSettingsForAllScenes" })
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSourceSettingsForScene" })
             return false
         }
 
@@ -221,39 +212,29 @@ object ObsSceneProcessor {
         OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENE_SOURCES
         GUI.refreshOBSStatus()
 
-        val sourceToLoad = try {
-            OBSState.scenes
-                .flatMap(TScene::sources)
-                .firstOrNull { !it.settingsLoaded }
-        } catch (t: Throwable) {
-            logger.severe("Failed to get next source for loading source settings")
-            t.printStackTrace()
-            Notifications.add(
-                "Could not load scene items source settings: ${t.localizedMessage}",
-                "OBS"
-            )
-            null
-        }
+        val sources = scene.sources.filter { !it.settingsLoaded }
 
-        if (sourceToLoad == null) {
+        if (sources.isEmpty()) {
             callback?.invokeWithCatch(
                 logger,
-                { "Failed to invoke callback during loadSourceSettingsForAllScenes" },
+                { "Failed to invoke callback during loadSourceSettingsForScene" },
                 { "Something went wrong after loading scene item sources: ${it.localizedMessage}" })
             return true
         }
 
-        try {
-            loadSourceSettingsForSource(sourceToLoad) { loadSourceSettingsForAllScenes(callback = callback) }
-        } catch (t: Throwable) {
-            logger.severe("Failed to load scene item sources settings for item '${sourceToLoad.name}'")
-            t.printStackTrace()
-            Notifications.add(
-                "Could not process scene item sources settings for item '${sourceToLoad.name}': ${t.localizedMessage}",
-                "OBS"
-            )
+        sources.forEach { source ->
+            try {
+                loadSourceSettingsForSource(source, callback = callback)
+            } catch (t: Throwable) {
+                logger.severe("Failed to load scene item sources settings for item '${source.name}'")
+                t.printStackTrace()
+                Notifications.add(
+                    "Could not process scene item sources settings for item '${source.name}': ${t.localizedMessage}",
+                    "OBS"
+                )
 
-            callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadSourceSettingsForSource failed" })
+                callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadSourceSettingsForSource failed" })
+            }
         }
         return true
     }
@@ -268,10 +249,8 @@ object ObsSceneProcessor {
             existingSource.copyTo(source)
             source.settingsLoaded = true
 
-            val scene = OBSState.scenes.firstOrNull { it.sources.contains(source) }
-            if (scene != null) {
-                GUI.onSceneTimeLimitUpdated(scene)
-            }
+            OBSState.scenes.filter { it.sources.contains(source) }
+                .forEach(GUI::onSceneTimeLimitUpdated)
 
             callback?.invokeWithCatch(
                 logger,
@@ -314,10 +293,8 @@ object ObsSceneProcessor {
 
         source.settingsLoaded = true
 
-        val scene = OBSState.scenes.firstOrNull { it.sources.contains(source) }
-        if (scene != null) {
-            GUI.onSceneTimeLimitUpdated(scene)
-        }
+        OBSState.scenes.filter { it.sources.contains(source) }
+            .forEach(GUI::onSceneTimeLimitUpdated)
     }
 
     private fun responsePlaylistToTPlaylist(playlist: JsonArray): TPlayList {
@@ -329,7 +306,7 @@ object ObsSceneProcessor {
         return TPlayList(videos)
     }
 
-    fun getSourceVideoLength(source: TSource) {
+    private fun getSourceVideoLength(source: TSource) {
         when (source.kind) {
             "ffmpeg_source" -> getSourceLengthForMediaSource(source)
             "vlc_source" -> getSourceLengthForVLCVideoSource(source)

@@ -106,7 +106,7 @@ class ObsSceneProcessorTest {
         Config.autoCalculateSceneLimitsBySources = false
         Config.obsAddress = "ws://123.123.123.123:0"
 
-        assertFalse(ObsSceneProcessor.loadSourceSettingsForAllScenes())
+        assertFalse(ObsSceneProcessor.loadSourceSettingsForScene(TScene()))
     }
 
     @Test

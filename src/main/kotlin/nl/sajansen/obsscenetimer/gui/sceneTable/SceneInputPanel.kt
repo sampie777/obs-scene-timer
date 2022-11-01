@@ -41,7 +41,7 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
 
         if (!isAddressLocalhost(Config.obsAddress)) {
             // pass
-        } else if (allSourceTimesAreLoaded()) {
+        } else if (scene.allSourceTimesAreLoaded()) {
             if (scene.timeLimit != null) {
                 reloadPanel.add(SceneVideoReloadButton(scene), BorderLayout.CENTER)
             }
@@ -57,8 +57,6 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
         reloadPanel.revalidate()
         reloadPanel.repaint()
     }
-
-    private fun allSourceTimesAreLoaded() = scene.sourcesAreLoaded && scene.sources.all { it.settingsLoaded }
 
     override fun onSceneTimeLimitUpdated(scene: TScene) {
         if (scene != this.scene) return

@@ -65,6 +65,8 @@ class TScene {
             ?: maxVideoLength()
     }
 
+    fun allSourceTimesAreLoaded() = sourcesAreLoaded && sources.all { it.settingsLoaded }
+
     fun addToGroup(groupNumber: Int) {
         logger.fine("Adding scene '$name' to group: $groupNumber")
         groups.add(groupNumber)
