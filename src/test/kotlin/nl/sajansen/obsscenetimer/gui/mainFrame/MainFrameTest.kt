@@ -64,12 +64,12 @@ class MainFrameTest {
         val frame = MainFrame.create()
         frame.extendedState = JFrame.MAXIMIZED_BOTH
         frame.setLocation(8, 9)
-        frame.setSize(10, 11)
+        frame.setSize(100, 110)
 
         frame.saveWindowPosition()
 
         assertEquals(Point(8, 9), Config.mainWindowLocation)
-        assertEquals(Dimension(0, 0), Config.mainWindowSize)
+        assertEquals(Dimension(60, 60), Config.mainWindowSize)   // Minimum allowed size
         assertTrue(Config.windowRestoreLastPosition)
         assertTrue(Config.mainWindowsIsMaximized)
     }
@@ -84,7 +84,7 @@ class MainFrameTest {
         val frame = MainFrame.create()
 
         assertEquals(Point(0, 0), frame.location)
-        assertEquals(Dimension(0, 0), frame.size)
+        assertEquals(Dimension(60, 60), frame.size) // Minimum allowed size
         assertEquals(JFrame.MAXIMIZED_BOTH, frame.extendedState)
     }
 
