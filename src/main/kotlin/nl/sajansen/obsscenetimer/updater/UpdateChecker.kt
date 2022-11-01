@@ -8,9 +8,9 @@ import nl.sajansen.obsscenetimer.gui.updater.UpdatePopup
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import java.awt.EventQueue
 import java.net.MalformedURLException
+import java.net.UnknownHostException
 import java.util.logging.Logger
 import java.util.prefs.Preferences
-
 
 class UpdateChecker(private val urlProvider: wURL = wURL()) {
     private val logger = Logger.getLogger(UpdateChecker::class.java.name)
@@ -56,23 +56,22 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
     }
 
     fun isNewUpdateAvailable(): Boolean {
-        val versions = getRemoteTags()
-        logger.fine("Retrieved ${versions.size} versions from remote: $versions")
+        latestVersion = getLatestVersion()?.trimStart('v')
 
-        if (versions.isEmpty()) {
+        if (latestVersion == null) {
+            logger.info("No latest version found: $latestVersion")
             return false
         }
 
-        latestVersion = versions.first().trimStart('v')
-        logger.fine("Latest version from remote: $latestVersion")
+        logger.info("Latest version from remote: $latestVersion")
 
         if (latestVersion == ApplicationInfo.version) {
-            logger.fine("Application up to date")
+            logger.info("Application up to date")
             return false
         }
 
         if (latestVersion == getLatestKnownVersion()) {
-            logger.fine("Latest version hasn't changed")
+            logger.info("Latest version hasn't changed")
             return false
         }
         updateLatestKnownVersion(latestVersion!!)
@@ -80,38 +79,37 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
         return true
     }
 
-    fun getRemoteTags(): List<String> {
-        val jsonResponse = getRemoteTagResponse() ?: return emptyList()
+    fun getLatestVersion(): String? {
+        val jsonResponse = getLatestVersionResponse() ?: return null
 
         return try {
-            val versionsResponse = Gson().fromJson(jsonResponse, VersionsResponseJson::class.java)
-            versionsResponse.values.map(VersionsResponseVersionsJson::name)
+            Gson().fromJson(jsonResponse, LatestVersionResponseJson::class.java).tag_name
         } catch (e: JsonParseException) {
-            logger.severe("Failed to parse versions JSON response: '${jsonResponse}'")
+            logger.severe("Failed to parse version JSON response: '${jsonResponse}'")
             e.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid JSON response. " +
                         "Please inform the developer of this application. More detailed: ${e.localizedMessage}.",
                 "Updater"
             )
-            emptyList()
+            null
         } catch (t: Throwable) {
-            logger.severe("Failed to retrieve latest application versions: invalid response")
+            logger.severe("Failed to retrieve latest application version: invalid response")
             t.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid response. " +
                         "Please inform the developer of this application. More detailed: ${t.localizedMessage}.",
                 "Updater"
             )
-            emptyList()
+            null
         }
     }
 
-    fun getRemoteTagResponse(): String? {
+    fun getLatestVersionResponse(): String? {
         return try {
             urlProvider.readText(ApplicationInfo.latestVersionsUrl)
         } catch (e: MalformedURLException) {
-            logger.severe("Failed to retrieve latest application versions: invalid URL: '${ApplicationInfo.latestVersionsUrl}'")
+            logger.severe("Failed to retrieve latest application version: invalid URL: '${ApplicationInfo.latestVersionsUrl}'")
             e.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid URL. " +
@@ -119,8 +117,11 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
                 "Updater"
             )
             null
+        } catch (e: UnknownHostException) {
+            logger.severe("Failed to retrieve latest application version. Internet is down?")
+            null
         } catch (t: Throwable) {
-            logger.severe("Failed to retrieve latest application versions")
+            logger.severe("Failed to retrieve latest application version")
             t.printStackTrace()
             null
         }

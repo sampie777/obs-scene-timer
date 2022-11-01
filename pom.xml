@@ -10,13 +10,13 @@
     <packaging>jar</packaging>
 
     <name>OBS Scene Timer</name>
-    <url>https://bitbucket.org/sajansen/obs-scene-timer/</url>
+    <url>https://github.com/sampie777/obs-scene-timer</url>
 
     <properties>
         <author>Samuel-Anton Jansen</author>
-        <latestVersionsUrl>https://api.bitbucket.org/2.0/repositories/sajansen/obs-scene-timer/refs/tags?sort=-name</latestVersionsUrl>
+        <latestVersionsUrl>https://api.github.com/repos/sampie777/obs-scene-timer/releases/latest</latestVersionsUrl>
         <updatesInfoUrl>https://obsproject.com/forum/resources/obs-scene-timer.920/updates</updatesInfoUrl>
-        <downloadsUrl>https://bitbucket.org/sajansen/obs-scene-timer/downloads/</downloadsUrl>
+        <downloadsUrl>https://github.com/sampie777/obs-scene-timer/releases</downloadsUrl>
         <donationUrl>https://www.buymeacoffee.com/sajansen</donationUrl>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

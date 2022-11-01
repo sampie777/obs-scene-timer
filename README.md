@@ -1,3 +1,5 @@
+### This repository has been moved to GitHub: [https://github.com/sampie777/obs-scene-timer](https://github.com/sampie777/obs-scene-timer)
+
 # OBS Scene Timer
 
 _Friendly basic application to keep track of time during your live streams_
@@ -56,7 +58,7 @@ This plugin only calculates source lengths for the following OBS sources:
 
 #### Web client
 
-There's a simple web client available which act as a child node for OBS Scene Timer. This file is downloadable at [Downloads](https://bitbucket.org/sajansen/obs-scene-timer/downloads/).
+There's a simple web client available which act as a child node for OBS Scene Timer. This file is downloadable at [Downloads](https://github.com/sampie777/obs-scene-timer/releases).
 
 This client is one single HTML file, which can be opened by most modern web browsers. As a matter of fact, it can also be opened by **OBS Browser source** (for display in multiview) or opened as a **custom OBS panel** (Views / Docks / Custom Browser Docks...). 
 

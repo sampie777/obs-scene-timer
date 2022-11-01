@@ -47,7 +47,7 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         )
         versionLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
-        val sourceCodeLabel = ClickableLinkComponent("Source code (BitBucket)", ApplicationInfo.url)
+        val sourceCodeLabel = ClickableLinkComponent("Source code (GitHub)", ApplicationInfo.url)
         sourceCodeLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
         val donationLabel = ClickableLinkComponent("Donate to ${ApplicationInfo.name}", ApplicationInfo.donationUrl)

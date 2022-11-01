@@ -1,0 +1,136 @@
+package nl.sajansen.obsscenetimer.gui.mainFrame
+
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.resetConfig
+import java.awt.Dimension
+import java.awt.Point
+import javax.swing.JFrame
+import kotlin.test.*
+
+class MainFrameTest {
+
+    @BeforeTest
+    fun before() {
+        resetConfig()
+    }
+
+    @Test
+    fun testRestoreWindowSize() {
+        Config.mainWindowLocation = Point(12, 13)
+        Config.mainWindowSize = Dimension(101, 102)
+        Config.windowRestoreLastPosition = true
+
+        val frame = MainFrame.create()
+
+        assertEquals(Point(12, 13), frame.location)
+        assertEquals(Dimension(101, 102), frame.size)
+    }
+
+    @Test
+    fun testDoNotRestoreWindowSize() {
+        Config.mainWindowLocation = Point(1112, 1113)
+        Config.mainWindowSize = Dimension(11101, 11102)
+        Config.windowRestoreLastPosition = false
+
+        val frame = MainFrame.create()
+
+        assertNotEquals(1112, frame.location.x)
+        assertNotEquals(1113, frame.location.y)
+        assertEquals(Dimension(900, 600), frame.size)
+    }
+
+    @Test
+    fun testSaveWindowPosition() {
+        Config.mainWindowLocation = Point(0, 0)
+        Config.mainWindowSize = Dimension(0, 0)
+        Config.windowRestoreLastPosition = false
+        val frame = MainFrame.create()
+        frame.setLocation(51, 52)
+        frame.setSize(501, 502)
+
+        frame.saveWindowPosition()
+
+        assertEquals(Point(51, 52), Config.mainWindowLocation)
+        assertEquals(Dimension(501, 502), Config.mainWindowSize)
+        assertFalse(Config.windowRestoreLastPosition)
+    }
+
+    @Test
+    fun testMaximizedWindowDoesntSaveSize() {
+        Config.mainWindowLocation = Point(0, 0)
+        Config.mainWindowSize = Dimension(0, 0)
+        Config.windowRestoreLastPosition = true
+        Config.mainWindowsIsMaximized = false
+        val frame = MainFrame.create()
+        frame.extendedState = JFrame.MAXIMIZED_BOTH
+        frame.setLocation(8, 9)
+        frame.setSize(10, 11)
+
+        frame.saveWindowPosition()
+
+        assertEquals(Point(8, 9), Config.mainWindowLocation)
+        assertEquals(Dimension(0, 0), Config.mainWindowSize)
+        assertTrue(Config.windowRestoreLastPosition)
+        assertTrue(Config.mainWindowsIsMaximized)
+    }
+
+    @Test
+    fun testConfigIsMaximizedLoadsAsMaximizedWindow() {
+        Config.mainWindowLocation = Point(0, 0)
+        Config.mainWindowSize = Dimension(0, 0)
+        Config.windowRestoreLastPosition = true
+        Config.mainWindowsIsMaximized = true
+
+        val frame = MainFrame.create()
+
+        assertEquals(Point(0, 0), frame.location)
+        assertEquals(Dimension(0, 0), frame.size)
+        assertEquals(JFrame.MAXIMIZED_BOTH, frame.extendedState)
+    }
+
+    @Test
+    fun testConfigIsMaximizedLoadsAsMaximizedWindowButKeepsNotMaximizedSize() {
+        Config.mainWindowSize = Dimension(100, 101)
+        Config.windowRestoreLastPosition = true
+        Config.mainWindowsIsMaximized = true
+
+        val frame = MainFrame.create()
+
+        assertEquals(Dimension(100, 101), frame.size)
+        assertEquals(JFrame.MAXIMIZED_BOTH, frame.extendedState)
+    }
+
+    @Test
+    fun testGuiStartsWithAlwaysOnTopSettingIfFalse() {
+        Config.mainWindowAlwaysOnTop = false
+
+        val frame = MainFrame.create()
+
+        assertFalse(frame.isAlwaysOnTop)
+    }
+
+    @Test
+    fun testGuiStartsWithAlwaysOnTopSettingIfTrue() {
+        Config.mainWindowAlwaysOnTop = true
+
+        val frame = MainFrame.create()
+
+        assertTrue(frame.isAlwaysOnTop)
+    }
+
+    @Test
+    fun testAlwaysOnTopTakesPlaceAfterGuiRebuild() {
+        val frame = MainFrame.create()
+
+        Config.mainWindowAlwaysOnTop = true
+        frame.rebuildGui()
+
+        assertTrue(frame.isAlwaysOnTop)
+
+        Config.mainWindowAlwaysOnTop = false
+        frame.rebuildGui()
+
+        assertFalse(frame.isAlwaysOnTop)
+    }
+
+}
