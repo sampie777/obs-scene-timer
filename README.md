@@ -15,17 +15,15 @@ Use cases:
 * Want to limit scene durations to a specific time? This timer will help you keep track of time!
 
 
-## Build
-
-You can download all versions from [BitBucket](https://bitbucket.org/sajansen/obs-scene-timer/downloads/), or build this application yourself using Maven. [Launch4j](http://launch4j.sourceforge.net/) is used to generate .exe files from the compiled JARs.
-
 ## OBS Scene Timer application setup
 
-1. Download and **install [obs-websocket](https://github.com/Palakis/obs-websocket)** (>= v4.0.0) for your OBS application.
 1. Make sure you have at least Java 8 installed.
 1. Make sure your OBS websocket is discoverable by the computer you will run this application on. If it's the same computer, no worries. 
-1. **Launch this application** (by running the executable JAR file with Java or running the EXE file) and enjoy.
+1. **Launch this application** (by running the executable JAR file with Java or running the EXE file).
 1. **Edit the settings** if needed. This can be done using the menu Application menu -> Settings or editing the _obs-scene-timer.properties_ file. This file will be created after first launch of the application. Don't run the application when editing this file. Application restart may be needed after changing the application settings.
+
+> OBS 28+ uses a new websocket protocol incompatible with older versions of OBS Scene Timer (< 2.0.0).
+> If you're using an older version of OBS (< v28), you have to manually install [obs-websocket](https://github.com/obsproject/obs-websocket/releases) (v4.x.x) next to OBS. You also should use an OBS Scene Timer version **below** 2.x.x (e.g. v1.7.1). 
 
 ## How it works
 
@@ -36,13 +34,13 @@ You can download all versions from [BitBucket](https://bitbucket.org/sajansen/ob
 1. When the **countdown approaches the time limit**, the screen will turn yellow. 
 1. When the **countdown has reached 0**, the screen will turn red, and the countdown will continue to count the elapsed time since the time limit has passed (negative number).
 
-Note that time limits are set in seconds. Time limits can be set using the `hh:mm:ss` or `mm:ss` notation. The total amount of seconds inserted, will be automatically converted to the `(h):mm:ss` representation. For example, inserting 62 will be converted to 1:02. Arrow keys can also be used to increase/decrease time limits.
+Note that time limits are set in seconds. Time limits can be set using the `hh:mm:ss` or `mm:ss` notation. If just an amount of seconds inserted, it will be automatically converted to the `(h):mm:ss` format. For example, inserting 62 will be converted to 1:02. Arrow keys can also be used to increase/decrease time limits.
 
 More info: https://obsproject.com/forum/resources/obs-scene-timer.920/
 
 #### Reset time limit input
 
-If you've adjusted the time limit for a scene for which the time limit was already automatically calculated, your changes will override the automatic calculations. To reset the time limit for the scene (so time limits will be automatically calculated), enter the value `-1` as time limit. The input will then automatically calculate its default value. 
+If you've adjusted the time limit for a scene for which the time limit was already automatically calculated, your changes will override the automatic calculations. To reset the time limit for the scene (so time limits will be automatically calculated), click the reset button next to the input or enter the value `-1` as time limit. The input will then automatically calculate its default value. 
 
 #### Reloading scenes
 If you've added a new media source, please use Application -> Reload scenes to reload the new changes.
