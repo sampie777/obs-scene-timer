@@ -23,6 +23,7 @@ import java.awt.EventQueue
 import java.awt.Image
 import java.util.logging.Logger
 import javax.swing.JFrame
+import kotlin.math.max
 
 
 class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
@@ -90,7 +91,10 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
 
         if (Config.windowRestoreLastPosition) {
             location = Config.mainWindowLocation
-            size = Config.mainWindowSize
+            val newSize = Config.mainWindowSize
+            newSize.width = max(newSize.width, 60)
+            newSize.height = max(newSize.height, 60)
+            size = newSize
 
             if (Config.mainWindowsIsMaximized) {
                 extendedState = extendedState or MAXIMIZED_BOTH
