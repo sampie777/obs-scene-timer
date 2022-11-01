@@ -1,7 +1,7 @@
 package gui.config.forminputs
 
-import config.Config
-import gui.config.formcomponents.StringFormInput
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.config.formcomponents.StringFormInput
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

@@ -1,8 +1,11 @@
 package gui.sceneTable
 
-import config.Config
-import objects.*
-import obs.OBSState
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneInput
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneInputFocusAdapter
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneTablePanel
+import nl.sajansen.obsscenetimer.objects.*
+import nl.sajansen.obsscenetimer.obs.OBSState
 import resetConfig
 import java.awt.event.FocusEvent
 import javax.swing.JLabel

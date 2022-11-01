@@ -1,7 +1,7 @@
 package mocks
 
-import gui.websocketScanner.WebsocketScannerFrame
-import objects.websocketScanner.ScanResult
+import nl.sajansen.obsscenetimer.gui.websocketScanner.WebsocketScannerFrame
+import nl.sajansen.obsscenetimer.objects.websocketScanner.ScanResult
 
 class WebsocketScannerFrameMock : WebsocketScannerFrame(null, visible = false) {
     var isProcessScanStatusCalled = false

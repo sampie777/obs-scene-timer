@@ -1,9 +1,10 @@
 package gui.menu.submenu
 
-import config.Config
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.menu.submenu.RemoteSyncMenu
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.remotesync.server.ServerStatus
 import org.eclipse.jetty.websocket.api.*
-import remotesync.server.ServerStatus
 import resetConfig
 import java.net.InetSocketAddress
 import kotlin.test.*

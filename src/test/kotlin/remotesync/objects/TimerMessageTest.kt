@@ -1,6 +1,7 @@
 package remotesync.objects
 
-import objects.TimerState
+import nl.sajansen.obsscenetimer.objects.TimerState
+import nl.sajansen.obsscenetimer.remotesync.objects.TimerMessage
 import org.junit.Before
 import resetConfig
 import java.time.Instant

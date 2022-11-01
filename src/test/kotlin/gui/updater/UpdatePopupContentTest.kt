@@ -1,6 +1,7 @@
 package gui.updater
 
-import gui.utils.ClickableLinkComponent
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopupContent
+import nl.sajansen.obsscenetimer.gui.utils.ClickableLinkComponent
 import javax.swing.JLabel
 import kotlin.test.Test
 import kotlin.test.assertEquals

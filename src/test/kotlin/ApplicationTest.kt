@@ -1,4 +1,5 @@
-import config.Config
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.setObsParametersFromObsAddress
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

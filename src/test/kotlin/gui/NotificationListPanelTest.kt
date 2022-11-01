@@ -1,9 +1,9 @@
 package gui
 
-import GUI
 import mocks.GuiComponentMock
-import gui.notifications.NotificationListPanel
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.GUI
+import nl.sajansen.obsscenetimer.gui.notifications.NotificationListPanel
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

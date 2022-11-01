@@ -1,7 +1,10 @@
 package themes
 
-import config.Config
 import mocks.ThemeMock
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.themes.DarkTheme
+import nl.sajansen.obsscenetimer.themes.LightTheme
+import nl.sajansen.obsscenetimer.themes.Theme
 import org.junit.After
 import java.awt.Color
 import javax.swing.UIManager

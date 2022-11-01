@@ -1,8 +1,9 @@
 package remotesync.client
 
-import objects.OBSSceneTimer
-import objects.TScene
-import obs.OBSState
+import nl.sajansen.obsscenetimer.objects.OBSSceneTimer
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.remotesync.client.TimerClientSocket
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

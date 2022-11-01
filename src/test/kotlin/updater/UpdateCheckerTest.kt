@@ -1,7 +1,9 @@
 package updater
 
-import ApplicationInfo
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.ApplicationInfo
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.updater.UpdateChecker
+import nl.sajansen.obsscenetimer.updater.wURL
 import org.junit.Test
 import org.mockito.Mockito.*
 import java.net.MalformedURLException

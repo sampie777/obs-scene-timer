@@ -1,5 +1,6 @@
-import gui.Refreshable
 import mocks.GuiComponentMock
+import nl.sajansen.obsscenetimer.GUI
+import nl.sajansen.obsscenetimer.gui.Refreshable
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

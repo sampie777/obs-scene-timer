@@ -1,6 +1,6 @@
 package mocks
 
-import themes.BaseTheme
+import nl.sajansen.obsscenetimer.themes.BaseTheme
 import java.awt.Color
 
 class ThemeMock : BaseTheme() {

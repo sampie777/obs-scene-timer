@@ -1,5 +1,8 @@
 package gui.updater
 
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopup
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopupActionPanel
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopupContent
 import javax.swing.JPanel
 import kotlin.test.Test
 import kotlin.test.assertEquals

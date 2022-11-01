@@ -1,7 +1,8 @@
 package gui.menu
 
-import ApplicationInfo
-import gui.utils.ClickableLinkComponent
+import nl.sajansen.obsscenetimer.ApplicationInfo
+import nl.sajansen.obsscenetimer.gui.menu.InfoFrame
+import nl.sajansen.obsscenetimer.gui.utils.ClickableLinkComponent
 import resetConfig
 import javax.swing.JLabel
 import javax.swing.JPanel

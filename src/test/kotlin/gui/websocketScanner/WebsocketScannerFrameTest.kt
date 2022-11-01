@@ -1,7 +1,8 @@
 package gui.websocketScanner
 
-import config.Config
-import objects.websocketScanner.ScanResult
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.websocketScanner.WebsocketScannerFrame
+import nl.sajansen.obsscenetimer.objects.websocketScanner.ScanResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

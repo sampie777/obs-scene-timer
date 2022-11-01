@@ -1,8 +1,9 @@
 package remotesync.server
 
-import objects.OBSSceneTimer
-import objects.TScene
-import obs.OBSState
+import nl.sajansen.obsscenetimer.objects.OBSSceneTimer
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.remotesync.server.TimerServer
 import org.junit.Before
 import resetConfig
 import kotlin.test.Test

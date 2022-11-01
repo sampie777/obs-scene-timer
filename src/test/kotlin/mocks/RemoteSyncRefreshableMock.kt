@@ -1,8 +1,8 @@
 package mocks
 
 
-import remotesync.objects.ConnectionState
-import remotesync.objects.RemoteSyncRefreshable
+import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
+import nl.sajansen.obsscenetimer.remotesync.objects.RemoteSyncRefreshable
 import java.util.logging.Logger
 
 class RemoteSyncRefreshableMock : RemoteSyncRefreshable {

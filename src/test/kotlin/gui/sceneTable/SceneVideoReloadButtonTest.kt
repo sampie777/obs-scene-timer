@@ -1,15 +1,18 @@
 package gui.sceneTable
 
-import config.Config
-import objects.TScene
-import objects.TSource
-import objects.TVideoFile
-import obs.OBSClientStatus
-import obs.OBSState
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneInputPanel
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneVideoLoadingIcon
+import nl.sajansen.obsscenetimer.gui.sceneTable.SceneVideoReloadButton
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.objects.TSource
+import nl.sajansen.obsscenetimer.objects.TVideoFile
+import nl.sajansen.obsscenetimer.obs.OBSClientStatus
+import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.utils.FAIcon
 import org.junit.Before
 import org.junit.Test
 import resetConfig
-import utils.FAIcon
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

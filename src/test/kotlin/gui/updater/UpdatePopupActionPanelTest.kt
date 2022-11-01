@@ -1,6 +1,8 @@
 package gui.updater
 
-import config.Config
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopup
+import nl.sajansen.obsscenetimer.gui.updater.UpdatePopupActionPanel
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import kotlin.test.Test

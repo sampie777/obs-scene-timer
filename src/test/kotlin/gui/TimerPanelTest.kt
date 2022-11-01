@@ -1,12 +1,13 @@
 package gui
 
-import config.Config
-import objects.OBSSceneTimer
-import objects.TScene
-import obs.OBSConnectionStatus
-import obs.OBSState
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.TimerPanel
+import nl.sajansen.obsscenetimer.objects.OBSSceneTimer
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.obs.OBSConnectionStatus
+import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.themes.Theme
 import resetConfig
-import themes.Theme
 import kotlin.test.*
 
 class TimerPanelTest {

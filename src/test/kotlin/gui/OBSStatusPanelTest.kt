@@ -1,9 +1,10 @@
 package gui
 
-import config.Config
-import obs.OBSClientStatus
-import obs.OBSConnectionStatus
-import obs.OBSState
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.OBSStatusPanel
+import nl.sajansen.obsscenetimer.obs.OBSClientStatus
+import nl.sajansen.obsscenetimer.obs.OBSConnectionStatus
+import nl.sajansen.obsscenetimer.obs.OBSState
 import resetConfig
 import kotlin.test.*
 

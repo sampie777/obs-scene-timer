@@ -1,7 +1,8 @@
 package gui.config
 
-import config.Config
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.config.ConfigEditPanel
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import org.junit.Before
 import resetConfig
 import kotlin.test.Test

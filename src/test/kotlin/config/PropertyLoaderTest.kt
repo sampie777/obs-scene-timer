@@ -1,6 +1,7 @@
 package config
 
 import mocks.ConfigMock
+import nl.sajansen.obsscenetimer.config.PropertyLoader
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point

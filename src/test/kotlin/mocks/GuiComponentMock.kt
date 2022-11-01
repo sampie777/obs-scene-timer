@@ -1,6 +1,6 @@
 package mocks
 
-import gui.Refreshable
+import nl.sajansen.obsscenetimer.gui.Refreshable
 
 class GuiComponentMock : Refreshable {
     var refreshTimerCalled: Boolean = false

@@ -1,6 +1,7 @@
 package gui.mainFrame
 
-import config.Config
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import resetConfig
 import java.awt.Dimension
 import java.awt.Point

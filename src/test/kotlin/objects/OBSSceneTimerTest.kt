@@ -1,7 +1,9 @@
 package objects
 
-import config.Config
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.objects.OBSSceneTimer
+import nl.sajansen.obsscenetimer.objects.TimerState
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import resetConfig
 import kotlin.test.*
 

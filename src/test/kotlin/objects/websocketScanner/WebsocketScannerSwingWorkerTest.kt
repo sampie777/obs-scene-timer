@@ -1,6 +1,9 @@
 package objects.websocketScanner
 
 import mocks.WebsocketScannerFrameMock
+import nl.sajansen.obsscenetimer.objects.websocketScanner.ScanResult
+import nl.sajansen.obsscenetimer.objects.websocketScanner.WebsocketScannerProcessStatus
+import nl.sajansen.obsscenetimer.objects.websocketScanner.WebsocketScannerSwingWorker
 import java.beans.PropertyChangeEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals

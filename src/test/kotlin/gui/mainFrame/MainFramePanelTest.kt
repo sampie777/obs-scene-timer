@@ -1,7 +1,8 @@
 package gui.mainFrame
 
-import config.Config
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.mainFrame.MainFramePanel
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals

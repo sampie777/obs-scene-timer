@@ -1,4 +1,4 @@
-import config.Config
+import nl.sajansen.obsscenetimer.config.Config
 
 fun resetConfig() {
     Config.obsAddress = "ws://localhost:4444"

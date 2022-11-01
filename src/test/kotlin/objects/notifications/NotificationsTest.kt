@@ -1,5 +1,7 @@
 package objects.notifications
 
+import nl.sajansen.obsscenetimer.objects.notifications.Notification
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

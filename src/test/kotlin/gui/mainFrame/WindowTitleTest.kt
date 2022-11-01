@@ -1,9 +1,10 @@
 package gui.mainFrame
 
-import config.Config
-import objects.OBSSceneTimer
-import objects.TScene
-import obs.OBSState
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.gui.mainFrame.WindowTitle
+import nl.sajansen.obsscenetimer.objects.OBSSceneTimer
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.obs.OBSState
 import org.junit.Before
 import resetConfig
 import kotlin.test.Test

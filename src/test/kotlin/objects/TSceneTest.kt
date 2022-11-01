@@ -1,5 +1,8 @@
 package objects
 
+import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.objects.TSource
+import nl.sajansen.obsscenetimer.objects.TVideoFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

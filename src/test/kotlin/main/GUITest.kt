@@ -1,7 +1,7 @@
 package main
 
-import GUI
 import mocks.GuiComponentMock
+import nl.sajansen.obsscenetimer.GUI
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFalse

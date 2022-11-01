@@ -1,5 +1,6 @@
 package objects.websocketScanner
 
+import nl.sajansen.obsscenetimer.objects.websocketScanner.ScanResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

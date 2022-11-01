@@ -214,7 +214,7 @@
                             <stayAlive>false</stayAlive>
                             <restartOnCrash>false</restartOnCrash>
                             <manifest/>
-                            <icon>src/main/resources/icon.ico</icon>
+                            <icon>src/main/resources/nl/sajansen/obsscenetimer/icon.ico</icon>
                             <jre>
                                 <path/>
                                 <bundledJre64Bit>false</bundledJre64Bit>

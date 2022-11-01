@@ -1,15 +1,18 @@
 package obs
 
-import GUI
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import config.Config
 import io.obswebsocket.community.client.model.Scene
 import mocks.GetInputSettingsResponseMock
 import mocks.GuiComponentMock
 import mocks.SceneMock
-import objects.*
-import objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.GUI
+import nl.sajansen.obsscenetimer.config.Config
+import nl.sajansen.obsscenetimer.objects.*
+import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.obs.OBSClientStatus
+import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.obs.ObsSceneProcessor
 import resetConfig
 import java.io.File
 import kotlin.test.*
@@ -108,7 +111,7 @@ class ObsSceneProcessorTest {
 
     @Test
     fun testGetSourceLengthForMediaSourceWithValidSource() {
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "Media source 1", kind = "ffmpeg_source")
         source.file = TVideoFile(name = filename)
 
@@ -121,7 +124,7 @@ class ObsSceneProcessorTest {
 
     @Test
     fun testGetSourceLengthForVLCSourceWithValidSource() {
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "VLC source 1", kind = "vlc_source")
         source.playlist = TPlayList(listOf(TVideoFile(name = filename)))
 
@@ -135,7 +138,7 @@ class ObsSceneProcessorTest {
     @Test
     fun testGetSourceLengthForVLCSourceWithMultipleFilesAndChooseLongest() {
         Config.sumVlcPlaylistSourceLengths = false
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "VLC source 1", kind = "vlc_source")
         source.playlist = TPlayList(
             listOf(
@@ -154,7 +157,7 @@ class ObsSceneProcessorTest {
     @Test
     fun testGetSourceLengthForVLCSourceWithMultipleFilesAndSumVideos() {
         Config.sumVlcPlaylistSourceLengths = true
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "VLC source 1", kind = "vlc_source")
         source.playlist = TPlayList(
             listOf(
@@ -223,7 +226,7 @@ class ObsSceneProcessorTest {
 
     @Test
     fun testAssignSourceSettingsFromOBSResponseWithVLCSource() {
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "VLC source 1", kind = "vlc_source")
 
         val responsePlaylistEntry = JsonObject()
@@ -248,7 +251,7 @@ class ObsSceneProcessorTest {
 
     @Test
     fun testAssignSourceSettingsFromOBSResponseWithFFMPEGSource() {
-        val filename = File(javaClass.classLoader.getResource("video2seconds.mkv")!!.file).absolutePath
+        val filename = File(javaClass.classLoader.getResource("nl/sajansen/obsscenetimer/video2seconds.mkv")!!.file).absolutePath
         val source = TSource(name = "Media source 1", kind = "ffmpeg_source")
         val response = GetInputSettingsResponseMock(
             inputKind = "ffmpeg_source",
