@@ -21,7 +21,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             try {
                 close(false)
             } catch (t: Throwable) {
-                logger.severe("Failed to close Rollbar instance")
+                logger.severe("Failed to close Rollbar instance. ${t.localizedMessage}")
                 t.printStackTrace()
             }
         }
@@ -38,7 +38,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             properties.load(Rollbar::class.java.getResourceAsStream("/nl/sajansen/obsscenetimer/secrets.properties"))
             properties.getProperty("rollbarAccessToken")
         } catch (t: Throwable) {
-            logger.severe("Failed to load secrets.properties")
+            logger.severe("Failed to load secrets.properties. ${t.localizedMessage}")
             t.printStackTrace()
             ""
         }
@@ -79,7 +79,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             )
             configure(config)
         } catch (e: Exception) {
-            logger.severe("Failed to initialize rollbar")
+            logger.severe("Failed to initialize rollbar. ${e.localizedMessage}")
             e.printStackTrace()
         }
     }

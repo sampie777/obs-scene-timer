@@ -7,6 +7,7 @@ import nl.sajansen.obsscenetimer.gui.mainFrame.WindowTitle
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.ObsSceneProcessor
 import nl.sajansen.obsscenetimer.themes.Theme
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.util.logging.Logger
@@ -202,14 +203,16 @@ class ConfigEditPanel : JPanel() {
             try {
                 panel.add(it.component())
             } catch (e: Exception) {
-                logger.severe("Failed to create Config Edit GUI component: ${it::class.java}")
-                e.printStackTrace()
-
                 if (it !is FormInput) {
+                    logger.severe("Failed to create Config Edit GUI component: ${it::class.java}. ${e.localizedMessage}")
+                    Rollbar.error(e, "Failed to create Config Edit GUI component: ${it::class.java}")
+                    e.printStackTrace()
                     return@forEach
                 }
 
-                logger.severe("Failed to create Config Edit GUI component: ${it.key}")
+                logger.severe("Failed to create Config Edit GUI component: ${it.key}. ${e.localizedMessage}")
+                Rollbar.error(e, "Failed to create Config Edit GUI component: ${it::class.java} key: ${it.key}")
+                e.printStackTrace()
                 Notifications.add(
                     "Failed to load GUI input for config key: <strong>${it.key}</strong>. Delete your <i>${PropertyLoader.getPropertiesFile().name}</i> file and try again. (Error: ${e.localizedMessage})",
                     "Configuration"

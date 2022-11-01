@@ -32,7 +32,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
 
     private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
     private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
-    
+
     init {
         GUI.register(this)
 
@@ -53,6 +53,10 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
     }
 
     fun getSceneTimeFromInput() {
+        if (text.isEmpty()) {
+            return
+        }
+
         if (text == getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)) {
             return
         }
@@ -88,7 +92,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
             return
         }
 
-        logger.warning("No input formatters found for text: $text")
+        logger.warning("No input formatters found for text: '$text'")
     }
 
     fun setNewTime(value: Int?) {
@@ -139,7 +143,7 @@ class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
     }
 }
 
-class SceneInputDocumentListener(private val input: SceneInput): DocumentListener {
+class SceneInputDocumentListener(private val input: SceneInput) : DocumentListener {
     override fun insertUpdate(e: DocumentEvent) {
         input.getSceneTimeFromInput()
     }
@@ -153,7 +157,7 @@ class SceneInputDocumentListener(private val input: SceneInput): DocumentListene
     }
 }
 
-class SceneInputFocusAdapter(private val input: SceneInput): FocusAdapter() {
+class SceneInputFocusAdapter(private val input: SceneInput) : FocusAdapter() {
     private val logger = Logger.getLogger(SceneInputFocusAdapter::class.java.name)
 
     override fun focusLost(e: FocusEvent) {

@@ -21,6 +21,7 @@ import org.bridj.cpp.com.shell.ITaskbarList3
 import org.bridj.jawt.JAWTUtils
 import java.awt.EventQueue
 import java.awt.Image
+import java.util.*
 import java.util.logging.Logger
 import javax.swing.JFrame
 import kotlin.math.max
@@ -73,7 +74,7 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
 
         initGUI()
 
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+        if (System.getProperty("os.name").lowercase(Locale.getDefault()).contains("win")) {
             logger.info("Creating taskbar object")
             try {
                 taskbarList = COMRuntime.newInstance(ITaskbarList3::class.java)

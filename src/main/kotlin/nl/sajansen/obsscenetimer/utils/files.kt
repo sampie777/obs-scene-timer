@@ -37,6 +37,7 @@ fun getVideoLengthOrZeroForFile(filename: String): Int {
         getVideoLength(filename).toInt()
     } catch (t: Throwable) {
         logger.severe("Failed to get video length for '$filename': ${t.message}")
+        Rollbar.error(t, "Failed to get video length for '$filename'")
         t.printStackTrace()
         0
     }

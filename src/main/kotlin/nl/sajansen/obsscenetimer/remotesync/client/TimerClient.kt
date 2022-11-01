@@ -36,7 +36,7 @@ object TimerClient {
             session = connection.get()
             logger.info("Connection started")
         } catch (e: Exception) {
-            logger.severe("Failed to start connection")
+            logger.severe("Failed to start connection. ${e.localizedMessage}")
             e.printStackTrace()
             processFailedConnection(
                 "Could not connect to remote server ($url): ${e.localizedMessage}",

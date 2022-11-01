@@ -156,6 +156,7 @@ object PropertyLoader {
         if (type == Long::class.javaPrimitiveType) return value.toLong()
         if (type == Double::class.javaPrimitiveType) return value.toDouble()
         if (type == Color::class.java) {
+            if (value.isEmpty()) return null
             val rgb = value.split(defaultValueDelimiter)
             if (rgb.size < 3) {
                 throw IllegalArgumentException("Configuration parameter '$name' has invalid value: $value")

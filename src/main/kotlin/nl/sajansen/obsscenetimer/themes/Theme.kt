@@ -2,6 +2,7 @@ package nl.sajansen.obsscenetimer.themes
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.Color
 import java.awt.Insets
 import java.util.logging.Logger
@@ -42,7 +43,8 @@ object Theme {
 
             get = newTheme
         } catch (e: Exception) {
-            logger.severe("Failed to set theme to '$themeInternalName'")
+            logger.severe("Failed to set theme to '$themeInternalName'. ${e.localizedMessage}")
+            Rollbar.error(e, "Failed to set theme to '$themeInternalName'")
             e.printStackTrace()
             Notifications.add("Failed to set theme to '$themeInternalName': ${e.localizedMessage}", "Theme")
         }

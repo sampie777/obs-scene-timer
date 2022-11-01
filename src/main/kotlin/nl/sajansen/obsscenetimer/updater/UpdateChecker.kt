@@ -6,6 +6,7 @@ import nl.sajansen.obsscenetimer.ApplicationInfo
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.updater.UpdatePopup
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.EventQueue
 import java.net.MalformedURLException
 import java.net.UnknownHostException
@@ -28,7 +29,8 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             try {
                 checkForUpdatesThread()
             } catch (t: Throwable) {
-                logger.severe("Failed to check for updates")
+                logger.severe("Failed to check for updates. ${t.localizedMessage}")
+                Rollbar.error(t, "Failed to check for updates")
                 t.printStackTrace()
                 Notifications.add(
                     "Failed to check for updates. More detailed: ${t.localizedMessage}",
@@ -85,7 +87,8 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
         return try {
             Gson().fromJson(jsonResponse, LatestVersionResponseJson::class.java).tag_name
         } catch (e: JsonParseException) {
-            logger.severe("Failed to parse version JSON response: '${jsonResponse}'")
+            logger.severe("Failed to parse version JSON response: '${jsonResponse}'. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("jsonResponse" to jsonResponse), "Failed to parse version JSON response")
             e.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid JSON response. " +
@@ -94,7 +97,8 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             )
             null
         } catch (t: Throwable) {
-            logger.severe("Failed to retrieve latest application version: invalid response")
+            logger.severe("Failed to retrieve latest application version: invalid response. ${t.localizedMessage}")
+            Rollbar.error(t, mapOf("jsonResponse" to jsonResponse), "Failed to retrieve latest application version: invalid response")
             t.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid response. " +
@@ -109,7 +113,7 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
         return try {
             urlProvider.readText(ApplicationInfo.latestVersionsUrl)
         } catch (e: MalformedURLException) {
-            logger.severe("Failed to retrieve latest application version: invalid URL: '${ApplicationInfo.latestVersionsUrl}'")
+            logger.severe("Failed to retrieve latest application version: invalid URL: '${ApplicationInfo.latestVersionsUrl}'. ${e.localizedMessage}")
             e.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid URL. " +
@@ -118,10 +122,11 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             )
             null
         } catch (e: UnknownHostException) {
-            logger.severe("Failed to retrieve latest application version. Internet is down?")
+            logger.severe("Failed to retrieve latest application version. Internet is down?. ${e.localizedMessage}")
             null
         } catch (t: Throwable) {
-            logger.severe("Failed to retrieve latest application version")
+            logger.severe("Failed to retrieve latest application version. ${t.localizedMessage}")
+            Rollbar.error(t, "Failed to retrieve latest application version")
             t.printStackTrace()
             null
         }

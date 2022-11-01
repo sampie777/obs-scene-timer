@@ -49,7 +49,7 @@ class TimerClientSocket(
 
     @OnWebSocketError
     fun onSocketError(t: Throwable) {
-        logger.severe("Connection error received")
+        logger.severe("Connection error received. ${t.localizedMessage}")
         t.printStackTrace()
     }
 
@@ -71,7 +71,7 @@ class TimerClientSocket(
         try {
             session!!.remote.sendString(message)
         } catch (e: Exception) {
-            logger.severe("Failed to send message to timer server")
+            logger.severe("Failed to send message to timer server. ${e.localizedMessage}")
             e.printStackTrace()
         }
     }

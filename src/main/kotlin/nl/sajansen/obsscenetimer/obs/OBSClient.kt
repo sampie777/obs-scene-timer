@@ -8,6 +8,7 @@ import io.obswebsocket.community.client.message.event.scenes.SceneListChangedEve
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.EventQueue
 import java.util.*
 import java.util.logging.Logger
@@ -30,7 +31,7 @@ object OBSClient {
         }
         isRunning = true
 
-        logger.info("Connecting to OBS on: ${Config.obsAddress}")
+        logger.info("Connecting to OBS on: ws://${Config.obsHost}:${Config.obsPort}")
         OBSState.connectionStatus = if (!reconnecting) OBSConnectionStatus.CONNECTING else OBSConnectionStatus.RECONNECTING
         GUI.refreshOBSStatus()
 
@@ -55,7 +56,8 @@ object OBSClient {
         try {
             controller = builder.build()
         } catch (e: Exception) {
-            logger.severe("Failed to create controller")
+            logger.severe("Failed to create controller. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("obsHost" to Config.obsHost, "obsPort" to Config.obsPort), "Failed to create controller")
             processFailedConnection("Could not connect to OBS: ${e.localizedMessage}", reconnect = false)
         }
     }
@@ -126,7 +128,8 @@ object OBSClient {
         try {
             ObsSceneProcessor.processNewScene(event.sceneName)
         } catch (t: Throwable) {
-            logger.severe("Could not process new scene change")
+            logger.severe("Could not process new scene change. ${t.localizedMessage}")
+            Rollbar.error(t, mapOf("event" to event), "Could not process new scene change")
             t.printStackTrace()
             Notifications.add("Could not process new scene change: ${t.localizedMessage}", "OBS")
         }
@@ -205,7 +208,8 @@ object OBSClient {
         try {
             ObsSceneProcessor.getCurrentSceneFromOBS()
         } catch (t: Throwable) {
-            logger.severe("Could not get current scene from OBS")
+            logger.severe("Could not get current scene from OBS. ${t.localizedMessage}")
+            Rollbar.error(t, "Could not get current scene from OBS")
             t.printStackTrace()
             Notifications.add("Could not get current scene: ${t.localizedMessage}", "OBS")
         }

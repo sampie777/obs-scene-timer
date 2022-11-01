@@ -1,6 +1,7 @@
 package nl.sajansen.obsscenetimer.gui.utils
 
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
@@ -72,6 +73,7 @@ fun createImageIcon(path: String): ImageIcon? {
     }
 
     logger.severe("Couldn't find imageIcon: $path")
+    Rollbar.error("Couldn't find imageIcon: $path")
     return null
 }
 

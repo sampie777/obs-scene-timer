@@ -14,6 +14,7 @@ import nl.sajansen.obsscenetimer.remotesync.objects.RemoteSyncRefreshable
 import nl.sajansen.obsscenetimer.remotesync.server.ServerStatus
 import nl.sajansen.obsscenetimer.remotesync.server.TimerServer
 import nl.sajansen.obsscenetimer.themes.Theme
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import openWebURL
 import java.awt.event.KeyEvent
 import java.util.logging.Logger
@@ -127,7 +128,8 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
                 TimerClient.connect(Config.remoteSyncClientAddress)
             }.start()
         } catch (e: Exception) {
-            logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server")
+            logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server. ${e.localizedMessage}")
+            Rollbar.error(e, "Failed to start tread for stopping OBS and connecting to remote sync server")
             e.printStackTrace()
             Notifications.popup(
                 "Could not setup connection to remote sync server: ${e.localizedMessage}. Try restarting ${ApplicationInfo.name}",

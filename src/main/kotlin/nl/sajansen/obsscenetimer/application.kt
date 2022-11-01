@@ -1,5 +1,6 @@
 package nl.sajansen.obsscenetimer
 
+import exitApplication
 import getCurrentJarDirectory
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
@@ -36,8 +37,15 @@ fun main(args: Array<String>) {
 
     Theme.init()
 
-    EventQueue.invokeLater {
-        MainFrame.createAndShow()
+    EventQueue.invokeAndWait {
+        try {
+            MainFrame.createAndShow()
+        }catch (t: Throwable) {
+            logger.severe("Failed to initialize GUI. ${t.localizedMessage}")
+            Rollbar.error(t, "Failed to initialize GUI")
+            t.printStackTrace()
+            exitApplication()
+        }
     }
 
     if ("--clear-update-history" in args) {
@@ -78,6 +86,7 @@ private fun setupLogging(args: Array<String>) {
         LogService.setup(args)
     } catch (e: Exception) {
         logger.severe("Failed to initiate logging: $e")
+        Rollbar.error(e, mapOf("args" to args), "Failed to initate logging")
         e.printStackTrace()
         Notifications.add("Failed to setup logging service: ${e.localizedMessage}", "Application")
     }

@@ -46,7 +46,7 @@ object SceneLogger {
             fileWriter.flush()
             fileWriter.close()
         } catch (e: Exception) {
-            logger.severe("Failed to write to sceneLogger file")
+            logger.severe("Failed to write to sceneLogger file. ${e.localizedMessage}")
             e.printStackTrace()
 
             Notifications.add("Failed to write to sceneLogger file", "SceneLogger")
@@ -67,7 +67,7 @@ object SceneLogger {
         try {
             file.createNewFile()
         } catch (e: Exception) {
-            logger.severe("Failed to create sceneLogger file")
+            logger.severe("Failed to create sceneLogger file. ${e.localizedMessage}")
             e.printStackTrace()
 
             Notifications.add("Failed to create sceneLogger file", "SceneLogger")

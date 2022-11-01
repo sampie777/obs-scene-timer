@@ -4,6 +4,7 @@ import nl.sajansen.obsscenetimer.gui.mainFrame.WindowTitle
 import nl.sajansen.obsscenetimer.objects.Json
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSState
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
@@ -63,8 +64,9 @@ object Config {
     var mainWindowTitle: String =
         "${WindowTitle.VARIABLE_IDENTIFIER.format(WindowTitle.SCENE_NAME)}: ${
             WindowTitle.VARIABLE_IDENTIFIER.format(
-            WindowTitle.TIMER_ELAPSED
-        )}"
+                WindowTitle.TIMER_ELAPSED
+            )
+        }"
     var mainWindowAlwaysOnTop: Boolean = false
 
     // Remote Sync
@@ -82,7 +84,7 @@ object Config {
             PropertyLoader.load()
             PropertyLoader.loadConfig(this::class.java)
         } catch (e: Exception) {
-            logger.severe("Failed to load Config")
+            logger.severe("Failed to load Config. ${e.localizedMessage}")
             e.printStackTrace()
             Notifications.add("Failed to load configuration from file: ${e.localizedMessage}", "Configuration")
         }
@@ -99,7 +101,8 @@ object Config {
                 PropertyLoader.save()
             }
         } catch (e: Exception) {
-            logger.severe("Failed to save Config")
+            logger.severe("Failed to save Config. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("properties" to PropertyLoader.getUserProperties().toString()), "Failed to save Config")
             e.printStackTrace()
             Notifications.add("Failed to save configuration to file: ${e.localizedMessage}", "Configuration")
         }
@@ -109,7 +112,7 @@ object Config {
         try {
             return javaClass.getDeclaredField(key).get(this)
         } catch (e: Exception) {
-            logger.severe("Could not get config key $key")
+            logger.severe("Could not get config key $key. ${e.localizedMessage}")
             e.printStackTrace()
             Notifications.add("Could not get configuration setting: $key (${e.localizedMessage})", "Configuration")
         }
@@ -120,7 +123,8 @@ object Config {
         try {
             javaClass.getDeclaredField(key).set(this, value)
         } catch (e: Exception) {
-            logger.severe("Could not set config key $key")
+            logger.severe("Could not set config key $key. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("key" to key, "value" to value), "Could not set config key $key")
             e.printStackTrace()
             Notifications.add("Could not set configuration setting: $key (${e.localizedMessage})", "Configuration")
         }

@@ -129,7 +129,8 @@ fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
         Desktop.getDesktop().browse(URI(url))
         return true
     } catch (t: Throwable) {
-        logger.severe("Error during opening link '$url'")
+        logger.severe("Error during opening link '$url'. ${t.localizedMessage}")
+        Rollbar.error(t, mapOf("url" to url), "Error during opening link '$url'")
         t.printStackTrace()
         Notifications.popup("Failed to open link: $url", subject)
     }
@@ -146,7 +147,9 @@ fun <R> (() -> R).invokeWithCatch(
         this.invoke()
     } catch (t: Throwable) {
         if (logger != null && logMessage != null) {
-            logger.severe(logMessage.invoke(t))
+            val message = logMessage.invoke(t)
+            logger.severe(message)
+            Rollbar.error(t, message)
         }
 
         t.printStackTrace()
