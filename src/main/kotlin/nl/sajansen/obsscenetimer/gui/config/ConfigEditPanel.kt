@@ -159,9 +159,8 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(HeaderFormComponent("Logging"))
         formComponents.add(
             BooleanFormInput(
-                "enableApplicationLoggingToFile",
-                "Enable application logging to a file",
-                toolTipText = "Location of this logfile is shown in the Information screen, under Menu"
+                "enableAutomaticErrorReporting", "Automatic error reporting",
+                toolTipText = "<html>Enable anonymous error log reporting<br/>so the developer can fix those errors faster</html>"
             )
         )
         formComponents.add(BooleanFormInput("enableSceneTimestampLogger", "Enable scene change logging"))

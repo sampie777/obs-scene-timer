@@ -9,6 +9,7 @@ import nl.sajansen.obsscenetimer.remotesync.client.TimerClient
 import nl.sajansen.obsscenetimer.remotesync.server.TimerServer
 import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.updater.UpdateChecker
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.EventQueue
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -16,6 +17,7 @@ import java.util.logging.Logger
 
 fun main(args: Array<String>) {
     val logger = Logger.getLogger("Application")
+
     logger.info("Starting application ${ApplicationInfo.artifactId}:${ApplicationInfo.version}")
     logger.info("Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath)
     LogService.logBuffer.add(
@@ -27,6 +29,7 @@ fun main(args: Array<String>) {
 
     Config.enableWriteToFile(true)
     Config.load()
+    Rollbar.enable(Config.enableAutomaticErrorReporting)
     setObsParametersFromObsAddress()
     setupLogging(args)  // Setup logging as soon as possible, but because it depends on Config, just let Config load first
     Config.save()

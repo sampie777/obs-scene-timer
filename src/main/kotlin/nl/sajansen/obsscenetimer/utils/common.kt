@@ -5,6 +5,7 @@ import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import nl.sajansen.obsscenetimer.objects.SceneLogger
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSClient
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.Color
 import java.awt.Desktop
 import java.io.File
@@ -85,6 +86,18 @@ fun exitApplication() {
     } catch (t: Throwable) {
         logger.warning("Failed to save configuration")
         t.printStackTrace()
+    }
+
+    try {
+        logger.info("Closing rollbar...")
+        Rollbar.close(true)
+    } catch (t: Throwable) {
+        if (Rollbar.isEnabled()) {
+            logger.warning("Failed to close rollbar")
+            t.printStackTrace()
+        } else {
+            logger.info("Failed to close rollbar but it's not enabled")
+        }
     }
 
     logger.info("Shutdown finished")

@@ -3,6 +3,7 @@ package nl.sajansen.obsscenetimer.gui.config
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import nl.sajansen.obsscenetimer.themes.Theme
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import java.awt.Dimension
 import java.awt.event.KeyEvent
 import java.util.logging.Logger
@@ -52,6 +53,7 @@ class ConfigActionPanel(private val frame: ConfigFrame) : JPanel() {
 
         Config.save()
         frame.dispose()
+        Rollbar.enable(Config.enableAutomaticErrorReporting)
         Theme.init()
         MainFrame.getInstance()?.rebuildGui()
     }

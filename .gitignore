@@ -12,3 +12,4 @@ out/
 releases/
 scratch/
 release.py
+secrets.properties

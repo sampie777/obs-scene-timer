@@ -200,6 +200,8 @@ Application logging is done to the console and to a file. Location of this file 
 java -jar obs-scene-timer.jar -v
 ```
 
+Automatic error reporting is enabled by default. This function will send anonymous error reports to the developer when an error occurs. This is done in the background and can be disabled in the settings.
+
 ### Properties
 
 In the same directory as the _.jar_ file, the _obs-scene-timer.properties_ can be found. Every time the application runs, it will load its configuration from this file. You can edit this file in your favorite editor. By editing the properties in the GUI via Application menu -> Settings, the new values will also be saved to this _obs-scene-timer.properties_ file. By deleting this file, all properties are reset to default. 
@@ -265,6 +267,8 @@ Use the following command line arguments for:
 Feel free to contribute by opening a pull request to `develop` branch or leaving a comment somewhere.
 
 Please try to add/edit tests for the code you've worked on. Also build the application with `mvn clean install` and run the compiled jar with `java -jar obs-scene-timer-X.X.X-SNAPSHOT.jar`.
+
+If you build this project yourself, make sure to create and fill a `secrets.properties` file in `resources/nl/sajansen/obsscenetimer/`.
 
 ## Donation
 

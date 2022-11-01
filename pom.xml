@@ -30,6 +30,7 @@
         <launch4j.version>2.1.3</launch4j.version>
         <bridj.version>0.7.0</bridj.version>
         <mockito.version>1.10.19</mockito.version>
+        <rollbar.version>1.8.1</rollbar.version>
     </properties>
 
     <repositories>
@@ -84,6 +85,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Error reporting -->
+        <dependency>
+            <groupId>com.rollbar</groupId>
+            <artifactId>rollbar-java</artifactId>
+            <version>${rollbar.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
