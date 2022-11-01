@@ -8,6 +8,7 @@ import io.obswebsocket.community.client.message.event.scenes.SceneListChangedEve
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import java.awt.EventQueue
 import java.util.*
 import java.util.logging.Logger
 
@@ -62,9 +63,19 @@ object OBSClient {
     fun stop(force: Boolean = false) {
         logger.info("Disconnecting with OBS (force stop=$force)")
         isForceStopped = force
+        OBSState.connectionStatus = OBSConnectionStatus.CLOSING
+        EventQueue.invokeLater { GUI.refreshOBSStatus() }
 
-        controller?.disconnect()
-        controller?.stop()
+        connectionRetryTimer?.cancel()
+        connectionRetryTimer?.purge()
+
+        Thread {
+            controller?.disconnect()
+            controller?.stop()
+        }.also {
+            it.isDaemon = false
+            it.start()
+        }
 
         isRunning = false
     }
