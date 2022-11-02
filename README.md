@@ -1,5 +1,3 @@
-### This repository has been moved to GitHub: [https://github.com/sampie777/obs-scene-timer](https://github.com/sampie777/obs-scene-timer)
-
 # OBS Scene Timer
 
 _Friendly basic application to keep track of time during your live streams_
