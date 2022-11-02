@@ -27,7 +27,7 @@ class TimerMessageTest {
             timerState = TimerState.NEUTRAL
         )
         val now = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-        val strippedNow = now.substring(0, now.length - 3)
+        val strippedNow = now.substring(0, now.length - 7)
 
         assertFalse(message.isTimed)
         assertEquals("", message.remainingTime)
