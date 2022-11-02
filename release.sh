@@ -41,6 +41,16 @@ function releaseMinor {
   pushAndRelease
 }
 
+function releaseMajor {
+  mvn test || exit 1
+  git checkout master || exit 1
+  git merge develop || exit 1
+
+  mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.nextMajorVersion}.0.0 -DgenerateBackupPoms=false versions:commit || exit 1
+
+  pushAndRelease
+}
+
 function pushAndRelease {
   RELEASE_VERSION=$(cat pom.xml | grep "<version>.*</version>" | head -1 |awk -F'[><]' '{print $3}')
   echo "Release version: ${RELEASE_VERSION}"
@@ -79,6 +89,10 @@ case $command in
     ;;
   minor)
     releaseMinor
+    setNextDevelopmentVersion
+    ;;
+  major)
+    releaseMajor
     setNextDevelopmentVersion
     ;;
   -h|--help)
