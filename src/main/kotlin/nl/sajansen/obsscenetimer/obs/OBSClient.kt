@@ -9,12 +9,12 @@ import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.EventQueue
 import java.util.*
-import java.util.logging.Logger
 
 object OBSClient {
-    private var logger = Logger.getLogger(OBSClient::class.java.name)
+    private var logger = LoggerFactory.getLogger(OBSClient::class.java.name)
 
     private var controller: OBSRemoteController? = null
     fun getController() = controller
@@ -56,7 +56,7 @@ object OBSClient {
         try {
             controller = builder.build()
         } catch (e: Exception) {
-            logger.severe("Failed to create controller. ${e.localizedMessage}")
+            logger.error("Failed to create controller. ${e.localizedMessage}")
             Rollbar.error(e, mapOf("obsHost" to Config.obsHost, "obsPort" to Config.obsPort), "Failed to create controller")
             processFailedConnection("Could not connect to OBS: ${e.localizedMessage}", reconnect = false)
         }
@@ -119,7 +119,7 @@ object OBSClient {
     private fun onCurrentProgramSceneChanged(event: CurrentProgramSceneChangedEvent) {
         if (isForceStopped) return
 
-        logger.fine("Processing scene switch event to: ${event.sceneName}")
+        logger.debug("Processing scene switch event to: ${event.sceneName}")
 
         if (OBSState.currentScene.name == event.sceneName) {
             return
@@ -128,7 +128,7 @@ object OBSClient {
         try {
             ObsSceneProcessor.processNewScene(event.sceneName)
         } catch (t: Throwable) {
-            logger.severe("Could not process new scene change. ${t.localizedMessage}")
+            logger.error("Could not process new scene change. ${t.localizedMessage}")
             Rollbar.error(t, mapOf("event" to event), "Could not process new scene change")
             t.printStackTrace()
             Notifications.add("Could not process new scene change: ${t.localizedMessage}", "OBS")
@@ -138,14 +138,14 @@ object OBSClient {
     private fun onSceneListChanged(event: SceneListChangedEvent) {
         if (isForceStopped) return
 
-        logger.fine("Processing scenes changed event for ${event.scenes.size} scenes")
+        logger.debug("Processing scenes changed event for ${event.scenes.size} scenes")
         if (isForceStopped) return
 
         ObsSceneProcessor.loadScenes()
     }
 
     private fun onControllerError(throwable: ReasonThrowable) {
-        logger.severe("OBS Controller gave an error: ${throwable.reason}")
+        logger.error("OBS Controller gave an error: ${throwable.reason}")
         throwable.throwable.printStackTrace()
 
         if (isForceStopped) return
@@ -154,7 +154,7 @@ object OBSClient {
     }
 
     private fun onCommunicatorError(throwable: ReasonThrowable) {
-        logger.severe("OBS Communicator gave an error: ${throwable.reason}")
+        logger.error("OBS Communicator gave an error: ${throwable.reason}")
         throwable.throwable.printStackTrace()
 
         if (isForceStopped) return
@@ -167,7 +167,7 @@ object OBSClient {
             logger.info("Failed to connect to OBS: $code (WebSocketCloseCode)")
             return
         }
-        logger.severe("Failed to connect to OBS: $code (WebSocketCloseCode)")
+        logger.error("Failed to connect to OBS: $code (WebSocketCloseCode)")
 
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTION_FAILED
         OBSState.clientActivityStatus = null
@@ -208,7 +208,7 @@ object OBSClient {
         try {
             ObsSceneProcessor.getCurrentSceneFromOBS()
         } catch (t: Throwable) {
-            logger.severe("Could not get current scene from OBS. ${t.localizedMessage}")
+            logger.error("Could not get current scene from OBS. ${t.localizedMessage}")
             Rollbar.error(t, "Could not get current scene from OBS")
             t.printStackTrace()
             Notifications.add("Could not get current scene: ${t.localizedMessage}", "OBS")

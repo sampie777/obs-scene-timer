@@ -9,8 +9,8 @@ import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.remotesync.objects.TimerMessage
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
+import org.slf4j.LoggerFactory
 import java.util.concurrent.CountDownLatch
-import java.util.logging.Logger
 
 @WebSocket
 class TimerClientSocket(
@@ -18,7 +18,7 @@ class TimerClientSocket(
     private val onCloseCallback: (reason: String?) -> Unit
 ) {
 
-    private val logger = Logger.getLogger(TimerClientSocket::class.java.name)
+    private val logger = LoggerFactory.getLogger(TimerClientSocket::class.java.name)
 
     private var session: Session? = null
     private val latch = CountDownLatch(1)
@@ -34,12 +34,12 @@ class TimerClientSocket(
 
     @OnWebSocketMessage
     fun onTextMessage(message: String) {
-        logger.fine("Received message: $message")
+        logger.debug("Received message: $message")
 
         val timerMessage = try {
             Gson().fromJson(message, TimerMessage::class.java)
         } catch (e: Exception) {
-            logger.warning("Failed to convert received message to json: $message")
+            logger.warn("Failed to convert received message to json: $message")
             e.printStackTrace()
             return
         }
@@ -49,7 +49,7 @@ class TimerClientSocket(
 
     @OnWebSocketError
     fun onSocketError(t: Throwable) {
-        logger.severe("Connection error received. ${t.localizedMessage}")
+        logger.error("Connection error received. ${t.localizedMessage}")
         t.printStackTrace()
     }
 
@@ -64,14 +64,14 @@ class TimerClientSocket(
     fun sendMessage(message: String) {
         logger.info("Sending message: $message")
         if (session == null) {
-            logger.warning("Cannot send message: not connected")
+            logger.warn("Cannot send message: not connected")
             return
         }
 
         try {
             session!!.remote.sendString(message)
         } catch (e: Exception) {
-            logger.severe("Failed to send message to timer server. ${e.localizedMessage}")
+            logger.error("Failed to send message to timer server. ${e.localizedMessage}")
             e.printStackTrace()
         }
     }

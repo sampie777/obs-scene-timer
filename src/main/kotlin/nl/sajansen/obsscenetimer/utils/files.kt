@@ -1,11 +1,11 @@
 package nl.sajansen.obsscenetimer.utils
 
 import com.xuggle.xuggler.IContainer
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.concurrent.TimeUnit
-import java.util.logging.Logger
 
-private val logger: Logger = Logger.getLogger("utils.files")
+private val logger = LoggerFactory.getLogger("utils.files")
 
 fun getReadableFileSize(file: File): String {
     return when {
@@ -36,7 +36,7 @@ fun getVideoLengthOrZeroForFile(filename: String): Int {
         logger.info("Trying to get video length for: $filename")
         getVideoLength(filename).toInt()
     } catch (t: Throwable) {
-        logger.severe("Failed to get video length for '$filename': ${t.message}")
+        logger.error("Failed to get video length for '$filename': ${t.message}")
         Rollbar.error(t, "Failed to get video length for '$filename'")
         t.printStackTrace()
         0
@@ -52,7 +52,7 @@ fun getVideoLengthOrZeroForFile(filename: String): Int {
 fun getVideoLength(filename: String): Long {
     val file = File(filename)
     if (!file.exists()) {
-        logger.warning("File does not exists: $filename")
+        logger.warn("File does not exists: $filename")
         return 0
     }
 

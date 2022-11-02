@@ -14,10 +14,10 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
 
 object TimerServer : Server(), Refreshable {
-    private val logger = Logger.getLogger(TimerServer::class.java.name)
+    private val logger = LoggerFactory.getLogger(TimerServer::class.java.name)
 
     private val port = Config.remoteSyncServerPort
     private var isSetup = false

@@ -9,6 +9,7 @@ import nl.sajansen.obsscenetimer.objects.TScene
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.FocusAdapter
@@ -19,7 +20,6 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JTextField
 import javax.swing.SwingConstants
@@ -28,7 +28,7 @@ import javax.swing.event.DocumentListener
 
 
 class SceneInput(val scene: TScene) : JTextField(), Refreshable {
-    private val logger = Logger.getLogger(SceneInput::class.java.name)
+    private val logger = LoggerFactory.getLogger(SceneInput::class.java.name)
 
     private val inputFont = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 16)
     private val currentSceneInputFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 16)
@@ -79,7 +79,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
             } catch (e: ParseException) {
                 return@forEach
             } catch (t: Throwable) {
-                logger.warning("Failed to parse duration input for SceneInput: $this")
+                logger.warn("Failed to parse duration input for SceneInput: $this")
                 t.printStackTrace()
                 Notifications.add("Failed to parse duration input: '$text'. Error: ${t.localizedMessage}")
                 return@forEach
@@ -92,7 +92,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
             return
         }
 
-        logger.warning("No input formatters found for text: '$text'")
+        logger.warn("No input formatters found for text: '$text'")
     }
 
     fun setNewTime(value: Int?) {
@@ -120,7 +120,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
 }
 
 class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
-    private val logger = Logger.getLogger(SceneInputKeyListener::class.java.name)
+    private val logger = LoggerFactory.getLogger(SceneInputKeyListener::class.java.name)
 
     override fun keyTyped(e: KeyEvent) {
     }
@@ -129,7 +129,7 @@ class SceneInputKeyListener(private val input: SceneInput) : KeyListener {
     }
 
     override fun keyPressed(e: KeyEvent) {
-        logger.fine("[keyPressed] in SceneInput field: ${e.keyCode}")
+        logger.debug("[keyPressed] in SceneInput field: ${e.keyCode}")
         when (e.keyCode) {
             KeyEvent.VK_UP -> increaseTimeLimitWith(1)
             KeyEvent.VK_DOWN -> increaseTimeLimitWith(-1)
@@ -158,10 +158,10 @@ class SceneInputDocumentListener(private val input: SceneInput) : DocumentListen
 }
 
 class SceneInputFocusAdapter(private val input: SceneInput) : FocusAdapter() {
-    private val logger = Logger.getLogger(SceneInputFocusAdapter::class.java.name)
+    private val logger = LoggerFactory.getLogger(SceneInputFocusAdapter::class.java.name)
 
     override fun focusLost(e: FocusEvent) {
-        logger.fine("[focusLost] on SceneInput $input")
+        logger.debug("[focusLost] on SceneInput $input")
         super.focusLost(e)
         input.refreshDisplayFromScene()
     }

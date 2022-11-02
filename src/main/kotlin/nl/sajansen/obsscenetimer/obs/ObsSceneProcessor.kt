@@ -15,11 +15,11 @@ import nl.sajansen.obsscenetimer.objects.*
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.utils.Rollbar
 import nl.sajansen.obsscenetimer.utils.getVideoLengthOrZeroForFile
+import org.slf4j.LoggerFactory
 import java.net.ConnectException
-import java.util.logging.Logger
 
 object ObsSceneProcessor {
-    private var logger = Logger.getLogger(ObsSceneProcessor::class.java.name)
+    private var logger = LoggerFactory.getLogger(ObsSceneProcessor::class.java.name)
 
     private val videoSources = listOf("ffmpeg_source", "vlc_source")
 
@@ -27,7 +27,7 @@ object ObsSceneProcessor {
      * Actively request the current scene from BOS
      */
     fun getCurrentSceneFromOBS() {
-        logger.fine("Retrieving current scene")
+        logger.debug("Retrieving current scene")
         OBSClient.getController()?.getCurrentProgramScene { response: GetCurrentProgramSceneResponse ->
             if (OBSState.currentScene.name == response.currentProgramSceneName) {
                 return@getCurrentProgramScene
@@ -36,7 +36,7 @@ object ObsSceneProcessor {
             try {
                 processNewScene(response.currentProgramSceneName)
             } catch (t: Throwable) {
-                logger.severe("Could not process current scene. ${t.localizedMessage}")
+                logger.error("Could not process current scene. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("response" to response), "Could not process current scene")
                 t.printStackTrace()
                 Notifications.add("Could not process current scene: ${t.localizedMessage}", "OBS")
@@ -51,7 +51,7 @@ object ObsSceneProcessor {
         logger.info("New scene: $sceneName")
 
         val newScene: TScene = OBSState.scenes.find { it.name == sceneName } ?: run {
-            logger.warning("New scene is not found in scene list. Creating new scene for it.")
+            logger.warn("New scene is not found in scene list. Creating new scene for it.")
             TScene(sceneName)
         }
 
@@ -80,7 +80,7 @@ object ObsSceneProcessor {
                 try {
                     processOBSScenesToOBSStateScenes(if (Config.reverseSceneOrder) response.scenes else response.scenes.reversed())
                 } catch (t: Throwable) {
-                    logger.severe("Failed to process scenes. ${t.localizedMessage}")
+                    logger.error("Failed to process scenes. ${t.localizedMessage}")
                     Rollbar.error(t, mapOf("response" to response), "Failed to process scenes")
                     t.printStackTrace()
                     Notifications.add("Something went wrong during scenes processing: ${t.localizedMessage}", "OBS")
@@ -88,7 +88,7 @@ object ObsSceneProcessor {
                 }
             }
         } catch (t: Throwable) {
-            logger.severe("Failed to retrieve scenes. ${t.localizedMessage}")
+            logger.error("Failed to retrieve scenes. ${t.localizedMessage}")
             Rollbar.error(t, "Failed to retrieve scenes")
             t.printStackTrace()
             Notifications.add("Something went wrong during retrieving scenes: ${t.localizedMessage}", "OBS")
@@ -155,7 +155,7 @@ object ObsSceneProcessor {
             try {
                 loadItemsForScene(scene) { loadSourceSettingsForScene(scene = scene, callback = callback) }
             } catch (t: Throwable) {
-                logger.severe("Failed to load scene items for scene '${scene.name}'. ${t.localizedMessage}")
+                logger.error("Failed to load scene items for scene '${scene.name}'. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("scene" to scene), "Failed to load scene items for scene '${scene.name}'")
                 t.printStackTrace()
                 Notifications.add(
@@ -231,7 +231,7 @@ object ObsSceneProcessor {
             try {
                 loadSourceSettingsForSource(source, callback = callback)
             } catch (t: Throwable) {
-                logger.severe("Failed to load scene item sources settings for item '${source.name}'. ${t.localizedMessage}")
+                logger.error("Failed to load scene item sources settings for item '${source.name}'. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("source" to source), "Failed to load scene item sources settings for item '${source.name}'")
                 t.printStackTrace()
                 Notifications.add(
@@ -284,7 +284,7 @@ object ObsSceneProcessor {
             try {
                 source.playlist = responsePlaylistToTPlaylist(response.inputSettings["playlist"].asJsonArray)
             } catch (t: Throwable) {
-                logger.warning("Could not process 'playlist' property '${response.inputSettings["playlist"]}' for source '${source.name}'")
+                logger.warn("Could not process 'playlist' property '${response.inputSettings["playlist"]}' for source '${source.name}'")
                 t.printStackTrace()
                 Notifications.add("Could not process playlist for source '${source.name}'", "OBS")
             }

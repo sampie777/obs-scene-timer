@@ -1,9 +1,9 @@
 package nl.sajansen.obsscenetimer.objects.websocketScanner
 
 import nl.sajansen.obsscenetimer.gui.websocketScanner.WebsocketScannerFrame
+import org.slf4j.LoggerFactory
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import java.util.logging.Logger
 import javax.swing.SwingWorker
 
 class WebsocketScannerSwingWorker(
@@ -11,7 +11,7 @@ class WebsocketScannerSwingWorker(
     private val timeout: Int = 200
 ) : SwingWorker<Boolean, Void>(),
     PropertyChangeListener {
-    private val logger = Logger.getLogger(WebsocketScannerSwingWorker::class.java.name)
+    private val logger = LoggerFactory.getLogger(WebsocketScannerSwingWorker::class.java.name)
 
     override fun doInBackground(): Boolean {
         val processStatus = WebsocketScannerProcessStatus(this)

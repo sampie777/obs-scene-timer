@@ -8,16 +8,16 @@ import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.ObsSceneProcessor
 import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.GridLayout
-import java.util.logging.Logger
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.border.EmptyBorder
 
 class ConfigEditPanel : JPanel() {
-    private val logger = Logger.getLogger(ConfigEditPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(ConfigEditPanel::class.java.name)
 
     private val formComponents: ArrayList<FormComponent> = ArrayList()
 
@@ -204,13 +204,13 @@ class ConfigEditPanel : JPanel() {
                 panel.add(it.component())
             } catch (e: Exception) {
                 if (it !is FormInput) {
-                    logger.severe("Failed to create Config Edit GUI component: ${it::class.java}. ${e.localizedMessage}")
+                    logger.error("Failed to create Config Edit GUI component: ${it::class.java}. ${e.localizedMessage}")
                     Rollbar.error(e, "Failed to create Config Edit GUI component: ${it::class.java}")
                     e.printStackTrace()
                     return@forEach
                 }
 
-                logger.severe("Failed to create Config Edit GUI component: ${it.key}. ${e.localizedMessage}")
+                logger.error("Failed to create Config Edit GUI component: ${it.key}. ${e.localizedMessage}")
                 Rollbar.error(e, "Failed to create Config Edit GUI component: ${it::class.java} key: ${it.key}")
                 e.printStackTrace()
                 Notifications.add(
@@ -232,13 +232,13 @@ class ConfigEditPanel : JPanel() {
                 return@forEach
             }
 
-            logger.warning(validation.toString())
+            logger.warn(validation.toString())
             validationErrors += validation
         }
 
         if (validationErrors.isNotEmpty()) {
             if (this.parent == null) {
-                logger.warning("Panel is not a visible GUI component")
+                logger.warn("Panel is not a visible GUI component")
                 return false
             }
 

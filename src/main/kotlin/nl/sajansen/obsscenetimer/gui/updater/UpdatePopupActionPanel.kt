@@ -4,15 +4,15 @@ import nl.sajansen.obsscenetimer.ApplicationInfo
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.themes.Theme
 import openWebURL
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class UpdatePopupActionPanel(private val frame: UpdatePopup) : JPanel() {
-    private val logger = Logger.getLogger(UpdatePopupActionPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(UpdatePopupActionPanel::class.java.name)
 
     private val disableUpdateCheckerCheckbox = JCheckBox()
 

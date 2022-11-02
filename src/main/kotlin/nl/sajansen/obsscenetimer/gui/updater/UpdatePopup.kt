@@ -2,15 +2,15 @@ package nl.sajansen.obsscenetimer.gui.updater
 
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
-import java.util.logging.Logger
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
 
 class UpdatePopup(private val version: String, private val parentFrame: JFrame?) : JDialog(parentFrame) {
-    private val logger = Logger.getLogger(UpdatePopup::class.java.name)
+    private val logger = LoggerFactory.getLogger(UpdatePopup::class.java.name)
 
     companion object {
         fun create(version: String, parentFrame: JFrame? = MainFrame.getInstance()): UpdatePopup =

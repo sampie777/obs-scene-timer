@@ -3,10 +3,10 @@ package nl.sajansen.obsscenetimer.remotesync
 
 import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
 import nl.sajansen.obsscenetimer.remotesync.objects.RemoteSyncRefreshable
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
 
 object RemoteSyncRefreshableRegister {
-    private val logger = Logger.getLogger(RemoteSyncRefreshableRegister::class.java.name)
+    private val logger = LoggerFactory.getLogger(RemoteSyncRefreshableRegister::class.java.name)
 
     private val components: HashSet<RemoteSyncRefreshable> = HashSet()
 

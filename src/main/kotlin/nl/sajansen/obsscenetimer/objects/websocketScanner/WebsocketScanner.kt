@@ -1,5 +1,6 @@
 package nl.sajansen.obsscenetimer.objects.websocketScanner
 
+import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.Socket
@@ -7,7 +8,6 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
-import java.util.logging.Logger
 
 
 class ScanResult(
@@ -21,7 +21,7 @@ class ScanResult(
 
 
 class WebsocketScanner(private val processStatus: WebsocketScannerProcessStatus, private val timeout: Int = 200, private val port: Int = 4444) {
-    private val logger = Logger.getLogger(WebsocketScanner::class.java.name)
+    private val logger = LoggerFactory.getLogger(WebsocketScanner::class.java.name)
 
     private val threadPoolSize = 20
 
@@ -88,7 +88,7 @@ class WebsocketScanner(private val processStatus: WebsocketScannerProcessStatus,
     private fun scanAddressPort(es: ExecutorService, ip: String, port: Int, timeout: Int): Future<ScanResult> {
         return es.submit(Callable {
             try {
-                logger.fine("Probing: $ip:$port")
+                logger.debug("Probing: $ip:$port")
                 processStatus.setState("Probing: $ip:$port")
 
                 val socket = Socket()

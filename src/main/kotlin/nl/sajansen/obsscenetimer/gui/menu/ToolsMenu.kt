@@ -6,16 +6,16 @@ import nl.sajansen.obsscenetimer.gui.menu.submenu.RemoteSyncMenu
 import nl.sajansen.obsscenetimer.gui.utils.getMainFrameComponent
 import nl.sajansen.obsscenetimer.gui.websocketScanner.WebsocketScannerFrame
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.KeyStroke
 
 class ToolsMenu : JMenu("Tools") {
-    private val logger = Logger.getLogger(ToolsMenu::class.java.name)
+    private val logger = LoggerFactory.getLogger(ToolsMenu::class.java.name)
 
     init {
         initGui()

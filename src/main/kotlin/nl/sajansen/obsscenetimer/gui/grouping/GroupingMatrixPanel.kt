@@ -6,19 +6,19 @@ import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.TScene
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.EventQueue
 import java.awt.Font
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import kotlin.math.min
 
 class GroupingMatrixPanel : JPanel(), Refreshable {
-    private val logger = Logger.getLogger(GroupingMatrixPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(GroupingMatrixPanel::class.java.name)
 
     private val groupAmount = min(OBSState.scenes.size - 1, Config.maxGroups)
     private val tableHeadFont = Font(Theme.get.FONT_FAMILY, Font.BOLD, 12)
@@ -118,7 +118,7 @@ class GroupingMatrixPanel : JPanel(), Refreshable {
 }
 
 class GroupCheckboxActionListener(private val scene: TScene, private val groupNumber: Int) : ActionListener {
-    private val logger = Logger.getLogger(GroupCheckboxActionListener::class.java.name)
+    private val logger = LoggerFactory.getLogger(GroupCheckboxActionListener::class.java.name)
 
     override fun actionPerformed(e: ActionEvent) {
         if (scene.isInGroup(groupNumber)) {

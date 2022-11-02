@@ -1,11 +1,11 @@
 package nl.sajansen.obsscenetimer.objects
 
 import nl.sajansen.obsscenetimer.config.Config
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
 
 
 class TScene {
-    private val logger = Logger.getLogger(TScene::class.java.name)
+    private val logger = LoggerFactory.getLogger(TScene::class.java.name)
 
     var name = ""
     var sources: ArrayList<TSource> = ArrayList()
@@ -68,17 +68,17 @@ class TScene {
     fun allSourceTimesAreLoaded() = sourcesAreLoaded && sources.all { it.settingsLoaded }
 
     fun addToGroup(groupNumber: Int) {
-        logger.fine("Adding scene '$name' to group: $groupNumber")
+        logger.debug("Adding scene '$name' to group: $groupNumber")
         groups.add(groupNumber)
     }
 
     fun removeFromGroup(groupNumber: Int) {
-        logger.fine("Removing scene '$name' from group: $groupNumber")
+        logger.debug("Removing scene '$name' from group: $groupNumber")
         groups.remove(groupNumber)
     }
 
     fun removeFromAllGroups() {
-        logger.fine("Removing scene '$name' from all groups")
+        logger.debug("Removing scene '$name' from all groups")
         groups.clear()
     }
 

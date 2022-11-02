@@ -19,16 +19,16 @@ import org.bridj.Pointer
 import org.bridj.cpp.com.COMRuntime
 import org.bridj.cpp.com.shell.ITaskbarList3
 import org.bridj.jawt.JAWTUtils
+import org.slf4j.LoggerFactory
 import java.awt.EventQueue
 import java.awt.Image
 import java.util.*
-import java.util.logging.Logger
 import javax.swing.JFrame
 import kotlin.math.max
 
 
 class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
-    private val logger = Logger.getLogger(MainFrame::class.java.name)
+    private val logger = LoggerFactory.getLogger(MainFrame::class.java.name)
 
     private val applicationIconDefault: Image?
     private val applicationIconOrange: Image?
@@ -79,7 +79,7 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
             try {
                 taskbarList = COMRuntime.newInstance(ITaskbarList3::class.java)
             } catch (t: Throwable) {
-                logger.warning("Could no create tasbkar object for using taskbar progressbar")
+                logger.warn("Could no create tasbkar object for using taskbar progressbar")
                 t.printStackTrace()
             }
         } else {
@@ -175,7 +175,7 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
                 @Suppress("UNCHECKED_CAST", "DEPRECATION")
                 hwnd = Pointer.pointerToAddress(hwndVal) as Pointer<Int>?
             } catch (t: Throwable) {
-                logger.warning("Could no get window handle for using taskbar progressbar")
+                logger.warn("Could no get window handle for using taskbar progressbar")
                 t.printStackTrace()
                 return
             }
@@ -194,7 +194,7 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
                 taskbarList?.SetProgressValue(hwnd, OBSSceneTimer.getValue(), OBSSceneTimer.getMaxTimerValue())
             }
         } catch (t: Throwable) {
-            logger.warning("Could no update taskbar progressbar")
+            logger.warn("Could no update taskbar progressbar")
             t.printStackTrace()
         }
     }

@@ -2,11 +2,11 @@ package nl.sajansen.obsscenetimer.gui.config.formcomponents
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
-import java.util.logging.Logger
 import javax.swing.*
 
 class NumberFormInput<T : Number>(
@@ -16,7 +16,7 @@ class NumberFormInput<T : Number>(
     private val max: T?,
     private val onSave: ((newValue: T) -> Unit)? = null
 ) : FormInput {
-    private val logger = Logger.getLogger(NumberFormInput::class.java.name)
+    private val logger = LoggerFactory.getLogger(NumberFormInput::class.java.name)
 
     private val input = JSpinner()
 

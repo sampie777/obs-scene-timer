@@ -3,14 +3,14 @@ package nl.sajansen.obsscenetimer.themes
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.Insets
-import java.util.logging.Logger
 import javax.swing.UIManager
 
 
 object Theme {
-    private val logger = Logger.getLogger(Theme::class.java.name)
+    private val logger = LoggerFactory.getLogger(Theme::class.java.name)
 
     lateinit var get: BaseTheme
     private val themeList: ArrayList<ThemeWrapper> = arrayListOf(
@@ -31,7 +31,7 @@ object Theme {
         try {
             val newTheme = loadTheme(themeInternalName)
             if (newTheme == null) {
-                logger.warning("Could not find theme '$themeInternalName'. Using default theme.")
+                logger.warn("Could not find theme '$themeInternalName'. Using default theme.")
 
                 if (themeList.size == 0) {
                     throw IndexOutOfBoundsException("No themes available")
@@ -43,7 +43,7 @@ object Theme {
 
             get = newTheme
         } catch (e: Exception) {
-            logger.severe("Failed to set theme to '$themeInternalName'. ${e.localizedMessage}")
+            logger.error("Failed to set theme to '$themeInternalName'. ${e.localizedMessage}")
             Rollbar.error(e, "Failed to set theme to '$themeInternalName'")
             e.printStackTrace()
             Notifications.add("Failed to set theme to '$themeInternalName': ${e.localizedMessage}", "Theme")

@@ -1,15 +1,15 @@
 package nl.sajansen.obsscenetimer.gui.config
 
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
-import java.util.logging.Logger
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
 
 class ConfigFrame(internal val parentFrame: JFrame?) : JDialog(parentFrame) {
-    private val logger = Logger.getLogger(ConfigFrame::class.java.name)
+    private val logger = LoggerFactory.getLogger(ConfigFrame::class.java.name)
 
     private val configEditPanel: ConfigEditPanel = ConfigEditPanel()
 

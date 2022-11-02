@@ -2,8 +2,8 @@ package nl.sajansen.obsscenetimer.gui.config.formcomponents
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.*
-import java.util.logging.Logger
 import javax.swing.JButton
 import javax.swing.JColorChooser
 import javax.swing.JLabel
@@ -13,7 +13,7 @@ class ColorFormInput(
     override val key: String,
     private val labelText: String
 ) : FormInput {
-    private val logger = Logger.getLogger(ColorFormInput::class.java.name)
+    private val logger = LoggerFactory.getLogger(ColorFormInput::class.java.name)
 
     private lateinit var color: Color
     private val button = JButton()

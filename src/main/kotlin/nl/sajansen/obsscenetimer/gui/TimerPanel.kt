@@ -10,15 +10,15 @@ import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.remotesync.client.TimerClient
 import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.*
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 
 class TimerPanel : JPanel(), Refreshable {
-    private val logger = Logger.getLogger(TimerPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(TimerPanel::class.java.name)
 
     val sceneLabel: JLabel = JLabel()
     private val resetTimerButton = JButton("Reset")

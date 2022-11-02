@@ -1,16 +1,16 @@
 package nl.sajansen.obsscenetimer.gui.utils
 
+import org.slf4j.LoggerFactory
 import java.awt.KeyEventDispatcher
 import java.awt.KeyboardFocusManager
 import java.awt.Window
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.KeyStroke
 
 class DefaultDialogKeyDispatcher(private val frame: Window) : KeyEventDispatcher {
 
-    private val logger = Logger.getLogger(DefaultDialogKeyDispatcher::class.java.name)
+    private val logger = LoggerFactory.getLogger(DefaultDialogKeyDispatcher::class.java.name)
 
     private val keyEvents = HashMap<Int, (e: KeyEvent) -> Unit>()
     private val keyStrokes = HashMap<KeyStroke, (e: KeyEvent) -> Unit>()
@@ -52,7 +52,7 @@ class DefaultDialogKeyDispatcher(private val frame: Window) : KeyEventDispatcher
         try {
             callback.invoke(keyEvent)
         } catch (e: Exception) {
-            logger.warning("Failed to execute keystroke: ${keyEvent.keyCode}")
+            logger.warn("Failed to execute keystroke: ${keyEvent.keyCode}")
             e.printStackTrace()
         } finally {
             return false

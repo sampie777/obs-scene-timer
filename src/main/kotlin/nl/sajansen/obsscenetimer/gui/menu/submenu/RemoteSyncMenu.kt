@@ -16,14 +16,14 @@ import nl.sajansen.obsscenetimer.remotesync.server.TimerServer
 import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.utils.Rollbar
 import openWebURL
+import org.slf4j.LoggerFactory
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 
 class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
-    private val logger = Logger.getLogger(RemoteSyncMenu::class.java.name)
+    private val logger = LoggerFactory.getLogger(RemoteSyncMenu::class.java.name)
 
     val startServerItem = JMenuItem("Start as server")
     val stopServerItem = JMenuItem("Stop as server")
@@ -128,7 +128,7 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
                 TimerClient.connect(Config.remoteSyncClientAddress)
             }.start()
         } catch (e: Exception) {
-            logger.severe("Failed to start tread for stopping OBS and connecting to remote sync server. ${e.localizedMessage}")
+            logger.error("Failed to start tread for stopping OBS and connecting to remote sync server. ${e.localizedMessage}")
             Rollbar.error(e, "Failed to start tread for stopping OBS and connecting to remote sync server")
             e.printStackTrace()
             Notifications.popup(

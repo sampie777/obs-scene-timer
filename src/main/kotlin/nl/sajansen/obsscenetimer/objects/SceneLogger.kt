@@ -3,15 +3,15 @@ package nl.sajansen.obsscenetimer.objects
 import getCurrentJarDirectory
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Logger
 
 
 object SceneLogger {
-    private val logger = Logger.getLogger(SceneLogger.toString())
+    private val logger = LoggerFactory.getLogger(SceneLogger.toString())
 
     private val file: File?
 
@@ -32,21 +32,21 @@ object SceneLogger {
         }
 
         if (file == null) {
-            logger.severe("Cannot log scenes because sceneLogger file is null")
+            logger.error("Cannot log scenes because sceneLogger file is null")
             return
         }
 
         val timestamp = System.currentTimeMillis()
         val dataLine = "${timestamp};\"${sceneName}\"\n"
 
-        logger.fine("Appending scene to sceneLogger: $dataLine")
+        logger.debug("Appending scene to sceneLogger: $dataLine")
         try {
             val fileWriter = FileWriter(file, true)
             fileWriter.append(dataLine)
             fileWriter.flush()
             fileWriter.close()
         } catch (e: Exception) {
-            logger.severe("Failed to write to sceneLogger file. ${e.localizedMessage}")
+            logger.error("Failed to write to sceneLogger file. ${e.localizedMessage}")
             e.printStackTrace()
 
             Notifications.add("Failed to write to sceneLogger file", "SceneLogger")
@@ -55,7 +55,7 @@ object SceneLogger {
 
     private fun checkAndCreateFile() {
         if (file == null) {
-            logger.severe("Cannot create sceneLogger file because no file is given")
+            logger.error("Cannot create sceneLogger file because no file is given")
             return
         }
 
@@ -67,7 +67,7 @@ object SceneLogger {
         try {
             file.createNewFile()
         } catch (e: Exception) {
-            logger.severe("Failed to create sceneLogger file. ${e.localizedMessage}")
+            logger.error("Failed to create sceneLogger file. ${e.localizedMessage}")
             e.printStackTrace()
 
             Notifications.add("Failed to create sceneLogger file", "SceneLogger")

@@ -4,9 +4,9 @@ package nl.sajansen.obsscenetimer.gui.grouping
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.obs.OBSState
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 class GroupingActionPanel(private val frame: GroupingFrame) : JPanel() {
-    private val logger = Logger.getLogger(GroupingActionPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(GroupingActionPanel::class.java.name)
 
     init {
         createGui()

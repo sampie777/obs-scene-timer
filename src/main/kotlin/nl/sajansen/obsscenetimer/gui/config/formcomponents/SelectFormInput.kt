@@ -2,11 +2,11 @@ package nl.sajansen.obsscenetimer.gui.config.formcomponents
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
-import java.util.logging.Logger
 import javax.swing.*
 
 class SelectFormInput<T : Any>(
@@ -15,7 +15,7 @@ class SelectFormInput<T : Any>(
     private val values: List<T>
 ) : FormInput {
 
-    private val logger = Logger.getLogger(SelectFormInput::class.java.name)
+    private val logger = LoggerFactory.getLogger(SelectFormInput::class.java.name)
 
     private val selectBox = JComboBox<Any>()
 

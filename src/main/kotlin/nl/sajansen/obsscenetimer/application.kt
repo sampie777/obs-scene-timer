@@ -4,35 +4,25 @@ import exitApplication
 import getCurrentJarDirectory
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
-import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSClient
 import nl.sajansen.obsscenetimer.remotesync.client.TimerClient
 import nl.sajansen.obsscenetimer.remotesync.server.TimerServer
 import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.updater.UpdateChecker
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.EventQueue
-import java.util.logging.Level
-import java.util.logging.LogRecord
-import java.util.logging.Logger
 
 fun main(args: Array<String>) {
-    val logger = Logger.getLogger("Application")
+    val logger = LoggerFactory.getLogger("Application")
 
     logger.info("Starting application ${ApplicationInfo.artifactId}:${ApplicationInfo.version}")
     logger.info("Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath)
-    LogService.logBuffer.add(
-        LogRecord(
-            Level.INFO,
-            "Executing JAR directory: " + getCurrentJarDirectory(Config).absolutePath
-        )
-    )
 
     Config.enableWriteToFile(true)
     Config.load()
     Rollbar.enable(Config.enableAutomaticErrorReporting)
     setObsParametersFromObsAddress()
-    setupLogging(args)  // Setup logging as soon as possible, but because it depends on Config, just let Config load first
     Config.save()
 
     Theme.init()
@@ -41,7 +31,7 @@ fun main(args: Array<String>) {
         try {
             MainFrame.createAndShow()
         }catch (t: Throwable) {
-            logger.severe("Failed to initialize GUI. ${t.localizedMessage}")
+            logger.error("Failed to initialize GUI. ${t.localizedMessage}")
             Rollbar.error(t, "Failed to initialize GUI")
             t.printStackTrace()
             exitApplication()
@@ -77,17 +67,5 @@ fun setObsParametersFromObsAddress() {
         Config.obsPort = 4455   // Default port
     } else {
         Config.obsPort = obsPort.toIntOrNull() ?: 4455
-    }
-}
-
-private fun setupLogging(args: Array<String>) {
-    val logger = Logger.getLogger("Application")
-    try {
-        LogService.setup(args)
-    } catch (e: Exception) {
-        logger.severe("Failed to initiate logging: $e")
-        Rollbar.error(e, mapOf("args" to args), "Failed to initate logging")
-        e.printStackTrace()
-        Notifications.add("Failed to setup logging service: ${e.localizedMessage}", "Application")
     }
 }

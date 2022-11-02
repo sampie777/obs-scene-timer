@@ -2,11 +2,11 @@ package nl.sajansen.obsscenetimer.objects.notifications
 
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
 import javax.swing.JOptionPane
 
 object Notifications {
-    private val logger = Logger.getLogger(Notifications.toString())
+    private val logger = LoggerFactory.getLogger(Notifications.toString())
 
     val list: ArrayList<Notification> = ArrayList()
     var unreadNotifications: Int = 0

@@ -3,8 +3,8 @@ package nl.sajansen.obsscenetimer.gui.notifications
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
-import java.util.logging.Logger
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JLabel
@@ -12,7 +12,7 @@ import javax.swing.JPanel
 
 class NotificationListPanel : JPanel(), Refreshable {
 
-    private val logger = Logger.getLogger(NotificationListPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(NotificationListPanel::class.java.name)
 
     private val mainPanel = JPanel()
 

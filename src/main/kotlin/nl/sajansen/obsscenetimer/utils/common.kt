@@ -6,6 +6,8 @@ import nl.sajansen.obsscenetimer.objects.SceneLogger
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSClient
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.Desktop
 import java.io.File
@@ -15,10 +17,9 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Logger
 import kotlin.system.exitProcess
 
-private val logger: Logger = Logger.getLogger("utils.common")
+private val logger = LoggerFactory.getLogger("utils.common")
 
 fun getTimeAsClock(value: Long, looseFormat: Boolean = false): String {
     var positiveValue = value
@@ -60,7 +61,7 @@ fun exitApplication() {
         logger.info("Stopping OBS client...")
         OBSClient.stop(true)
     } catch (t: Throwable) {
-        logger.warning("Failed to correctly stop OBS client")
+        logger.warn("Failed to correctly stop OBS client")
         t.printStackTrace()
     }
 
@@ -68,7 +69,7 @@ fun exitApplication() {
         logger.info("Closing windows...")
         GUI.windowClosing(MainFrame.getInstance())
     } catch (t: Throwable) {
-        logger.warning("Failed to correctly close windows")
+        logger.warn("Failed to correctly close windows")
         t.printStackTrace()
     }
 
@@ -76,7 +77,7 @@ fun exitApplication() {
         logger.info("Shutting down scene logger...")
         SceneLogger.log("")
     } catch (t: Throwable) {
-        logger.warning("Failed to shutdown scene logger")
+        logger.warn("Failed to shutdown scene logger")
         t.printStackTrace()
     }
 
@@ -84,7 +85,7 @@ fun exitApplication() {
         logger.info("Saving configuration...")
         Config.save()
     } catch (t: Throwable) {
-        logger.warning("Failed to save configuration")
+        logger.warn("Failed to save configuration")
         t.printStackTrace()
     }
 
@@ -93,7 +94,7 @@ fun exitApplication() {
         Rollbar.close(true)
     } catch (t: Throwable) {
         if (Rollbar.isEnabled()) {
-            logger.warning("Failed to close rollbar")
+            logger.warn("Failed to close rollbar")
             t.printStackTrace()
         } else {
             logger.info("Failed to close rollbar but it's not enabled")
@@ -122,14 +123,14 @@ internal fun jsonBuilder() =
 
 fun openWebURL(url: String, subject: String = "Webbrowser"): Boolean {
     if (!Desktop.isDesktopSupported()) {
-        logger.warning("Cannot open link '$url': not supported by host")
+        logger.warn("Cannot open link '$url': not supported by host")
         return false
     }
     try {
         Desktop.getDesktop().browse(URI(url))
         return true
     } catch (t: Throwable) {
-        logger.severe("Error during opening link '$url'. ${t.localizedMessage}")
+        logger.error("Error during opening link '$url'. ${t.localizedMessage}")
         Rollbar.error(t, mapOf("url" to url), "Error during opening link '$url'")
         t.printStackTrace()
         Notifications.popup("Failed to open link: $url", subject)
@@ -148,7 +149,7 @@ fun <R> (() -> R).invokeWithCatch(
     } catch (t: Throwable) {
         if (logger != null && logMessage != null) {
             val message = logMessage.invoke(t)
-            logger.severe(message)
+            logger.error(message)
             Rollbar.error(t, message)
         }
 

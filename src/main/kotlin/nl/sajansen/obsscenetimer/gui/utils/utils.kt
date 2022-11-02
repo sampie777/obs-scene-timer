@@ -2,15 +2,15 @@ package nl.sajansen.obsscenetimer.gui.utils
 
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import java.net.URL
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.plaf.basic.BasicSplitPaneDivider
 
-private val logger = Logger.getLogger("nl/sajansen/obsscenetimer/utils")
+private val logger = LoggerFactory.getLogger("nl/sajansen/obsscenetimer/utils")
 
 
 fun createGraphics(width: Int, height: Int): Pair<BufferedImage, Graphics2D> {
@@ -59,7 +59,7 @@ fun getMainFrameComponent(childComponent: Component): JFrame? {
 fun loadIcon(iconPath: String): Image? {
     val resource: URL? = MainFrame::class.java.getResource(iconPath)
     if (resource == null) {
-        logger.warning("Could not find icon: $iconPath")
+        logger.warn("Could not find icon: $iconPath")
         return null
     }
 
@@ -72,7 +72,7 @@ fun createImageIcon(path: String): ImageIcon? {
         return ImageIcon(imgURL)
     }
 
-    logger.severe("Couldn't find imageIcon: $path")
+    logger.error("Couldn't find imageIcon: $path")
     Rollbar.error("Couldn't find imageIcon: $path")
     return null
 }

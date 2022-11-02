@@ -5,8 +5,8 @@ import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.remotesync.objects.TimerMessage
+import org.slf4j.LoggerFactory
 import java.util.*
-import java.util.logging.Logger
 import kotlin.math.max
 
 class SceneTimerTask : TimerTask() {
@@ -19,7 +19,7 @@ class SceneTimerTask : TimerTask() {
 }
 
 object OBSSceneTimer {
-    private val logger = Logger.getLogger(OBSSceneTimer::class.java.name)
+    private val logger = LoggerFactory.getLogger(OBSSceneTimer::class.java.name)
 
     private var timerValue = 0L
     private var maxTimerValue = 0L
@@ -32,7 +32,7 @@ object OBSSceneTimer {
     fun reset() {
         logger.info("Resetting timer")
         if (Config.remoteSyncClientEnabled) {
-            logger.warning("Can't reset Scene Timer because Client mode is enabled")
+            logger.warn("Can't reset Scene Timer because Client mode is enabled")
             Notifications.add("Can't restart Timer while in client mode", "Timer")
             return
         }

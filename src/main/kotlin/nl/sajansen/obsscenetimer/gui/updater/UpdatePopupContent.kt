@@ -3,9 +3,9 @@ package nl.sajansen.obsscenetimer.gui.updater
 import nl.sajansen.obsscenetimer.ApplicationInfo
 import nl.sajansen.obsscenetimer.gui.utils.ClickableLinkComponent
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.awt.Font
-import java.util.logging.Logger
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JLabel
@@ -13,7 +13,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 class UpdatePopupContent(val version: String) : JPanel() {
-    private val logger = Logger.getLogger(UpdatePopupContent::class.java.name)
+    private val logger = LoggerFactory.getLogger(UpdatePopupContent::class.java.name)
 
     init {
         initGui()

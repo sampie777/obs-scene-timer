@@ -4,12 +4,12 @@ import com.rollbar.api.payload.data.Person
 import com.rollbar.notifier.config.ConfigBuilder
 import com.rollbar.notifier.provider.Provider
 import nl.sajansen.obsscenetimer.ApplicationInfo
+import org.slf4j.LoggerFactory
 import java.util.*
-import java.util.logging.Logger
 import java.util.prefs.Preferences
 
 object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").build()) {
-    private var logger = Logger.getLogger(Rollbar::class.java.name)
+    private var logger = LoggerFactory.getLogger(Rollbar::class.java.name)
 
     private val persistentSettings = Preferences.userRoot().node(Rollbar::class.java.name)
     private const val persistentSettingsPersonReference = "personUuid"
@@ -21,7 +21,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             try {
                 close(false)
             } catch (t: Throwable) {
-                logger.severe("Failed to close Rollbar instance. ${t.localizedMessage}")
+                logger.error("Failed to close Rollbar instance. ${t.localizedMessage}")
                 t.printStackTrace()
             }
         }
@@ -38,7 +38,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             properties.load(Rollbar::class.java.getResourceAsStream("/nl/sajansen/obsscenetimer/secrets.properties"))
             properties.getProperty("rollbarAccessToken")
         } catch (t: Throwable) {
-            logger.severe("Failed to load secrets.properties. ${t.localizedMessage}")
+            logger.error("Failed to load secrets.properties. ${t.localizedMessage}")
             t.printStackTrace()
             ""
         }
@@ -79,7 +79,7 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
             )
             configure(config)
         } catch (e: Exception) {
-            logger.severe("Failed to initialize rollbar. ${e.localizedMessage}")
+            logger.error("Failed to initialize rollbar. ${e.localizedMessage}")
             e.printStackTrace()
         }
     }

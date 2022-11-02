@@ -7,16 +7,16 @@ import nl.sajansen.obsscenetimer.gui.notifications.NotificationFrame
 import nl.sajansen.obsscenetimer.gui.utils.getMainFrameComponent
 import nl.sajansen.obsscenetimer.obs.ObsSceneProcessor
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.BorderFactory
 import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.KeyStroke
 
 class ApplicationMenu : JMenu("Application") {
-    private val logger = Logger.getLogger(ApplicationMenu::class.java.name)
+    private val logger = LoggerFactory.getLogger(ApplicationMenu::class.java.name)
 
     init {
         initGui()

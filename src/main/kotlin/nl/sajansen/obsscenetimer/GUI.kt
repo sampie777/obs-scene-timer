@@ -3,11 +3,11 @@ package nl.sajansen.obsscenetimer
 import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.TScene
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.Component
-import java.util.logging.Logger
 
 object GUI {
-    private val logger = Logger.getLogger(GUI::class.java.name)
+    private val logger = LoggerFactory.getLogger(GUI::class.java.name)
 
     private val components: HashSet<Refreshable> = HashSet()
 
@@ -17,7 +17,7 @@ object GUI {
             try {
                 component.refreshTimer()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute refreshTimer() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute refreshTimer() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute refreshTimer() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -30,7 +30,7 @@ object GUI {
             try {
                 component.switchedScenes()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute switchedScenes() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute switchedScenes() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute switchedScenes() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -43,7 +43,7 @@ object GUI {
             try {
                 component.refreshScenes()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute refreshScenes() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute refreshScenes() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute refreshScenes() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -56,7 +56,7 @@ object GUI {
             try {
                 component.refreshGroups()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute refreshGroups() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute refreshGroups() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute refreshGroups() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -69,7 +69,7 @@ object GUI {
             try {
                 component.onSceneTimeLimitUpdated(scene)
             } catch (t: Throwable) {
-                logger.severe("Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("scene" to scene), "Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -82,7 +82,7 @@ object GUI {
             try {
                 component.refreshOBSStatus()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute refreshOBSStatus() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute refreshOBSStatus() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute refreshOBSStatus() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -95,7 +95,7 @@ object GUI {
             try {
                 component.refreshNotifications()
             } catch (t: Throwable) {
-                logger.severe("Failed to execute refreshNotifications() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute refreshNotifications() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute refreshNotifications() for component ${component.javaClass}")
                 t.printStackTrace()
             }
@@ -108,7 +108,7 @@ object GUI {
             try {
                 component.windowClosing(window)
             } catch (t: Throwable) {
-                logger.severe("Failed to execute window() for component ${component.javaClass}. ${t.localizedMessage}")
+                logger.error("Failed to execute window() for component ${component.javaClass}. ${t.localizedMessage}")
                 Rollbar.error(t, "Failed to execute window() for component ${component.javaClass}")
                 t.printStackTrace()
             }

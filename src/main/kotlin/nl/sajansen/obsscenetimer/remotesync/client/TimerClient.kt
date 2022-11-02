@@ -7,12 +7,12 @@ import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest
 import org.eclipse.jetty.websocket.client.WebSocketClient
+import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.*
-import java.util.logging.Logger
 
 object TimerClient {
-    private val logger = Logger.getLogger(TimerClient::class.java.name)
+    private val logger = LoggerFactory.getLogger(TimerClient::class.java.name)
 
     private val websocketClient = WebSocketClient()
     private val timerClientSocket = TimerClientSocket({ onConnect() }, { onClose() })
@@ -36,7 +36,7 @@ object TimerClient {
             session = connection.get()
             logger.info("Connection started")
         } catch (e: Exception) {
-            logger.severe("Failed to start connection. ${e.localizedMessage}")
+            logger.error("Failed to start connection. ${e.localizedMessage}")
             e.printStackTrace()
             processFailedConnection(
                 "Could not connect to remote server ($url): ${e.localizedMessage}",
@@ -54,14 +54,14 @@ object TimerClient {
             session?.close()
             timerClientSocket.disconnect()
         } catch (e: Exception) {
-            logger.warning("Failed to close connection session")
+            logger.warn("Failed to close connection session")
             e.printStackTrace()
         }
 
         try {
             websocketClient.stop()
         } catch (e: Exception) {
-            logger.warning("Failed to close client")
+            logger.warn("Failed to close client")
             e.printStackTrace()
         }
 

@@ -1,15 +1,15 @@
 package nl.sajansen.obsscenetimer.gui.grouping
 
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
-import java.util.logging.Logger
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
 
 class GroupingFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
-    private val logger = Logger.getLogger(GroupingFrame::class.java.name)
+    private val logger = LoggerFactory.getLogger(GroupingFrame::class.java.name)
 
     private val groupingMatrixPanel = GroupingMatrixPanel()
 

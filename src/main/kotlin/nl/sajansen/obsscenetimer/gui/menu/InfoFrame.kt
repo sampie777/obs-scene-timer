@@ -1,7 +1,6 @@
 package nl.sajansen.obsscenetimer.gui.menu
 
 import nl.sajansen.obsscenetimer.ApplicationInfo
-import nl.sajansen.obsscenetimer.LogService
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.utils.ClickableLinkComponent
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
@@ -9,6 +8,7 @@ import nl.sajansen.obsscenetimer.themes.Theme
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.KeyboardFocusManager
+import java.nio.file.Paths
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -53,7 +53,7 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         val donationLabel = ClickableLinkComponent("Donate to ${ApplicationInfo.name}", ApplicationInfo.donationUrl)
         donationLabel.font = Font(Theme.get.FONT_FAMILY, Font.PLAIN, 14)
 
-        val applicationLoggingInfoLabel = JLabel("<html>Application log file location: ${LogService.getLogFile()?.absolutePath}</html>")
+        val applicationLoggingInfoLabel = JLabel("<html>Application log file location: ${Paths.get(System.getProperty("java.io.tmpdir"), "obs-scene-timer.log")}</html>")
         applicationLoggingInfoLabel.font = Font(Theme.get.FONT_FAMILY, Font.ITALIC, 12)
 
         mainPanel.add(versionLabel)

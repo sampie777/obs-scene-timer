@@ -12,16 +12,16 @@ import nl.sajansen.obsscenetimer.gui.utils.divider
 import nl.sajansen.obsscenetimer.gui.utils.getMainFrameComponent
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
-import java.util.logging.Logger
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 class MainFramePanel : JSplitPane(), Refreshable {
-    private val logger = Logger.getLogger(MainFramePanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(MainFramePanel::class.java.name)
 
     val notificationsButton = JButton()
 

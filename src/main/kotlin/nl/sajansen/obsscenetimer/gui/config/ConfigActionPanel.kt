@@ -4,9 +4,9 @@ import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.utils.Rollbar
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.awt.event.KeyEvent
-import java.util.logging.Logger
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 class ConfigActionPanel(private val frame: ConfigFrame) : JPanel() {
-    private val logger = Logger.getLogger(ConfigActionPanel::class.java.name)
+    private val logger = LoggerFactory.getLogger(ConfigActionPanel::class.java.name)
 
     val saveButton = JButton("Save")
 
@@ -41,7 +41,7 @@ class ConfigActionPanel(private val frame: ConfigFrame) : JPanel() {
     }
 
     private fun cancelWindow() {
-        logger.fine("Exiting configuration window")
+        logger.debug("Exiting configuration window")
         frame.dispose()
     }
 

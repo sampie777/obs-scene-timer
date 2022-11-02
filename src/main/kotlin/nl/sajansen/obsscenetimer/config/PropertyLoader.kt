@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import getCurrentJarDirectory
 import jsonBuilder
 import nl.sajansen.obsscenetimer.objects.Json
+import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
@@ -12,10 +13,9 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.lang.reflect.Modifier
 import java.util.*
-import java.util.logging.Logger
 
 object PropertyLoader {
-    private val logger = Logger.getLogger(PropertyLoader.toString())
+    private val logger = LoggerFactory.getLogger(PropertyLoader.toString())
 
     // En-/disables the creation of a properties file and writing to a properties file.
     // Leave disabled when running tests.
@@ -86,7 +86,7 @@ object PropertyLoader {
                     continue
                 }
 
-                logger.fine("Loading config field: ${field.name}")
+                logger.debug("Loading config field: ${field.name}")
 
                 try {
                     if (!Modifier.isStatic(field.modifiers)) {
@@ -97,7 +97,7 @@ object PropertyLoader {
                     field.set(null, propertyValueToTypedValue(userProperties, field.name, field.type))
 
                 } catch (e: IllegalArgumentException) {
-                    logger.warning(e.toString())
+                    logger.warn(e.toString())
                 }
             }
         } catch (e: Exception) {
@@ -127,11 +127,11 @@ object PropertyLoader {
                     field.isAccessible = true
                     val configValue = field.get(Config)
 
-                    logger.finer("Saving config field: ${field.name} with value: $configValue")
+                    logger.trace("Saving config field: ${field.name} with value: $configValue")
                     typedValueToPropertyValue(newProperties, field.name, field.type, configValue)
 
                 } catch (e: IllegalArgumentException) {
-                    logger.warning(e.toString())
+                    logger.warn(e.toString())
                 }
             }
         } catch (e: Exception) {
@@ -171,7 +171,7 @@ object PropertyLoader {
                 .map {
                     val pair: List<String> = it.split(sceneValuePairDelimiter)
                     if (pair.size != 2) {
-                        logger.warning("Invalid property pair: $it")
+                        logger.warn("Invalid property pair: $it")
                     }
                     pair
                 }

@@ -2,11 +2,11 @@ package nl.sajansen.obsscenetimer.gui.config.formcomponents
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.themes.Theme
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Font
-import java.util.logging.Logger
 import javax.swing.JCheckBox
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -18,7 +18,7 @@ class BooleanFormInput(
     private val toolTipText: String = "",
     private val onSave: ((newValue: Boolean) -> Unit)? = null
 ) : FormInput {
-    private val logger = Logger.getLogger(BooleanFormInput::class.java.name)
+    private val logger = LoggerFactory.getLogger(BooleanFormInput::class.java.name)
 
     private val input = JCheckBox()
 

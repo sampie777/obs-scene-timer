@@ -5,10 +5,10 @@ import nl.sajansen.obsscenetimer.remotesync.RemoteSyncRefreshableRegister
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.WebSocketAdapter
 import org.eclipse.jetty.websocket.common.WebSocketSession
-import java.util.logging.Logger
+import org.slf4j.LoggerFactory
 
 class EventSocket : WebSocketAdapter() {
-    private val logger = Logger.getLogger(EventSocket::class.java.name)
+    private val logger = LoggerFactory.getLogger(EventSocket::class.java.name)
 
     private var sessionId: String = ""
 

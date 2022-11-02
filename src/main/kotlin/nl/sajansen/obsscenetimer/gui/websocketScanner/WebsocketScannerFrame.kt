@@ -4,9 +4,9 @@ import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
 import nl.sajansen.obsscenetimer.objects.websocketScanner.ScanResult
 import nl.sajansen.obsscenetimer.objects.websocketScanner.WebsocketScannerSwingWorker
+import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
 import java.awt.KeyboardFocusManager
-import java.util.logging.Logger
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -14,7 +14,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 open class WebsocketScannerFrame(private val parentFrame: JFrame?, private val visible: Boolean = true) : JDialog(parentFrame) {
-    private val logger = Logger.getLogger(WebsocketScannerFrame::class.java.name)
+    private val logger = LoggerFactory.getLogger(WebsocketScannerFrame::class.java.name)
 
     val websocketScannerTable = WebsocketScannerTable()
     private val websocketScannerStatusPanel = WebsocketScannerStatusPanel()
