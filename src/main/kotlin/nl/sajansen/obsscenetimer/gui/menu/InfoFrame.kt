@@ -1,7 +1,6 @@
 package nl.sajansen.obsscenetimer.gui.menu
 
 import nl.sajansen.obsscenetimer.ApplicationInfo
-import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.gui.utils.ClickableLinkComponent
 import nl.sajansen.obsscenetimer.gui.utils.DefaultDialogKeyDispatcher
 import nl.sajansen.obsscenetimer.themes.Theme
@@ -62,9 +61,7 @@ class InfoFrame(private val parentFrame: JFrame?) : JDialog(parentFrame) {
         mainPanel.add(Box.createRigidArea(Dimension(0, 10)))
         mainPanel.add(donationLabel)
         mainPanel.add(Box.createRigidArea(Dimension(0, 20)))
-        if (Config.enableApplicationLoggingToFile) {
-            mainPanel.add(applicationLoggingInfoLabel)
-        }
+        mainPanel.add(applicationLoggingInfoLabel)
 
         title = "Information"
         pack()

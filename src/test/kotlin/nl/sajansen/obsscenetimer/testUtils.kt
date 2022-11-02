@@ -8,7 +8,6 @@ fun resetConfig() {
     Config.remoteSyncClientEnabled = false
     Config.mainWindowsIsMaximized = false
     Config.mainWindowAlwaysOnTop = false
-    Config.enableApplicationLoggingToFile = false
     Config.remoteSyncServerEnabled = false
     Config.remoteSyncClientEnabled = false
     Config.autoCalculateSceneLimitsBySources = true

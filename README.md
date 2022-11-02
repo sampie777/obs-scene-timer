@@ -194,11 +194,7 @@ List of hotkeys:
 
 #### Logging
 
-Application logging is done to the console and to a file. Location of this file is displayed in the Info window. By default, the log level is INFO. For debug logging, pass the `-v` argument when running the application, like so: 
-
-```bash
-java -jar obs-scene-timer.jar -v
-```
+Application log file path can be found in the Info window.
 
 Automatic error reporting is enabled by default. This function will send anonymous error reports to the developer when an error occurs. This is done in the background and can be disabled in the settings.
 
@@ -242,7 +238,6 @@ _Other settings_
 
 * `enableSceneTimestampLogger` (boolean) (default: `false`): enable the logging of every scene change to a .csv file. This file will be generated in the same folder as the application. Might be handy for diagnoses afterwards. 
 * `enableApplicationLoggingToFile` (boolean) (default: `true` since v1.4.1): Write application logging to a file. Location of this logfile is shown in the Information screen. Submit this file when reporting issues/bugs.
-* `maxLogFileSize` (number in bytes) (default: `1024*1024` = 1 MB): when the logg file exceeds this size, a new one will be created and the old one will be renamed with `*.1.*`.
 
 _Remote sync_
 
@@ -258,7 +253,6 @@ _Remote sync_
 
 Use the following command line arguments for:
 
-* `-v`: Enable verbose logging.
 * `--offline`: Start OBS Scene Timer without connecting to OBS.
 * `--clear-update-history`: Clear the update history in order to force display new updates.
 

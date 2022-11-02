@@ -11,36 +11,35 @@ class BooleanFormInputTest {
 
     @AfterTest
     fun after() {
-        Config.enableApplicationLoggingToFile = false
     }
 
     @Test
     fun testBooleanFormInputWithTrueValue() {
-        val input = BooleanFormInput("enableApplicationLoggingToFile", "label", onSave = null)
-        Config.enableApplicationLoggingToFile = true
+        val input = BooleanFormInput("enableSceneTimestampLogger", "label", onSave = null)
+        Config.enableSceneTimestampLogger = true
         input.component()
 
         assertEquals(true, input.value())
         assertTrue(input.validate().isEmpty())
 
-        Config.enableApplicationLoggingToFile = false
+        Config.enableSceneTimestampLogger = false
         input.save()
         assertEquals(true, input.value())
-        assertEquals(true, Config.enableApplicationLoggingToFile)
+        assertEquals(true, Config.enableSceneTimestampLogger)
     }
 
     @Test
     fun testBooleanFormInputWithFalseValue() {
-        val input = BooleanFormInput("enableApplicationLoggingToFile", "label", onSave = null)
-        Config.enableApplicationLoggingToFile = false
+        val input = BooleanFormInput("enableSceneTimestampLogger", "label", onSave = null)
+        Config.enableSceneTimestampLogger = false
         input.component()
 
         assertEquals(false, input.value())
         assertTrue(input.validate().isEmpty())
 
-        Config.enableApplicationLoggingToFile = true
+        Config.enableSceneTimestampLogger = true
         input.save()
         assertEquals(false, input.value())
-        assertEquals(false, Config.enableApplicationLoggingToFile)
+        assertEquals(false, Config.enableSceneTimestampLogger)
     }
 }

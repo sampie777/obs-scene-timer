@@ -25,7 +25,7 @@ class InfoFrameTest {
         assertEquals("Information", dialog.title)
 
         val components = (dialog.contentPane.components[0] as JPanel).components
-        assertEquals(6, components.size)
+        assertEquals(7, components.size)
 
         val infoLabel = components[0] as JLabel
         val codeLink = components[2] as ClickableLinkComponent
