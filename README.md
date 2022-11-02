@@ -262,7 +262,7 @@ Feel free to contribute by opening a pull request to `develop` branch or leaving
 
 Please try to add/edit tests for the code you've worked on. Also build the application with `mvn clean install` and run the compiled jar with `java -jar obs-scene-timer-X.X.X-SNAPSHOT.jar`.
 
-If you build this project yourself, make sure to create and fill a `secrets.properties` file in `resources/nl/sajansen/obsscenetimer/`.
+If you build this project yourself, make sure to create and fill a `secrets.properties` file in `resources/nl/sajansen/obsscenetimer/` with values base64 encoded.
 
 ## Donation
 

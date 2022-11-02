@@ -36,7 +36,8 @@ object Rollbar : com.rollbar.notifier.Rollbar(ConfigBuilder.withAccessToken("").
         return try {
             val properties = Properties()
             properties.load(Rollbar::class.java.getResourceAsStream("/nl/sajansen/obsscenetimer/secrets.properties"))
-            properties.getProperty("rollbarAccessToken")
+            val data = properties.getProperty("rollbarAccessToken")
+            Base64.getDecoder().decode(data).decodeToString()
         } catch (t: Throwable) {
             logger.error("Failed to load secrets.properties. ${t.localizedMessage}")
             t.printStackTrace()
