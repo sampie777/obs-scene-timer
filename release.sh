@@ -11,6 +11,7 @@ function usage {
      commands:
        patch                Release a patch version (0.0.X)
        minor                Release a minor version (0.X.0)
+       major                Release a major version (X.0.0)
        -h, --help           Show this help message and exit
 
 HEREDOC
