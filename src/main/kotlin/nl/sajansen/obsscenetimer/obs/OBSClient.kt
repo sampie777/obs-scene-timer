@@ -55,6 +55,12 @@ object OBSClient {
 
         try {
             controller = builder.build()
+        } catch (e: IllegalArgumentException) {
+            if (!arrayOf("Host or Port are invalid", "Password is required").contains(e.message)) {
+                Rollbar.error(e, mapOf("obsHost" to Config.obsHost, "obsPort" to Config.obsPort), "Failed to create controller")
+            }
+            logger.error("Failed to create controller. ${e.localizedMessage}")
+            processFailedConnection("Could not connect to OBS: ${e.localizedMessage}", reconnect = false)
         } catch (e: Exception) {
             logger.error("Failed to create controller. ${e.localizedMessage}")
             Rollbar.error(e, mapOf("obsHost" to Config.obsHost, "obsPort" to Config.obsPort), "Failed to create controller")
