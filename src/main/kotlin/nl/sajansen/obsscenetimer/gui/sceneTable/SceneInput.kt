@@ -23,6 +23,7 @@ import java.util.*
 import javax.swing.BorderFactory
 import javax.swing.JTextField
 import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
@@ -49,7 +50,9 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
     }
 
     fun refreshDisplayFromScene() {
-        text = getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)
+        SwingUtilities.invokeLater {
+            text = getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)
+        }
     }
 
     fun getSceneTimeFromInput() {
