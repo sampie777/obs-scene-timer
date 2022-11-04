@@ -154,6 +154,15 @@ object ObsSceneProcessor {
         OBSState.scenes.forEach { scene ->
             try {
                 loadItemsForScene(scene) { loadSourceSettingsForScene(scene = scene, callback = callback) }
+            } catch (e: ConnectException) {
+                logger.error("Failed to load scene items for scene '${scene.name}'. ${e.localizedMessage}")
+                e.printStackTrace()
+                Notifications.add(
+                    "Could not load scene items for scene '${scene.name}': ${e.localizedMessage}",
+                    "OBS"
+                )
+
+                callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadItemsForScene failed" })
             } catch (t: Throwable) {
                 logger.error("Failed to load scene items for scene '${scene.name}'. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("scene" to scene), "Failed to load scene items for scene '${scene.name}'")
@@ -230,6 +239,15 @@ object ObsSceneProcessor {
         sources.forEach { source ->
             try {
                 loadSourceSettingsForSource(source, callback = callback)
+            } catch (e: ConnectException) {
+                logger.error("Failed to load scene item sources settings for item '${source.name}'. ${e.localizedMessage}")
+                e.printStackTrace()
+                Notifications.add(
+                    "Could not process scene item sources settings for item '${source.name}': ${e.localizedMessage}",
+                    "OBS"
+                )
+
+                callback?.invokeWithCatch(logger, { "Failed to invoke callback after loadSourceSettingsForSource failed" })
             } catch (t: Throwable) {
                 logger.error("Failed to load scene item sources settings for item '${source.name}'. ${t.localizedMessage}")
                 Rollbar.error(t, mapOf("source" to source), "Failed to load scene item sources settings for item '${source.name}'")
