@@ -50,7 +50,7 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
             messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
 
             if (OBSState.connectionStatus == OBSConnectionStatus.CONNECTED) {
-                messageLabel.toolTipText = "<html>Connected to ${Config.obsAddress}.<br/>${settingsFileString()}</html>"
+                messageLabel.toolTipText = "<html>Connected to ${Config.obsHost}:${Config.obsPort}.<br/>${settingsFileString()}</html>"
             } else {
                 messageLabel.toolTipText = settingsFileString()
             }
@@ -63,7 +63,7 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
             OBSState.clientActivityStatus?.status ?: "" else OBSState.connectionStatus.status
 
         if (OBSState.clientActivityStatus == null && OBSState.connectionStatus == OBSConnectionStatus.CONNECTING) {
-            obsDisplayStatusString = "Connecting to ${Config.obsAddress}..."
+            obsDisplayStatusString = "Connecting to ${Config.obsHost}:${Config.obsPort}..."
         }
 
         return obsDisplayStatusString

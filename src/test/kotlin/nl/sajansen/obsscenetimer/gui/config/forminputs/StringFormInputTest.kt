@@ -11,29 +11,29 @@ class StringFormInputTest {
 
     @Test
     fun testStringFormInput() {
-        val input = StringFormInput("obsAddress", "label", allowEmpty = false)
-        Config.obsAddress = "someaddress"
+        val input = StringFormInput("obsHost", "label", allowEmpty = false)
+        Config.obsHost = "someaddress"
         input.component()
 
         assertEquals("someaddress", input.value())
         assertTrue(input.validate().isEmpty())
 
-        Config.obsAddress = ""
+        Config.obsHost = ""
         input.save()
         assertEquals("someaddress", input.value())
-        assertEquals("someaddress", Config.obsAddress)
+        assertEquals("someaddress", Config.obsHost)
     }
 
     @Test
     fun testStringFormInputValidationWithWrongInput() {
-        val input = StringFormInput("obsAddress", "label", allowEmpty = false)
-        Config.obsAddress = ""
+        val input = StringFormInput("obsHost", "label", allowEmpty = false)
+        Config.obsHost = ""
         input.component()
 
         assertEquals("", input.value())
         assertEquals(1, input.validate().size)
 
-        Config.obsAddress = "someaddress"
+        Config.obsHost = "someaddress"
 
         assertEquals("", input.value())
         assertFalse(input.validate().isEmpty())
@@ -41,17 +41,17 @@ class StringFormInputTest {
 
     @Test
     fun testStringFormInputAllowEmptyValidationWithWrongInput() {
-        val input = StringFormInput("obsAddress", "label", allowEmpty = true)
-        Config.obsAddress = ""
+        val input = StringFormInput("obsHost", "label", allowEmpty = true)
+        Config.obsHost = ""
         input.component()
 
         assertEquals("", input.value())
         assertTrue(input.validate().isEmpty())
 
-        Config.obsAddress = "someaddress"
+        Config.obsHost = "someaddress"
         input.save()
 
         assertEquals("", input.value())
-        assertEquals("", Config.obsAddress)
+        assertEquals("", Config.obsHost)
     }
 }

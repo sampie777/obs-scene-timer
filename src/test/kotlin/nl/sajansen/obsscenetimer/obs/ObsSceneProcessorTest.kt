@@ -53,7 +53,7 @@ class ObsSceneProcessorTest {
         val panelMock = GuiComponentMock()
         GUI.register(panelMock)
 
-        Config.obsAddress = "ws://somewhereNotLocalhost"
+        Config.obsHost = "somewhereNotLocalhost"
 
         assertFalse(panelMock.refreshScenesCalled)
         assertFalse(panelMock.switchedScenesCalled)
@@ -101,7 +101,7 @@ class ObsSceneProcessorTest {
     @Test
     fun testAutoCalculateSceneLimitsBySourcesPreventsSourceSettingsLoading() {
         Config.autoCalculateSceneLimitsBySources = false
-        Config.obsAddress = "ws://123.123.123.123:0"
+        Config.obsHost = "123.123.123.123"
 
         assertFalse(ObsSceneProcessor.loadSourceSettingsForScene(TScene()))
     }

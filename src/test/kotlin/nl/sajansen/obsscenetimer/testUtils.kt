@@ -5,6 +5,8 @@ import java.awt.EventQueue
 
 fun resetConfig() {
     Config.obsAddress = "ws://localhost:4444"
+    Config.obsHost = "localhost"
+    Config.obsPort = 4455
     Config.sceneProperties.tScenes.clear()
     Config.remoteSyncClientEnabled = false
     Config.mainWindowsIsMaximized = false

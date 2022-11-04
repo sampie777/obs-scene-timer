@@ -1,6 +1,5 @@
 package nl.sajansen.obsscenetimer.gui
 
-import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.obs.OBSClientStatus
 import nl.sajansen.obsscenetimer.obs.OBSConnectionStatus
 import nl.sajansen.obsscenetimer.obs.OBSState
@@ -32,7 +31,7 @@ class OBSStatusPanelTest {
 
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTING
 
-        assertEquals("Connecting to ${Config.obsAddress}...", panel.getOBSStatusRepresentation())
+        assertEquals("Connecting to localhost:4455...", panel.getOBSStatusRepresentation())
     }
 
     @Test

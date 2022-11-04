@@ -143,7 +143,7 @@ class SceneInputPanelTest {
 
     @Test
     fun `test component state when OBS is not on localhost`() {
-        Config.obsAddress = "ws://123.123.123:1234"
+        Config.obsHost = "123.123.123"
         val scene = TScene()
         scene.timeLimit = 9
         scene.sources.add(TSource(file = TVideoFile(duration = 10)))
@@ -156,7 +156,7 @@ class SceneInputPanelTest {
 
     @Test
     fun `test component state when sources are loaded but OBS is not on localhost`() {
-        Config.obsAddress = "ws://123.123.123:1234"
+        Config.obsHost = "123.123.123"
         val scene = TScene()
         scene.timeLimit = 9
         scene.sources.add(TSource(file = TVideoFile(duration = 10)))

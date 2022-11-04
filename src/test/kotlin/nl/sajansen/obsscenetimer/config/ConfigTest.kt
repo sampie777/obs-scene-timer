@@ -14,9 +14,9 @@ class ConfigTest {
 
     @Test
     fun testConfigGetExistingKey() {
-        Config.obsAddress = "x"
+        Config.obsHost = "x"
 
-        assertEquals("x", Config.get("obsAddress"))
+        assertEquals("x", Config.get("obsHost"))
         assertTrue(Notifications.list.isEmpty())
     }
 
@@ -29,10 +29,10 @@ class ConfigTest {
 
     @Test
     fun testConfigSetExistingKey() {
-        Config.obsAddress = "x"
+        Config.obsHost = "x"
 
-        Config.set("obsAddress", "new")
-        assertEquals("new", Config.obsAddress)
+        Config.set("obsHost", "new")
+        assertEquals("new", Config.obsHost)
         assertTrue(Notifications.list.isEmpty())
     }
 

@@ -39,7 +39,7 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
     private fun refreshReloadPanel() {
         reloadPanel.removeAll()
 
-        if (!isAddressLocalhost(Config.obsAddress) || !Config.autoCalculateSceneLimitsBySources) {
+        if (!isAddressLocalhost(Config.obsHost) || !Config.autoCalculateSceneLimitsBySources) {
             // pass
         } else if (scene.allSourceTimesAreLoaded()) {
             if (scene.timeLimit != null) {

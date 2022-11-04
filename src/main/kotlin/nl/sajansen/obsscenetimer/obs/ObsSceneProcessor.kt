@@ -136,7 +136,7 @@ object ObsSceneProcessor {
     }
 
     private fun loadSceneItems(callback: (() -> Unit)? = null) {
-        if (!isAddressLocalhost(Config.obsAddress)) {
+        if (!isAddressLocalhost(Config.obsHost)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
             callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSceneItems" })
             return
@@ -225,7 +225,7 @@ object ObsSceneProcessor {
             return false
         }
 
-        if (!isAddressLocalhost(Config.obsAddress)) {
+        if (!isAddressLocalhost(Config.obsHost)) {
             logger.info("Not going to try to get the video lengths, because the source files are probably running on another computer")
             callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSourceSettingsForAllScenes" })
             return false

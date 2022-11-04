@@ -102,6 +102,13 @@ open class WebsocketScannerFrame(private val parentFrame: JFrame?, private val v
 
         logger.info("Saving new obsAddress: $newAddress")
         Config.obsAddress = newAddress
+        Config.obsHost = newAddress.substringAfter("://").substringBeforeLast(":")
+        val obsPort = newAddress.substringAfterLast(":")
+        if (obsPort == Config.obsHost) {
+            Config.obsPort = 4455   // Default port
+        } else {
+            Config.obsPort = obsPort.toIntOrNull() ?: 4455
+        }
         return true
     }
 }

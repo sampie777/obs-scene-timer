@@ -72,7 +72,7 @@ object Config {
     var remoteSyncServerEnabled: Boolean = false
     var remoteSyncClientEnabled: Boolean = false
     @Deprecated("Use remoteSyncClientHost and remoteSyncServerPort instead")
-    var remoteSyncClientAddress: String = obsAddress.replace(":4444", ":4050").replace(":4455", ":4050")
+    var remoteSyncClientAddress: String = obsAddress.replace(":4455", ":4050")
     var remoteSyncServerHost: String = obsHost
     var remoteSyncServerPort: Int = 4050
     var remoteSyncClientReconnectionTimeout: Long = 3000
