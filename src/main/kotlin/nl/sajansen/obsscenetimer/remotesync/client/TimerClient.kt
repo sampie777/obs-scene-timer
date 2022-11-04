@@ -86,7 +86,7 @@ object TimerClient {
         connectionRetryTimer.schedule(object : TimerTask() {
             override fun run() {
                 reconnecting = true
-                connect(Config.remoteSyncClientAddress)
+                connect("ws://${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}")
             }
         }, Config.remoteSyncClientReconnectionTimeout)
     }

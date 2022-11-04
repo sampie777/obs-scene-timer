@@ -167,8 +167,14 @@ class ConfigEditPanel : JPanel() {
         formComponents.add(BooleanFormInput("enableSceneTimestampLogger", "Enable scene change logging"))
 
         formComponents.add(HeaderFormComponent("Remote Synchronisation"))
-        formComponents.add(NumberFormInput<Int>("remoteSyncServerPort", "Server: Port to run on", 0, null))
-        formComponents.add(StringFormInput("remoteSyncClientAddress", "Client: Remote sync server address", true))
+        formComponents.add(
+            NumberFormInput<Int>("remoteSyncServerPort", "Port to run on / connect to", 0, 65535,
+                onSave = { newValue -> Config.obsAddress = "ws://${Config.remoteSyncServerHost}:${newValue}" })
+        )
+        formComponents.add(
+            StringFormInput("remoteSyncServerHost", "Remote sync server host (client only)", true,
+                onSave = { newValue -> Config.obsAddress = "ws://${newValue}:${Config.remoteSyncServerPort}" })
+        )
         formComponents.add(
             NumberFormInput<Long>(
                 "remoteSyncClientReconnectionTimeout",

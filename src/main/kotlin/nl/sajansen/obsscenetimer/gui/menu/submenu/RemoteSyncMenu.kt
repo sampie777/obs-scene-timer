@@ -132,11 +132,11 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
             Thread {
                 OBSClient.stop()
 
-                TimerClient.connect(Config.remoteSyncClientAddress)
+                TimerClient.connect("ws://${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}")
             }.start()
         } catch (e: Exception) {
             logger.error("Failed to start tread for stopping OBS and connecting to remote sync server. ${e.localizedMessage}")
-            Rollbar.error(e, "Failed to start tread for stopping OBS and connecting to remote sync server")
+            Rollbar.error(e, "Failed to start thread for stopping OBS and connecting to remote sync server")
             e.printStackTrace()
             Notifications.popup(
                 "Could not setup connection to remote sync server: ${e.localizedMessage}. Try restarting ${ApplicationInfo.name}",

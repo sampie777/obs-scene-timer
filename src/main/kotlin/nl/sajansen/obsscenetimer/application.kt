@@ -45,7 +45,7 @@ fun main(args: Array<String>) {
 
     if (Config.remoteSyncClientEnabled) {
         logger.info("Start up with remote sync client enabled")
-        TimerClient.connect(Config.remoteSyncClientAddress)
+        TimerClient.connect("ws://${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}")
     } else {
         if (Config.remoteSyncServerEnabled) {
             logger.info("Start up with remote sync server enabled")
@@ -59,13 +59,23 @@ fun main(args: Array<String>) {
 }
 
 fun setObsParametersFromObsAddress() {
-    if (Config.obsAddress == "ws://${Config.obsHost}:${Config.obsPort}" || Config.obsAddress.isEmpty()) return
+    if (Config.obsAddress != "ws://${Config.obsHost}:${Config.obsPort}" && Config.obsAddress.isNotEmpty()) {
+        Config.obsHost = Config.obsAddress.substringAfter("://").substringBeforeLast(":")
+        val obsPort = Config.obsAddress.substringAfterLast(":")
+        if (obsPort == Config.obsHost) {
+            Config.obsPort = 4455   // Default port
+        } else {
+            Config.obsPort = obsPort.toIntOrNull() ?: 4455
+        }
+    }
 
-    Config.obsHost = Config.obsAddress.substringAfter("://").substringBeforeLast(":")
-    val obsPort = Config.obsAddress.substringAfterLast(":")
-    if (obsPort == Config.obsHost) {
-        Config.obsPort = 4455   // Default port
-    } else {
-        Config.obsPort = obsPort.toIntOrNull() ?: 4455
+    if (Config.remoteSyncClientAddress != "ws://${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}" && Config.remoteSyncClientAddress.isNotEmpty()) {
+        Config.remoteSyncServerHost = Config.remoteSyncClientAddress.substringAfter("://").substringBeforeLast(":")
+        val obsPort = Config.remoteSyncClientAddress.substringAfterLast(":")
+        if (obsPort == Config.remoteSyncServerHost) {
+            Config.remoteSyncServerPort = 4050   // Default port
+        } else {
+            Config.remoteSyncServerPort = obsPort.toIntOrNull() ?: 4050
+        }
     }
 }

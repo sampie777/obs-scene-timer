@@ -14,7 +14,8 @@ object Config {
     private val logger = LoggerFactory.getLogger(Config.toString())
 
     // OBS Connection
-    var obsAddress: String = "ws://localhost:4455"  // Deprecated
+    @Deprecated("Use obsHost and obsPort instead")
+    var obsAddress: String = "ws://localhost:4455"
     var obsHost: String = "localhost"
     var obsPort: Int = 4455
     var obsPassword: String = ""
@@ -69,9 +70,11 @@ object Config {
 
     // Remote Sync
     var remoteSyncServerEnabled: Boolean = false
-    var remoteSyncServerPort: Int = 4050
     var remoteSyncClientEnabled: Boolean = false
-    var remoteSyncClientAddress: String = obsAddress.replace(":4444", ":4050")
+    @Deprecated("Use remoteSyncClientHost and remoteSyncServerPort instead")
+    var remoteSyncClientAddress: String = obsAddress.replace(":4444", ":4050").replace(":4455", ":4050")
+    var remoteSyncServerHost: String = obsHost
+    var remoteSyncServerPort: Int = 4050
     var remoteSyncClientReconnectionTimeout: Long = 3000
 
     // Other

@@ -78,7 +78,7 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
             messageLabel.text = "Remote sync: ${getRemoteSyncClientStatusRepresentation(state)}"
 
             if (state == ConnectionState.CONNECTED) {
-                messageLabel.toolTipText = "Connected to ${Config.remoteSyncClientAddress}. ${settingsFileString()}"
+                messageLabel.toolTipText = "Connected to ${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}. ${settingsFileString()}"
             } else {
                 messageLabel.toolTipText = settingsFileString()
             }
@@ -89,7 +89,7 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
     private fun getRemoteSyncClientStatusRepresentation(state: ConnectionState): String {
         var remoteSyncClientDisplayStatusString = state.text
         if (state == ConnectionState.CONNECTING) {
-            remoteSyncClientDisplayStatusString = "Connecting to ${Config.remoteSyncClientAddress}..."
+            remoteSyncClientDisplayStatusString = "Connecting to ${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}..."
         }
 
         return remoteSyncClientDisplayStatusString

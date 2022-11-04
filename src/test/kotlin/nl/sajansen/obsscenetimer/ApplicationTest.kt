@@ -64,4 +64,64 @@ class ApplicationTest {
         assertEquals("test", Config.obsHost)
         assertEquals(1234, Config.obsPort)
     }
+    
+    @Test
+    fun `test config remoteSync host is set when remoteSyncClientAddress differs`() {
+        Config.remoteSyncClientAddress = "ws://test:1234"
+        Config.remoteSyncServerHost = ""
+        Config.remoteSyncServerPort = 0
+
+        setObsParametersFromObsAddress()
+
+        assertEquals("test", Config.remoteSyncServerHost)
+        assertEquals(1234, Config.remoteSyncServerPort)
+    }
+
+    @Test
+    fun `test config remoteSync host remains when remoteSyncClientAddress is equal`() {
+        Config.remoteSyncClientAddress = "ws://test:1234"
+        Config.remoteSyncServerHost = "test"
+        Config.remoteSyncServerPort = 1234
+
+        setObsParametersFromObsAddress()
+
+        assertEquals("test", Config.remoteSyncServerHost)
+        assertEquals(1234, Config.remoteSyncServerPort)
+    }
+
+    @Test
+    fun `test config remoteSync port defaults when remoteSyncClientAddress has non integer port`() {
+        Config.remoteSyncClientAddress = "ws://test:abc"
+        Config.remoteSyncServerHost = ""
+        Config.remoteSyncServerPort = 1234
+
+        setObsParametersFromObsAddress()
+
+        assertEquals("test", Config.remoteSyncServerHost)
+        assertEquals(4050, Config.remoteSyncServerPort)
+    }
+
+    @Test
+    fun `test config remoteSync port defaults when remoteSyncClientAddress has no port`() {
+        Config.remoteSyncClientAddress = "ws://test"
+        Config.remoteSyncServerHost = ""
+        Config.remoteSyncServerPort = 1234
+
+        setObsParametersFromObsAddress()
+
+        assertEquals("test", Config.remoteSyncServerHost)
+        assertEquals(4050, Config.remoteSyncServerPort)
+    }
+
+    @Test
+    fun `test config remoteSync host remains when remoteSyncClientAddress is empty`() {
+        Config.remoteSyncClientAddress = ""
+        Config.remoteSyncServerHost = "test"
+        Config.remoteSyncServerPort = 1234
+
+        setObsParametersFromObsAddress()
+
+        assertEquals("test", Config.remoteSyncServerHost)
+        assertEquals(1234, Config.remoteSyncServerPort)
+    }
 }
