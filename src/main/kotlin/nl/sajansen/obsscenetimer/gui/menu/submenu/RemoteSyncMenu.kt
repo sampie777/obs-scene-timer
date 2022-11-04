@@ -102,8 +102,10 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
 
         TimerServer.startServer()
 
-        updateMenuItems()
-        MainFrame.getInstance()?.rebuildGui()
+        EventQueue.invokeLater {
+            updateMenuItems()
+            MainFrame.getInstance()?.rebuildGui()
+        }
 
         if (!OBSClient.isRunning()) {
             Notifications.popup("Please restart the application to (re)connect to OBS", "Remote Sync")
@@ -115,7 +117,9 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         Config.remoteSyncServerEnabled = false
         TimerServer.stopServer()
 
-        updateMenuItems()
+        EventQueue.invokeLater {
+            updateMenuItems()
+        }
     }
 
     private fun startClient() {
@@ -144,8 +148,10 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
             )
         }
 
-        updateMenuItems()
-        MainFrame.getInstance()?.rebuildGui()
+        EventQueue.invokeLater {
+            updateMenuItems()
+            MainFrame.getInstance()?.rebuildGui()
+        }
     }
 
     private fun stopClient() {
@@ -153,7 +159,9 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
         Config.remoteSyncClientEnabled = false
         TimerClient.disconnect()
 
-        updateMenuItems()
+        EventQueue.invokeLater {
+            updateMenuItems()
+        }
         Notifications.add("Please restart the application to (re)connect to OBS", "Remote Sync")
     }
 

@@ -10,6 +10,7 @@ import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.remotesync.RemoteSyncRefreshableRegister
 import nl.sajansen.obsscenetimer.remotesync.objects.TimerMessage
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -46,6 +47,8 @@ object TimerServer : Server(), Refreshable {
             try {
                 setup()
             } catch (e: Exception) {
+                logger.error("Failed to initialize timer server. ${e.localizedMessage}")
+                Rollbar.error(e, mapOf("port" to port), "Failed to initialize timer server")
                 e.printStackTrace()
                 Notifications.add("Failed to initialize server: ${e.localizedMessage}", "Remote Sync")
                 RemoteSyncRefreshableRegister.remoteSyncServerRefreshConnectionState()
@@ -57,6 +60,8 @@ object TimerServer : Server(), Refreshable {
             start()
             GUI.register(this)
         } catch (e: Exception) {
+            logger.error("Failed to start timer server. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("port" to port), "Failed to start timer server")
             e.printStackTrace()
             Notifications.add("Could not start server: ${e.localizedMessage}", "Remote Sync")
             RemoteSyncRefreshableRegister.remoteSyncServerRefreshConnectionState()
@@ -88,7 +93,7 @@ object TimerServer : Server(), Refreshable {
             return
         }
 
-        Thread { updateClientsWithTimerMessage() }.run()
+        Thread { updateClientsWithTimerMessage() }.start()
     }
 
     override fun refreshTimer() {
@@ -96,13 +101,23 @@ object TimerServer : Server(), Refreshable {
             return
         }
 
-        Thread { updateClientsWithTimerMessage() }.run()
+        Thread { updateClientsWithTimerMessage() }.start()
     }
 
     private fun updateClientsWithTimerMessage() {
         val timerMessageJson = getCurrentTimerMessage().json()
         ServerStatus.clients.values.forEach {
-            it.remote.sendString(timerMessageJson)
+            try {
+                it.remote.sendString(timerMessageJson)
+                throw java.lang.Exception("Yoehoe")
+            } catch (t: Throwable) {
+                logger.error("Failed to send timer message to client. ${t.localizedMessage}")
+                Rollbar.error(
+                    t, mapOf("message" to timerMessageJson, "clientsCount" to ServerStatus.clients.size, "client" to it, "remote" to it.remote),
+                    "Failed to send timer message to client. ${t.localizedMessage}"
+                )
+                t.printStackTrace()
+            }
         }
     }
 

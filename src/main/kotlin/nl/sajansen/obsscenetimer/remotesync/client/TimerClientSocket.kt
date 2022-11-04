@@ -7,6 +7,7 @@ import nl.sajansen.obsscenetimer.objects.TScene
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.remotesync.objects.TimerMessage
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
 import org.slf4j.LoggerFactory
@@ -39,7 +40,8 @@ class TimerClientSocket(
         val timerMessage = try {
             Gson().fromJson(message, TimerMessage::class.java)
         } catch (e: Exception) {
-            logger.warn("Failed to convert received message to json: $message")
+            logger.warn("Failed to convert received message to json: $message. ${e.localizedMessage}")
+            Rollbar.warning(e, mapOf("message" to message), "Failed to convert received message to json.")
             e.printStackTrace()
             return
         }
@@ -72,6 +74,7 @@ class TimerClientSocket(
             session!!.remote.sendString(message)
         } catch (e: Exception) {
             logger.error("Failed to send message to timer server. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("message" to message, "session" to session, "remote" to session?.remote), "Failed to send message to timer server")
             e.printStackTrace()
         }
     }

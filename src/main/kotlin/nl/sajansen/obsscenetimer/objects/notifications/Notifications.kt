@@ -3,6 +3,7 @@ package nl.sajansen.obsscenetimer.objects.notifications
 import nl.sajansen.obsscenetimer.GUI
 import nl.sajansen.obsscenetimer.gui.mainFrame.MainFrame
 import org.slf4j.LoggerFactory
+import java.awt.EventQueue
 import javax.swing.JOptionPane
 
 object Notifications {
@@ -40,12 +41,14 @@ object Notifications {
     fun popup(notification: Notification, markAsRead: Boolean = true) {
         add(notification, markAsRead)
 
-        JOptionPane.showMessageDialog(
-            MainFrame.getInstance(),
-            notification.message,
-            notification.subject,
-            JOptionPane.PLAIN_MESSAGE
-        )
+        EventQueue.invokeLater {
+            JOptionPane.showMessageDialog(
+                MainFrame.getInstance(),
+                notification.message,
+                notification.subject,
+                JOptionPane.PLAIN_MESSAGE
+            )
+        }
     }
 
     fun popup(message: String, subject: String = "", markAsRead: Boolean = true) {
