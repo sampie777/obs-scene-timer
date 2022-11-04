@@ -39,13 +39,16 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
     private fun refreshReloadPanel() {
         reloadPanel.removeAll()
 
-        if (!isAddressLocalhost(Config.obsAddress)) {
+        if (!isAddressLocalhost(Config.obsAddress) || !Config.autoCalculateSceneLimitsBySources) {
             // pass
         } else if (scene.allSourceTimesAreLoaded()) {
             if (scene.timeLimit != null) {
                 reloadPanel.add(SceneVideoReloadButton(scene), BorderLayout.CENTER)
             }
-        } else if (OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENES || OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENE_SOURCES) {
+        } else if (OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENES
+            || OBSState.clientActivityStatus == OBSClientStatus.LOADING_SCENE_SOURCES
+            || scene.someSourceTimesAreLoading()
+        ) {
             reloadPanel.add(SceneVideoLoadingIcon(), BorderLayout.CENTER)
         } else {
             reloadPanel.add(FAIcon("\uf071", fontSize = 12f).also {

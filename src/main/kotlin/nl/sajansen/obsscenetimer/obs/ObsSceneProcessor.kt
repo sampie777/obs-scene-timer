@@ -142,6 +142,12 @@ object ObsSceneProcessor {
             return
         }
 
+        if (!Config.autoCalculateSceneLimitsBySources) {
+            logger.info("Auto calculation of scene time limits by source files is disabled")
+            callback?.invokeWithCatch(logger, { "Failed to invoke callback when skipping loadSceneItems" })
+            return
+        }
+
         if (OBSState.scenes.isEmpty()) {
             callback?.invokeWithCatch(
                 logger,
@@ -182,6 +188,7 @@ object ObsSceneProcessor {
             throw ConnectException("OBS not connected")
         }
 
+        scene.sourcesAreLoading = true
         OBSClient.getController()?.getSceneItemList(scene.name) { response: GetSceneItemListResponse ->
             response.sceneItems.forEach { item ->
                 if (item.sourceType == "OBS_SOURCE_TYPE_INPUT" && videoSources.contains(item.inputKind)) {
@@ -192,6 +199,7 @@ object ObsSceneProcessor {
 //                }
             }
             scene.sourcesAreLoaded = true
+            scene.sourcesAreLoading = false
 
             if (scene.sources.isEmpty()) {
                 GUI.onSceneTimeLimitUpdated(scene)
@@ -223,9 +231,6 @@ object ObsSceneProcessor {
             return false
         }
 
-        OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENE_SOURCES
-        GUI.refreshOBSStatus()
-
         val sources = scene.sources.filter { !it.settingsLoaded }
 
         if (sources.isEmpty()) {
@@ -235,6 +240,9 @@ object ObsSceneProcessor {
                 { "Something went wrong after loading scene item sources: ${it.localizedMessage}" })
             return true
         }
+
+        OBSState.clientActivityStatus = OBSClientStatus.LOADING_SCENE_SOURCES
+        GUI.refreshOBSStatus()
 
         sources.forEach { source ->
             try {
@@ -264,6 +272,8 @@ object ObsSceneProcessor {
     }
 
     private fun loadSourceSettingsForSource(source: TSource, callback: (() -> Unit)? = null) {
+        source.settingsAreLoading = true
+
         // First check our scenes for matching sources
         val existingSource = OBSState.scenes.flatMap { it.sources }
             .find { it.settingsLoaded && it != source && it.name == source.name }
@@ -272,6 +282,7 @@ object ObsSceneProcessor {
             logger.info("Copying existing settings from matching source '${source.name}'.")
             existingSource.copyTo(source)
             source.settingsLoaded = true
+            source.settingsAreLoading = false
 
             OBSState.scenes.filter { it.sources.contains(source) }
                 .forEach(GUI::onSceneTimeLimitUpdated)
@@ -316,6 +327,7 @@ object ObsSceneProcessor {
         getSourceVideoLength(source)
 
         source.settingsLoaded = true
+        source.settingsAreLoading = false
 
         OBSState.scenes.filter { it.sources.contains(source) }
             .forEach(GUI::onSceneTimeLimitUpdated)

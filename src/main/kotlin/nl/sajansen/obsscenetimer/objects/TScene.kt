@@ -14,6 +14,7 @@ class TScene {
     var timeLimit: Int? = null
     val groups: MutableSet<Int> = mutableSetOf()
 
+    var sourcesAreLoading = false
     var sourcesAreLoaded = false
 
     companion object {
@@ -66,6 +67,7 @@ class TScene {
     }
 
     fun allSourceTimesAreLoaded() = sourcesAreLoaded && sources.all { it.settingsLoaded }
+    fun someSourceTimesAreLoading() = sourcesAreLoading || sources.any { it.settingsAreLoading }
 
     fun addToGroup(groupNumber: Int) {
         logger.debug("Adding scene '$name' to group: $groupNumber")
