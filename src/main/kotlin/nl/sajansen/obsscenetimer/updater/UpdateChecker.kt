@@ -114,6 +114,7 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             urlProvider.readText(ApplicationInfo.latestVersionsUrl)
         } catch (e: MalformedURLException) {
             logger.error("Failed to retrieve latest application version: invalid URL: '${ApplicationInfo.latestVersionsUrl}'. ${e.localizedMessage}")
+            Rollbar.error(e, mapOf("url" to ApplicationInfo.latestVersionsUrl), "Failed to retrieve latest application version: invalid URL.")
             e.printStackTrace()
             Notifications.add(
                 "Failed to check for updates: invalid URL. " +
@@ -126,7 +127,7 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
             null
         } catch (t: Throwable) {
             logger.error("Failed to retrieve latest application version. ${t.localizedMessage}")
-            Rollbar.error(t, "Failed to retrieve latest application version")
+            Rollbar.error(t, mapOf("url" to ApplicationInfo.latestVersionsUrl), "Failed to retrieve latest application version")
             t.printStackTrace()
             null
         }

@@ -103,7 +103,8 @@ object Config {
             }
         } catch (e: Exception) {
             logger.error("Failed to save Config. ${e.localizedMessage}")
-            Rollbar.error(e, mapOf("properties" to PropertyLoader.getUserProperties().toString()), "Failed to save Config")
+            Rollbar.error(e, mapOf("properties" to PropertyLoader.getUserProperties().toString(), "file" to PropertyLoader.getPropertiesFile().absolutePath),
+                "Failed to save Config")
             e.printStackTrace()
             Notifications.add("Failed to save configuration to file: ${e.localizedMessage}", "Configuration")
         }
