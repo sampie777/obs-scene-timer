@@ -109,7 +109,6 @@ object TimerServer : Server(), Refreshable {
         ServerStatus.clients.values.forEach {
             try {
                 it.remote.sendString(timerMessageJson)
-                throw java.lang.Exception("Yoehoe")
             } catch (t: Throwable) {
                 logger.error("Failed to send timer message to client. ${t.localizedMessage}")
                 Rollbar.error(
