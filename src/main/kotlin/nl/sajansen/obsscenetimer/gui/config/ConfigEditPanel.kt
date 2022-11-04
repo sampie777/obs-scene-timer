@@ -168,17 +168,17 @@ class ConfigEditPanel : JPanel() {
 
         formComponents.add(HeaderFormComponent("Remote Synchronisation"))
         formComponents.add(
-            NumberFormInput<Int>("remoteSyncServerPort", "Port to run on / connect to", 0, 65535,
-                onSave = { newValue -> Config.obsAddress = "ws://${Config.remoteSyncServerHost}:${newValue}" })
+            StringFormInput("remoteSyncServerHost", "OBS Scene Timer server host to connect to", true,
+                onSave = { newValue -> Config.obsAddress = "ws://${newValue}:${Config.remoteSyncServerPort}" })
         )
         formComponents.add(
-            StringFormInput("remoteSyncServerHost", "Remote sync server host (client only)", true,
-                onSave = { newValue -> Config.obsAddress = "ws://${newValue}:${Config.remoteSyncServerPort}" })
+            NumberFormInput("remoteSyncServerPort", "Port to run on / connect to", 0, 65535,
+                onSave = { newValue -> Config.obsAddress = "ws://${Config.remoteSyncServerHost}:${newValue}" })
         )
         formComponents.add(
             NumberFormInput<Long>(
                 "remoteSyncClientReconnectionTimeout",
-                "Client: Connection retry interval (millisec.)",
+                "Connection retry interval (millisec.) (client only)",
                 0,
                 null
             )

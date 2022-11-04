@@ -78,7 +78,7 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
             messageLabel.text = "Remote sync: ${getRemoteSyncClientStatusRepresentation(state)}"
 
             if (state == ConnectionState.CONNECTED) {
-                messageLabel.toolTipText = "Connected to ${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}. ${settingsFileString()}"
+                messageLabel.toolTipText = "<html>Connected to ${Config.remoteSyncServerHost}:${Config.remoteSyncServerPort}.<br/>${settingsFileString()}</html>"
             } else {
                 messageLabel.toolTipText = settingsFileString()
             }
