@@ -60,6 +60,7 @@ object OBSSceneTimer {
             logger.info("Timer canceled")
             return true
         } catch (e: Exception) {
+            logger.error("Error occurred during canceling timer: ${e.localizedMessage}")
             e.printStackTrace()
         }
         return false
