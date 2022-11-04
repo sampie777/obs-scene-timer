@@ -11,6 +11,7 @@ import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.themes.Theme
 import org.slf4j.LoggerFactory
 import java.awt.Dimension
+import java.awt.EventQueue
 import java.awt.Font
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
@@ -23,7 +24,6 @@ import java.util.*
 import javax.swing.BorderFactory
 import javax.swing.JTextField
 import javax.swing.SwingConstants
-import javax.swing.SwingUtilities
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
@@ -50,7 +50,7 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
     }
 
     fun refreshDisplayFromScene() {
-        SwingUtilities.invokeLater {
+        EventQueue.invokeLater {
             text = getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)
         }
     }

@@ -13,10 +13,7 @@ import nl.sajansen.obsscenetimer.gui.utils.getMainFrameComponent
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.themes.Theme
 import org.slf4j.LoggerFactory
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.Cursor
-import java.awt.Dimension
+import java.awt.*
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -78,15 +75,17 @@ class MainFramePanel : JSplitPane(), Refreshable {
     }
 
     override fun refreshNotifications() {
-        if (Notifications.unreadNotifications > 0) {
-            notificationsButton.icon = notificationsButtonIconYellow
-            notificationsButton.text = "(${Notifications.unreadNotifications})"
-            notificationsButton.toolTipText = "New notifications available"
-            return
-        }
+        EventQueue.invokeLater {
+            if (Notifications.unreadNotifications > 0) {
+                notificationsButton.icon = notificationsButtonIconYellow
+                notificationsButton.text = "(${Notifications.unreadNotifications})"
+                notificationsButton.toolTipText = "New notifications available"
+                return@invokeLater
+            }
 
-        notificationsButton.icon = notificationsButtonIconDefault
-        notificationsButton.text = ""
-        notificationsButton.toolTipText = "No new notifications"
+            notificationsButton.icon = notificationsButtonIconDefault
+            notificationsButton.text = ""
+            notificationsButton.toolTipText = "No new notifications"
+        }
     }
 }

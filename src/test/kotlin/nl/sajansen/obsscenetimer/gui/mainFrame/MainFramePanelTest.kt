@@ -2,6 +2,7 @@ package nl.sajansen.obsscenetimer.gui.mainFrame
 
 import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
+import nl.sajansen.obsscenetimer.waitForSwing
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -12,15 +13,22 @@ class MainFramePanelTest {
     fun testNotificationButtonChangesOnNewNotifications() {
         val panel = MainFramePanel()
 
+        waitForSwing()
         Notifications.markAllAsRead()
+
+        waitForSwing()
         assertEquals("", panel.notificationsButton.text)
         assertEquals("No new notifications", panel.notificationsButton.toolTipText)
 
         Notifications.add("message")
+
+        waitForSwing()
         assertEquals("(1)", panel.notificationsButton.text)
         assertEquals("New notifications available", panel.notificationsButton.toolTipText)
 
         Notifications.markAllAsRead()
+
+        waitForSwing()
         assertEquals("", panel.notificationsButton.text)
         assertEquals("No new notifications", panel.notificationsButton.toolTipText)
     }

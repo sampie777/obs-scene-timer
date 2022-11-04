@@ -5,6 +5,7 @@ import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import org.slf4j.LoggerFactory
 import java.awt.Dimension
+import java.awt.EventQueue
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JLabel
@@ -53,6 +54,8 @@ class NotificationListPanel : JPanel(), Refreshable {
     }
 
     override fun refreshNotifications() {
-        addNotificationPanels()
+        EventQueue.invokeLater {
+            addNotificationPanels()
+        }
     }
 }

@@ -10,6 +10,7 @@ import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
 import nl.sajansen.obsscenetimer.remotesync.objects.RemoteSyncRefreshable
 import nl.sajansen.obsscenetimer.themes.Theme
 import java.awt.BorderLayout
+import java.awt.EventQueue
 import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -45,14 +46,16 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
     }
 
     override fun refreshOBSStatus() {
-        messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
+        EventQueue.invokeLater {
+            messageLabel.text = "OBS: ${getOBSStatusRepresentation()}"
 
-        if (OBSState.connectionStatus == OBSConnectionStatus.CONNECTED) {
-            messageLabel.toolTipText = "<html>Connected to ${Config.obsAddress}.<br/>${settingsFileString()}</html>"
-        } else {
-            messageLabel.toolTipText = settingsFileString()
+            if (OBSState.connectionStatus == OBSConnectionStatus.CONNECTED) {
+                messageLabel.toolTipText = "<html>Connected to ${Config.obsAddress}.<br/>${settingsFileString()}</html>"
+            } else {
+                messageLabel.toolTipText = settingsFileString()
+            }
+            repaint()
         }
-        repaint()
     }
 
     fun getOBSStatusRepresentation(): String {
@@ -71,14 +74,16 @@ class OBSStatusPanel : JPanel(), Refreshable, RemoteSyncRefreshable {
             return
         }
 
-        messageLabel.text = "Remote sync: ${getRemoteSyncClientStatusRepresentation(state)}"
+        EventQueue.invokeLater {
+            messageLabel.text = "Remote sync: ${getRemoteSyncClientStatusRepresentation(state)}"
 
-        if (state == ConnectionState.CONNECTED) {
-            messageLabel.toolTipText = "Connected to ${Config.remoteSyncClientAddress}. ${settingsFileString()}"
-        } else {
-            messageLabel.toolTipText = settingsFileString()
+            if (state == ConnectionState.CONNECTED) {
+                messageLabel.toolTipText = "Connected to ${Config.remoteSyncClientAddress}. ${settingsFileString()}"
+            } else {
+                messageLabel.toolTipText = settingsFileString()
+            }
+            repaint()
         }
-        repaint()
     }
 
     private fun getRemoteSyncClientStatusRepresentation(state: ConnectionState): String {

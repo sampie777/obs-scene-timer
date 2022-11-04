@@ -5,6 +5,7 @@ import nl.sajansen.obsscenetimer.obs.OBSClientStatus
 import nl.sajansen.obsscenetimer.obs.OBSConnectionStatus
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.resetConfig
+import nl.sajansen.obsscenetimer.waitForSwing
 import kotlin.test.*
 
 class OBSStatusPanelTest {
@@ -76,6 +77,7 @@ class OBSStatusPanelTest {
         OBSState.connectionStatus = OBSConnectionStatus.UNKNOWN
         val panel = OBSStatusPanel()
 
+        waitForSwing()
         assertEquals("OBS: Unknown", panel.getMessageLabel().text)
         assertFalse(panel.getMessageLabel().toolTipText.contains("Connected"),
             "'Connected' string is falsy in messageLabel tooltip text")
@@ -83,6 +85,7 @@ class OBSStatusPanelTest {
         OBSState.connectionStatus = OBSConnectionStatus.CONNECTED
         panel.refreshOBSStatus()
 
+        waitForSwing()
         assertEquals("OBS: Connected", panel.getMessageLabel().text)
         assertTrue(panel.getMessageLabel().toolTipText.contains("Connected"),
             "'Connected' string is missing in messageLabel tooltip text")

@@ -7,6 +7,7 @@ import nl.sajansen.obsscenetimer.obs.OBSConnectionStatus
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.resetConfig
 import nl.sajansen.obsscenetimer.themes.Theme
+import nl.sajansen.obsscenetimer.waitForSwing
 import kotlin.test.*
 
 class TimerPanelTest {
@@ -32,16 +33,19 @@ class TimerPanelTest {
         OBSSceneTimer.increase()   // 1
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals(Theme.get.BACKGROUND_COLOR, panel.background)
 
         OBSSceneTimer.increase()   // 2
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals(Theme.get.TIMER_APPROACHING_BACKGROUND_COLOR, panel.background)
 
         OBSSceneTimer.increase()   // 3
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals(Theme.get.TIMER_EXCEEDED_BACKGROUND_COLOR, panel.background)
     }
 
@@ -49,6 +53,7 @@ class TimerPanelTest {
     fun testTimerPanelDisplaysCorrectTime() {
         val panel = TimerPanel()
 
+        waitForSwing()
         assertTrue(panel.timerUpLabel.isVisible)
         assertEquals("0:00:00", panel.timerUpLabel.text)
         assertFalse(panel.timerDownLabel.isVisible)
@@ -56,6 +61,7 @@ class TimerPanelTest {
         OBSSceneTimer.increase()   // 1
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals("0:00:01", panel.timerUpLabel.text)
         assertFalse(panel.timerDownLabel.isVisible)
 
@@ -63,6 +69,7 @@ class TimerPanelTest {
         OBSSceneTimer.setMaxTimerValue(3)
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals("0:00:02", panel.timerUpLabel.text)
         assertTrue(panel.timerDownLabel.isVisible)
         assertEquals("0:00:01", panel.timerDownLabel.text)
@@ -70,6 +77,7 @@ class TimerPanelTest {
         OBSSceneTimer.increase()   // 3
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals("0:00:03", panel.timerUpLabel.text)
         assertTrue(panel.timerDownLabel.isVisible)
         assertEquals("0:00:00", panel.timerDownLabel.text)
@@ -77,6 +85,7 @@ class TimerPanelTest {
         OBSSceneTimer.increase()   // 4
         panel.refreshTimer()
 
+        waitForSwing()
         assertEquals("0:00:04", panel.timerUpLabel.text)
         assertTrue(panel.timerDownLabel.isVisible)
         assertEquals("-0:00:01", panel.timerDownLabel.text)
@@ -87,6 +96,7 @@ class TimerPanelTest {
         OBSState.connectionStatus = OBSConnectionStatus.DISCONNECTED
         val panel = TimerPanel()
 
+        waitForSwing()
         assertTrue(panel.sceneLabel.isVisible)
         assertEquals("Waiting for connection...", panel.sceneLabel.text)
 
@@ -94,11 +104,13 @@ class TimerPanelTest {
         OBSState.currentScene = TScene("scene1")
         panel.switchedScenes()
 
+        waitForSwing()
         assertEquals("scene1", panel.sceneLabel.text)
 
         OBSState.currentScene = TScene("scene2")
         panel.switchedScenes()
 
+        waitForSwing()
         assertEquals("scene2", panel.sceneLabel.text)
     }
 }

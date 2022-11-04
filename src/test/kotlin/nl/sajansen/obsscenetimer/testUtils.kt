@@ -1,6 +1,7 @@
 package nl.sajansen.obsscenetimer
 
 import nl.sajansen.obsscenetimer.config.Config
+import java.awt.EventQueue
 
 fun resetConfig() {
     Config.obsAddress = "ws://localhost:4444"
@@ -17,4 +18,21 @@ fun resetConfig() {
     Config.timerFlashForRemainingTimeLessThan = 10
     Config.timerCountUpFontSize = 80
     Config.timerCountDownFontSize = 100
+}
+
+fun waitForSwing(amount: Int = 2){
+    if (amount <= 0) {
+        return
+    }
+
+    if (EventQueue.isDispatchThread()) {
+        return
+    }
+
+    try {
+        EventQueue.invokeAndWait {  }
+    } catch (_: Throwable) {
+    }
+
+    waitForSwing(amount - 1)
 }

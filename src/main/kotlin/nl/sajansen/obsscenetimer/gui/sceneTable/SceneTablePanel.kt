@@ -113,7 +113,9 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     override fun refreshScenes() {
-        createSceneTable()
+        EventQueue.invokeLater {
+            createSceneTable()
+        }
 
         OBSSceneTimer.setMaxTimerValue(
             getValueForScene(OBSState.currentScene.name)
@@ -126,7 +128,9 @@ class SceneTablePanel : JPanel(), Refreshable {
             return
         }
 
-        createSceneTable()
+        EventQueue.invokeLater {
+            createSceneTable()
+        }
 
         OBSSceneTimer.setMaxTimerValue(
             getValueForScene(OBSState.currentScene.name)
@@ -139,14 +143,16 @@ class SceneTablePanel : JPanel(), Refreshable {
     }
 
     override fun refreshGroups() {
-        OBSState.scenes.forEach { scene ->
-            val label = sceneLabels[scene.name] ?: return@forEach
-            label.font = getLabelFontForScene(scene)
+        EventQueue.invokeLater {
+            OBSState.scenes.forEach { scene ->
+                val label = sceneLabels[scene.name] ?: return@forEach
+                label.font = getLabelFontForScene(scene)
 
-            if (scene.groups.isEmpty()) {
-                label.toolTipText = null
-            } else {
-                label.toolTipText = "Group(s): " + scene.groups.joinToString(", ")
+                if (scene.groups.isEmpty()) {
+                    label.toolTipText = null
+                } else {
+                    label.toolTipText = "Group(s): " + scene.groups.joinToString(", ")
+                }
             }
         }
     }

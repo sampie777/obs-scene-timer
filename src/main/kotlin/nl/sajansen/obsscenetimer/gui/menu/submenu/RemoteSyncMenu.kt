@@ -17,6 +17,7 @@ import nl.sajansen.obsscenetimer.themes.Theme
 import nl.sajansen.obsscenetimer.utils.Rollbar
 import openWebURL
 import org.slf4j.LoggerFactory
+import java.awt.EventQueue
 import java.awt.event.KeyEvent
 import javax.swing.BorderFactory
 import javax.swing.JMenu
@@ -74,15 +75,21 @@ class RemoteSyncMenu : JMenu("Remote sync"), RemoteSyncRefreshable {
     }
 
     override fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
-        updateMenuItems()
+        EventQueue.invokeLater {
+            updateMenuItems()
+        }
     }
 
     override fun remoteSyncServerRefreshConnectionState() {
-        updateMenuItems()
+        EventQueue.invokeLater {
+            updateMenuItems()
+        }
     }
 
     override fun remoteSyncServerConnectionsUpdate() {
-        stopServerItem.toolTipText = "${ServerStatus.clients.size} connections"
+        EventQueue.invokeLater {
+            stopServerItem.toolTipText = "${ServerStatus.clients.size} connections"
+        }
     }
 
     private fun startServer() {

@@ -4,6 +4,7 @@ import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.notifications.Notifications
 import nl.sajansen.obsscenetimer.remotesync.server.ServerStatus
 import nl.sajansen.obsscenetimer.resetConfig
+import nl.sajansen.obsscenetimer.waitForSwing
 import org.eclipse.jetty.websocket.api.*
 import java.net.InetSocketAddress
 import kotlin.test.*
@@ -21,6 +22,7 @@ class RemoteSyncMenuTest {
     fun testUpdateMenuItemsSetsEnabledCorrectly() {
         val menu = RemoteSyncMenu()
 
+        waitForSwing()
         assertTrue(menu.startServerItem.isEnabled)
         assertFalse(menu.stopServerItem.isEnabled)
         assertTrue(menu.startClientItem.isEnabled)
@@ -30,6 +32,7 @@ class RemoteSyncMenuTest {
         Config.remoteSyncClientEnabled = true
         menu.updateMenuItems()
 
+        waitForSwing()
         assertTrue(menu.startServerItem.isEnabled)
         assertFalse(menu.stopServerItem.isEnabled)
         assertFalse(menu.startClientItem.isEnabled)
@@ -39,6 +42,7 @@ class RemoteSyncMenuTest {
         Config.remoteSyncClientEnabled = false
         menu.updateMenuItems()
 
+        waitForSwing()
         assertFalse(menu.startServerItem.isEnabled)
         assertTrue(menu.stopServerItem.isEnabled)
         assertTrue(menu.startClientItem.isEnabled)
@@ -48,10 +52,13 @@ class RemoteSyncMenuTest {
     @Test
     fun testUpdateSessionCount() {
         val menu = RemoteSyncMenu()
+        waitForSwing()
         assertEquals("", menu.stopServerItem.toolTipText)
 
         Config.remoteSyncServerEnabled = true
         menu.updateMenuItems()
+
+        waitForSwing()
         assertEquals("0 connections", menu.stopServerItem.toolTipText)
 
         ServerStatus.clients["x"] = object : Session{
@@ -120,10 +127,14 @@ class RemoteSyncMenuTest {
             }
         }
         menu.remoteSyncServerConnectionsUpdate()
+
+        waitForSwing()
         assertEquals("1 connections", menu.stopServerItem.toolTipText)
 
         Config.remoteSyncServerEnabled = false
         menu.updateMenuItems()
+
+        waitForSwing()
         assertEquals("", menu.stopServerItem.toolTipText)
     }
 
@@ -133,6 +144,7 @@ class RemoteSyncMenuTest {
         val menu = RemoteSyncMenu()
         menu.stopClientItem.doClick()
 
+        waitForSwing()
         assertFalse(Config.remoteSyncClientEnabled)
         assertTrue(menu.startClientItem.isEnabled)
         assertFalse(menu.stopClientItem.isEnabled)
@@ -147,6 +159,7 @@ class RemoteSyncMenuTest {
         val menu = RemoteSyncMenu()
         menu.stopServerItem.doClick()
 
+        waitForSwing()
         assertFalse(Config.remoteSyncServerEnabled)
         assertTrue(menu.startServerItem.isEnabled)
         assertFalse(menu.stopServerItem.isEnabled)

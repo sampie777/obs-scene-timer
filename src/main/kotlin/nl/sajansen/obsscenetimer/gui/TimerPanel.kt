@@ -95,20 +95,24 @@ class TimerPanel : JPanel(), Refreshable {
     }
 
     override fun refreshTimer() {
-        updateLabelsForTimer()
-        updateColorsForTimer()
-        repaint()
+        EventQueue.invokeLater {
+            updateLabelsForTimer()
+            updateColorsForTimer()
+            repaint()
+        }
     }
 
     override fun switchedScenes() {
-        if ((Config.remoteSyncClientEnabled && TimerClient.getConnectionState() != ConnectionState.CONNECTED)
-            || (!Config.remoteSyncClientEnabled && OBSState.connectionStatus != OBSConnectionStatus.CONNECTED)
-        ) {
-            sceneLabel.text = "Waiting for connection..."
-            return
-        }
+        EventQueue.invokeLater {
+            if ((Config.remoteSyncClientEnabled && TimerClient.getConnectionState() != ConnectionState.CONNECTED)
+                || (!Config.remoteSyncClientEnabled && OBSState.connectionStatus != OBSConnectionStatus.CONNECTED)
+            ) {
+                sceneLabel.text = "Waiting for connection..."
+                return@invokeLater
+            }
 
-        sceneLabel.text = OBSState.currentScene.name
+            sceneLabel.text = OBSState.currentScene.name
+        }
     }
 
     private fun updateLabelsForTimer() {

@@ -143,23 +143,29 @@ class MainFrame : JFrame(), Refreshable, RemoteSyncRefreshable {
     }
 
     override fun refreshTimer() {
-        title = WindowTitle.generateWindowTitle()
+        EventQueue.invokeLater {
+            title = WindowTitle.generateWindowTitle()
 
-        iconImage = when (OBSSceneTimer.getTimerState()) {
-            TimerState.EXCEEDED -> applicationIconRed
-            TimerState.APPROACHING -> applicationIconOrange
-            else -> applicationIconDefault
+            iconImage = when (OBSSceneTimer.getTimerState()) {
+                TimerState.EXCEEDED -> applicationIconRed
+                TimerState.APPROACHING -> applicationIconOrange
+                else -> applicationIconDefault
+            }
+
+            updateTaskbarProgressbar()
         }
-
-        updateTaskbarProgressbar()
     }
 
     override fun refreshOBSStatus() {
-        updateTaskbarProgressbar()
+        EventQueue.invokeLater {
+            updateTaskbarProgressbar()
+        }
     }
 
     override fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
-        updateTaskbarProgressbar()
+        EventQueue.invokeLater {
+            updateTaskbarProgressbar()
+        }
     }
 
     private fun updateTaskbarProgressbar() {

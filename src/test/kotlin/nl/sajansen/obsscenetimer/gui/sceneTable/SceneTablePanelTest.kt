@@ -4,10 +4,10 @@ import nl.sajansen.obsscenetimer.config.Config
 import nl.sajansen.obsscenetimer.objects.*
 import nl.sajansen.obsscenetimer.obs.OBSState
 import nl.sajansen.obsscenetimer.resetConfig
+import nl.sajansen.obsscenetimer.waitForSwing
 import java.awt.event.FocusEvent
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.SwingUtilities
 import kotlin.test.*
 
 class SceneTablePanelTest {
@@ -34,6 +34,7 @@ class SceneTablePanelTest {
 
         panel.refreshScenes()
 
+        waitForSwing()
         assertEquals(2, panel.sceneInputs.size)
         assertEquals(2, panel.sceneLabels.size)
     }
@@ -44,20 +45,20 @@ class SceneTablePanelTest {
         OBSState.scenes.add(TScene("scene1"))
         val panel = SceneTablePanel()
 
-        SwingUtilities.invokeAndWait {
-            assertEquals(1, panel.sceneInputs.size)
-            assertTrue(panel.sceneInputs.containsKey("scene1"), "SceneValues doesn't contain key 'scene1'")
-            assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
-            assertEquals(1, panel.sceneLabels.size)
+        waitForSwing()
+        assertEquals(1, panel.sceneInputs.size)
+        assertTrue(panel.sceneInputs.containsKey("scene1"), "SceneValues doesn't contain key 'scene1'")
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
+        assertEquals(1, panel.sceneLabels.size)
 
-            // When
-            OBSState.scenes.add(TScene("scene2"))
+        // When
+        OBSState.scenes.add(TScene("scene2"))
 
-            panel.refreshScenes()
+        panel.refreshScenes()
 
-            assertEquals(2, panel.sceneInputs.size)
-            assertEquals(2, panel.sceneLabels.size)
-        }
+        waitForSwing()
+        assertEquals(2, panel.sceneInputs.size)
+        assertEquals(2, panel.sceneLabels.size)
     }
 
     @Test
@@ -66,8 +67,8 @@ class SceneTablePanelTest {
         OBSState.scenes.add(TScene("scene4_with_maxvideo_but_value_set_in_config", timeLimit = 40))
         Config.save()
         val panel = SceneTablePanel()
-        SwingUtilities.invokeAndWait {}
 
+        waitForSwing()
         assertEquals(2, panel.sceneInputs.size)
         assertTrue(panel.sceneInputs.containsKey("scene1_value_set_in_config"), "Missing key in SceneInputs")
         assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.sceneInput.text)
@@ -97,14 +98,13 @@ class SceneTablePanelTest {
 
         panel.refreshScenes()
 
-        SwingUtilities.invokeAndWait {
-            assertEquals(4, panel.sceneInputs.size)
-            assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.sceneInput.text)
-            assertEquals("0:20", panel.sceneInputs["scene2_with_maxvideo"]!!.sceneInput.text)
-            assertEquals("0:00", panel.sceneInputs["scene3"]!!.sceneInput.text)
-            assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.sceneInput.text)
-            assertEquals(4, panel.sceneLabels.size)
-        }
+        waitForSwing()
+        assertEquals(4, panel.sceneInputs.size)
+        assertEquals("0:10", panel.sceneInputs["scene1_value_set_in_config"]!!.sceneInput.text)
+        assertEquals("0:20", panel.sceneInputs["scene2_with_maxvideo"]!!.sceneInput.text)
+        assertEquals("0:00", panel.sceneInputs["scene3"]!!.sceneInput.text)
+        assertEquals("0:40", panel.sceneInputs["scene4_with_maxvideo_but_value_set_in_config"]!!.sceneInput.text)
+        assertEquals(4, panel.sceneLabels.size)
     }
 
     @Test
@@ -117,6 +117,7 @@ class SceneTablePanelTest {
 
         panel.refreshScenes()
 
+        waitForSwing()
         assertEquals(1 + 4, panel.container.componentCount)
         assertEquals("Scene", ((panel.container.components[0] as JPanel).components[0] as JLabel).text)
         assertEquals("scene1", ((panel.container.components[1] as JPanel).components[0] as JLabel).text)
@@ -131,20 +132,20 @@ class SceneTablePanelTest {
         OBSState.scenes.add(scene1)
         val panel = SceneTablePanel()
 
-        SwingUtilities.invokeAndWait {
-            assertEquals("0:00", panel.sceneInputs["scene1"]!!.sceneInput.text)
-            assertEquals(0, Config.sceneProperties.tScenes.size)
+        waitForSwing()
+        assertEquals("0:00", panel.sceneInputs["scene1"]!!.sceneInput.text)
+        assertEquals(0, Config.sceneProperties.tScenes.size)
 
-            // When
-            panel.sceneInputs["scene1"]!!.sceneInput.text = "0:10"
-            Config.save()
+        // When
+        panel.sceneInputs["scene1"]!!.sceneInput.text = "0:10"
+        Config.save()
 
-            assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
-            assertEquals(10, scene1.timeLimit)
-            assertEquals("scene1", Config.sceneProperties.tScenes[0].name)
-            assertEquals(10, Config.sceneProperties.tScenes[0].timeLimit)
-            assertEquals(0, OBSSceneTimer.getMaxTimerValue())
-        }
+        waitForSwing()
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
+        assertEquals(10, scene1.timeLimit)
+        assertEquals("scene1", Config.sceneProperties.tScenes[0].name)
+        assertEquals(10, Config.sceneProperties.tScenes[0].timeLimit)
+        assertEquals(0, OBSSceneTimer.getMaxTimerValue())
     }
 
     @Test
@@ -156,18 +157,18 @@ class SceneTablePanelTest {
         val panel = SceneTablePanel()
         panel.switchedScenes()
 
-        SwingUtilities.invokeAndWait {
-            assertEquals("0:00", panel.sceneInputs["scene2"]!!.sceneInput.text)
-            assertEquals(0, Config.sceneProperties.tScenes.size)
-            assertEquals(0, OBSSceneTimer.getMaxTimerValue())
+        waitForSwing()
+        assertEquals("0:00", panel.sceneInputs["scene2"]!!.sceneInput.text)
+        assertEquals(0, Config.sceneProperties.tScenes.size)
+        assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
-            // When
-            panel.sceneInputs["scene2"]!!.sceneInput.text = "0:10"
+        // When
+        panel.sceneInputs["scene2"]!!.sceneInput.text = "0:10"
 
-            assertEquals("0:10", panel.sceneInputs["scene2"]!!.sceneInput.text)
-            assertEquals(10, scene2.timeLimit)
-            assertEquals(10, OBSSceneTimer.getMaxTimerValue())
-        }
+        waitForSwing()
+        assertEquals("0:10", panel.sceneInputs["scene2"]!!.sceneInput.text)
+        assertEquals(10, scene2.timeLimit)
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 
     @Test
@@ -180,10 +181,9 @@ class SceneTablePanelTest {
         val panel = SceneTablePanel()
         panel.refreshScenes()
 
-        SwingUtilities.invokeAndWait {
-            assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
-            assertEquals(10, OBSSceneTimer.getMaxTimerValue())
-        }
+        waitForSwing()
+        assertEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 
     @Test
@@ -193,16 +193,16 @@ class SceneTablePanelTest {
         OBSState.scenes.add(TScene("scene2"))
         val panel = SceneTablePanel()
 
-        SwingUtilities.invokeAndWait {
-            assertNotEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
-            assertEquals(0, OBSSceneTimer.getMaxTimerValue())
+        waitForSwing()
+        assertNotEquals("0:10", panel.sceneInputs["scene1"]!!.sceneInput.text)
+        assertEquals(0, OBSSceneTimer.getMaxTimerValue())
 
-            scene1.timeLimit = 10
-            OBSState.currentScene = scene1
-            panel.switchedScenes()
+        scene1.timeLimit = 10
+        OBSState.currentScene = scene1
+        panel.switchedScenes()
 
-            assertEquals(10, OBSSceneTimer.getMaxTimerValue())
-        }
+        waitForSwing()
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 
     @Test
@@ -210,19 +210,20 @@ class SceneTablePanelTest {
         val scene = TScene("scene1")
         val input = SceneInput(scene)
 
-        SwingUtilities.invokeAndWait {
-            // when
-            input.text = "0:10"
+        waitForSwing()
+        // when
+        input.text = "0:10"
 
-            assertEquals("0:10", input.text)
-            assertEquals(10, scene.timeLimit)
+        waitForSwing()
+        assertEquals("0:10", input.text)
+        assertEquals(10, scene.timeLimit)
 
-            // when
-            input.text = "0:20"
+        // when
+        input.text = "0:20"
 
-            assertEquals("0:20", input.text)
-            assertEquals(20, scene.timeLimit)
-        }
+        waitForSwing()
+        assertEquals("0:20", input.text)
+        assertEquals(20, scene.timeLimit)
     }
 
     @Test
@@ -230,45 +231,46 @@ class SceneTablePanelTest {
         val scene = TScene("scene1")
         val input = SceneInput(scene)
         val focusEvent = FocusEvent(input, 0)
-        SwingUtilities.invokeAndWait {}
+        waitForSwing()
 
         // when
         input.text = "-1"
         input.focusListeners.find { it is SceneInputFocusAdapter }?.focusLost(focusEvent)
 
-        SwingUtilities.invokeAndWait {
-            assertEquals("0:00", input.text)
-            assertEquals(null, scene.timeLimit)
+        waitForSwing()
+        assertEquals("0:00", input.text)
+        assertEquals(null, scene.timeLimit)
 
-            // when (using as normal)
-            input.text = "0:10"
+        // when (using as normal)
+        input.text = "0:10"
 
-            assertEquals("0:10", input.text)
-            assertEquals(10, scene.timeLimit)
-        }
+        waitForSwing()
+        assertEquals("0:10", input.text)
+        assertEquals(10, scene.timeLimit)
     }
 
     @Test
     fun testSceneInputDocumentListenerChangesLimitAndCurrentMaxTimerTimeOnSpinnerChange() {
         val scene = TScene("scene1")
         val input = SceneInput(scene)
-        SwingUtilities.invokeAndWait {
-            OBSState.currentScene = scene
+        OBSState.currentScene = scene
+        waitForSwing()
 
-            // when
-            input.text = "0:10"
+        // when
+        input.text = "0:10"
 
-            assertEquals("0:10", input.text)
-            assertEquals(10, scene.timeLimit)
-            assertEquals(10, OBSSceneTimer.getMaxTimerValue())
+        waitForSwing()
+        assertEquals("0:10", input.text)
+        assertEquals(10, scene.timeLimit)
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
 
-            // when
-            OBSState.currentScene = TScene("scene2")
-            input.text = "0:20"
+        // when
+        OBSState.currentScene = TScene("scene2")
+        input.text = "0:20"
 
-            assertEquals("0:20", input.text)
-            assertEquals(20, scene.timeLimit)
-            assertEquals(10, OBSSceneTimer.getMaxTimerValue())
-        }
+        waitForSwing()
+        assertEquals("0:20", input.text)
+        assertEquals(20, scene.timeLimit)
+        assertEquals(10, OBSSceneTimer.getMaxTimerValue())
     }
 }
