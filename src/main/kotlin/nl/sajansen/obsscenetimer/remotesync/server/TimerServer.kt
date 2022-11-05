@@ -15,7 +15,10 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.websocket.api.Session
 import org.slf4j.LoggerFactory
+import java.util.*
+import kotlin.concurrent.timerTask
 
 object TimerServer : Server(), Refreshable {
     private val logger = LoggerFactory.getLogger(TimerServer::class.java.name)
@@ -89,7 +92,7 @@ object TimerServer : Server(), Refreshable {
     }
 
     override fun switchedScenes() {
-        if (Config.remoteSyncClientEnabled) {
+        if (Config.remoteSyncClientEnabled || !Config.remoteSyncServerEnabled) {
             return
         }
 
@@ -97,7 +100,7 @@ object TimerServer : Server(), Refreshable {
     }
 
     override fun refreshTimer() {
-        if (Config.remoteSyncClientEnabled) {
+        if (Config.remoteSyncClientEnabled || !Config.remoteSyncServerEnabled) {
             return
         }
 
@@ -107,16 +110,48 @@ object TimerServer : Server(), Refreshable {
     private fun updateClientsWithTimerMessage() {
         val timerMessageJson = getCurrentTimerMessage().json()
         ServerStatus.clients.values.forEach {
-            try {
-                it.remote.sendString(timerMessageJson)
-            } catch (t: Throwable) {
-                logger.error("Failed to send timer message to client. ${t.localizedMessage}")
-                Rollbar.error(
-                    t, mapOf("message" to timerMessageJson, "clientsCount" to ServerStatus.clients.size, "client" to it, "remote" to it.remote),
-                    "Failed to send timer message to client. ${t.localizedMessage}"
-                )
-                t.printStackTrace()
+            sendMessageToClient(it, timerMessageJson)
+        }
+    }
+
+    private fun sendMessageToClient(it: Session, message: String, retries: Int = 2) {
+        try {
+            it.remote.sendString(message)
+        } catch (e: IllegalStateException) {
+            logger.error("Failed to send timer message to client. ${e.localizedMessage}")
+
+            if (retries > 0 && e.message != null && e.message!!.startsWith("Blocking message pending")) {
+                Timer().schedule(timerTask {
+                    logger.info("Retrying sending of message")
+                    sendMessageToClient(it, message, retries - 1)
+                }, 100)
+                return
             }
+
+            Rollbar.error(
+                e, mapOf(
+                    "message" to message,
+                    "clientsCount" to ServerStatus.clients.size,
+                    "client" to it,
+                    "remote" to it.remote,
+                    "retries" to retries,
+                ),
+                "Failed to send timer message to client. ${e.localizedMessage}"
+            )
+            e.printStackTrace()
+        } catch (t: Throwable) {
+            logger.error("Failed to send timer message to client. ${t.localizedMessage}")
+            Rollbar.error(
+                t, mapOf(
+                    "message" to message,
+                    "clientsCount" to ServerStatus.clients.size,
+                    "client" to it,
+                    "remote" to it.remote,
+                    "retries" to retries,
+                ),
+                "Failed to send timer message to client. ${t.localizedMessage}"
+            )
+            t.printStackTrace()
         }
     }
 
