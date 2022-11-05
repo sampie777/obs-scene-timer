@@ -2,8 +2,8 @@ package nl.sajansen.obsscenetimer
 
 import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.TScene
-import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.slf4j.LoggerFactory
+import runWithCatch
 import java.awt.Component
 
 object GUI {
@@ -12,109 +12,80 @@ object GUI {
     private val components: HashSet<Refreshable> = HashSet()
 
     fun refreshTimer() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.refreshTimer()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute refreshTimer() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute refreshTimer() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.refreshTimer() }, logger,
+                logMessage = { "Failed to execute refreshTimer() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun switchedScenes() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.switchedScenes()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute switchedScenes() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute switchedScenes() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.switchedScenes() }, logger,
+                logMessage = { "Failed to execute switchedScenes() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun refreshScenes() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.refreshScenes()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute refreshScenes() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute refreshScenes() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.refreshScenes() }, logger,
+                logMessage = { "Failed to execute refreshScenes() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun refreshGroups() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.refreshGroups()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute refreshGroups() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute refreshGroups() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.refreshGroups() }, logger,
+                logMessage = { "Failed to execute refreshGroups() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun onSceneTimeLimitUpdated(scene: TScene) {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.onSceneTimeLimitUpdated(scene)
-            } catch (t: Throwable) {
-                logger.error("Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, mapOf("scene" to scene), "Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch(
+                { component.onSceneTimeLimitUpdated(scene) }, logger,
+                logMessage = { "Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}. ${it.localizedMessage}" },
+                rollbarCustomObjects = mapOf("scene" to scene)
+            )
         }
     }
 
     fun refreshOBSStatus() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.refreshOBSStatus()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute refreshOBSStatus() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute refreshOBSStatus() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.refreshOBSStatus() }, logger,
+                logMessage = { "Failed to execute refreshOBSStatus() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun refreshNotifications() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.refreshNotifications()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute refreshNotifications() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute refreshNotifications() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.refreshNotifications() }, logger,
+                logMessage = { "Failed to execute refreshNotifications() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
     fun windowClosing(window: Component?) {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.windowClosing(window)
-            } catch (t: Throwable) {
-                logger.error("Failed to execute window() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute window() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.windowClosing(window) }, logger,
+                logMessage = { "Failed to execute window() for component ${component.javaClass}. ${it.localizedMessage}" })
         }
     }
 
+    private fun cloneComponentsList(): Array<Refreshable> {
+        return runWithCatch(
+            { components.toTypedArray() }, logger,
+            logMessage = { "Failed to clone Refreshable components. ${it.localizedMessage}" },
+            defaultReturnValue = emptyArray(),
+            rollbarCustomObjects = mapOf("size" to components.size)
+        )!!
+    }
 
     fun register(component: Refreshable) {
         logger.info("Registering component: ${component::class.java}")

@@ -142,15 +142,17 @@ fun <R> (() -> R).invokeWithCatch(
     logger: Logger? = null,
     logMessage: ((t: Throwable) -> String)? = null,
     notificationMessage: ((t: Throwable) -> String)? = null,
-    notificationTitle: String = "OBS"
-) {
-    try {
+    notificationTitle: String = "OBS",
+    rollbarCustomObjects: Map<String, Any>? = null,
+    defaultReturnValue: R? = null,
+): R? {
+    return try {
         this.invoke()
     } catch (t: Throwable) {
         if (logger != null && logMessage != null) {
             val message = logMessage.invoke(t)
             logger.error(message)
-            Rollbar.error(t, message)
+            Rollbar.error(t, rollbarCustomObjects, message)
         }
 
         t.printStackTrace()
@@ -158,5 +160,23 @@ fun <R> (() -> R).invokeWithCatch(
         if (notificationMessage != null) {
             Notifications.add(notificationMessage.invoke(t), notificationTitle)
         }
+        defaultReturnValue
     }
 }
+
+fun <R> runWithCatch(
+    function: () -> R,
+    logger: Logger? = null,
+    logMessage: ((t: Throwable) -> String)? = null,
+    notificationMessage: ((t: Throwable) -> String)? = null,
+    notificationTitle: String = "OBS",
+    rollbarCustomObjects: Map<String, Any>? = null,
+    defaultReturnValue: R? = null,
+) = function.invokeWithCatch(
+    logger = logger,
+    logMessage = logMessage,
+    notificationMessage = notificationMessage,
+    notificationTitle = notificationTitle,
+    rollbarCustomObjects = rollbarCustomObjects,
+    defaultReturnValue = defaultReturnValue,
+)
