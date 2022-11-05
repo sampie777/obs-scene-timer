@@ -3,8 +3,8 @@ package nl.sajansen.obsscenetimer.remotesync
 
 import nl.sajansen.obsscenetimer.remotesync.objects.ConnectionState
 import nl.sajansen.obsscenetimer.remotesync.objects.RemoteSyncRefreshable
-import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.slf4j.LoggerFactory
+import runWithCatch
 
 object RemoteSyncRefreshableRegister {
     private val logger = LoggerFactory.getLogger(RemoteSyncRefreshableRegister::class.java.name)
@@ -12,42 +12,39 @@ object RemoteSyncRefreshableRegister {
     private val components: HashSet<RemoteSyncRefreshable> = HashSet()
 
     fun remoteSyncClientRefreshConnectionState(state: ConnectionState) {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.remoteSyncClientRefreshConnectionState(state)
-            } catch (t: Throwable) {
-                logger.error("Failed to execute remoteSyncClientRefreshConnectionState() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, mapOf("state" to state), "Failed to execute remoteSyncClientRefreshConnectionState() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch(
+                { component.remoteSyncClientRefreshConnectionState(state) }, logger,
+                logMessage = { "Failed to execute remoteSyncClientRefreshConnectionState() for component ${component.javaClass}" },
+                rollbarCustomObjects = mapOf("state" to state)
+            )
         }
     }
 
     fun remoteSyncServerRefreshConnectionState() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.remoteSyncServerRefreshConnectionState()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute remoteSyncServerRefreshConnectionState() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute remoteSyncServerRefreshConnectionState() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.remoteSyncServerRefreshConnectionState() }, logger,
+                logMessage = { "Failed to execute remoteSyncServerRefreshConnectionState() for component ${component.javaClass}" })
         }
     }
 
     fun remoteSyncServerConnectionsUpdate() {
-        val componentsCopy = components.toTypedArray()
+        val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
-            try {
-                component.remoteSyncServerConnectionsUpdate()
-            } catch (t: Throwable) {
-                logger.error("Failed to execute remoteSyncServerConnectionsUpdate() for component ${component.javaClass}. ${t.localizedMessage}")
-                Rollbar.error(t, "Failed to execute remoteSyncServerConnectionsUpdate() for component ${component.javaClass}")
-                t.printStackTrace()
-            }
+            runWithCatch({ component.remoteSyncServerConnectionsUpdate() }, logger,
+                logMessage = { "Failed to execute remoteSyncServerConnectionsUpdate() for component ${component.javaClass}" })
         }
+    }
+
+    private fun cloneComponentsList(): Array<RemoteSyncRefreshable> {
+        return runWithCatch(
+            { components.toTypedArray() }, logger,
+            logMessage = { "Failed to clone ${components.size} RemoteSyncRefreshable components" },
+            defaultReturnValue = emptyArray(),
+            rollbarCustomObjects = mapOf("size" to components.size)
+        )!!
     }
 
     fun register(component: RemoteSyncRefreshable) {
@@ -60,8 +57,12 @@ object RemoteSyncRefreshableRegister {
     }
 
     fun unregister(component: RemoteSyncRefreshable) {
-        logger.info("Unregistering component: ${component::class.java}")
-        components.remove(component)
+        logger.debug("Unregistering component: ${component::class.java}")
+        runWithCatch(
+            { components.remove(component) }, logger,
+            logMessage = { "Failed to unregister component ${component.javaClass}" },
+            rollbarCustomObjects = mapOf("size" to components.size)
+        )
     }
 
     fun unregisterAll() {

@@ -151,7 +151,7 @@ fun <R> (() -> R).invokeWithCatch(
     } catch (t: Throwable) {
         if (logger != null && logMessage != null) {
             val message = logMessage.invoke(t)
-            logger.error(message)
+            logger.error(message + (if (t.localizedMessage == null) "" else ". ${t.localizedMessage}"))
             Rollbar.error(t, rollbarCustomObjects, message)
         }
 

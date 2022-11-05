@@ -24,6 +24,11 @@ class SceneInputPanel(private val scene: TScene) : JPanel(), Refreshable {
         initGUI()
     }
 
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
+    }
+
     private fun initGUI() {
         layout = BorderLayout(8, 0)
 

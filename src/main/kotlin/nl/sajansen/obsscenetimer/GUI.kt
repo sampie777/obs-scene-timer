@@ -15,7 +15,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.refreshTimer() }, logger,
-                logMessage = { "Failed to execute refreshTimer() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute refreshTimer() for component ${component.javaClass}" })
         }
     }
 
@@ -23,7 +23,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.switchedScenes() }, logger,
-                logMessage = { "Failed to execute switchedScenes() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute switchedScenes() for component ${component.javaClass}" })
         }
     }
 
@@ -31,7 +31,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.refreshScenes() }, logger,
-                logMessage = { "Failed to execute refreshScenes() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute refreshScenes() for component ${component.javaClass}" })
         }
     }
 
@@ -39,7 +39,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.refreshGroups() }, logger,
-                logMessage = { "Failed to execute refreshGroups() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute refreshGroups() for component ${component.javaClass}" })
         }
     }
 
@@ -48,7 +48,7 @@ object GUI {
         for (component in componentsCopy) {
             runWithCatch(
                 { component.onSceneTimeLimitUpdated(scene) }, logger,
-                logMessage = { "Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}. ${it.localizedMessage}" },
+                logMessage = { "Failed to execute onSceneTimeLimitUpdated() for component ${component.javaClass}" },
                 rollbarCustomObjects = mapOf("scene" to scene)
             )
         }
@@ -58,7 +58,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.refreshOBSStatus() }, logger,
-                logMessage = { "Failed to execute refreshOBSStatus() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute refreshOBSStatus() for component ${component.javaClass}" })
         }
     }
 
@@ -66,7 +66,7 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.refreshNotifications() }, logger,
-                logMessage = { "Failed to execute refreshNotifications() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute refreshNotifications() for component ${component.javaClass}" })
         }
     }
 
@@ -74,21 +74,21 @@ object GUI {
         val componentsCopy = cloneComponentsList()
         for (component in componentsCopy) {
             runWithCatch({ component.windowClosing(window) }, logger,
-                logMessage = { "Failed to execute window() for component ${component.javaClass}. ${it.localizedMessage}" })
+                logMessage = { "Failed to execute window() for component ${component.javaClass}" })
         }
     }
 
     private fun cloneComponentsList(): Array<Refreshable> {
         return runWithCatch(
             { components.toTypedArray() }, logger,
-            logMessage = { "Failed to clone Refreshable components. ${it.localizedMessage}" },
+            logMessage = { "Failed to clone ${components.size} Refreshable components" },
             defaultReturnValue = emptyArray(),
             rollbarCustomObjects = mapOf("size" to components.size)
         )!!
     }
 
     fun register(component: Refreshable) {
-        logger.info("Registering component: ${component::class.java}")
+        logger.debug("Registering component: ${component::class.java}")
         components.add(component)
     }
 
@@ -97,8 +97,12 @@ object GUI {
     }
 
     fun unregister(component: Refreshable) {
-        logger.info("Unregistering component: ${component::class.java}")
-        components.remove(component)
+        logger.debug("Unregistering component: ${component::class.java}")
+        runWithCatch(
+            { components.remove(component) }, logger,
+            logMessage = { "Failed to unregister component ${component.javaClass}" },
+            rollbarCustomObjects = mapOf("size" to components.size)
+        )
     }
 
     fun unregisterAll() {

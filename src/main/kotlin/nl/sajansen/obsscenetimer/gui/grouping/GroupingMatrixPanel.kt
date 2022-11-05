@@ -32,6 +32,11 @@ class GroupingMatrixPanel : JPanel(), Refreshable {
         GUI.register(this)
     }
 
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
+    }
+
     fun rebuildGui() {
         logger.info("Rebuilding matrix panel")
         EventQueue.invokeLater {

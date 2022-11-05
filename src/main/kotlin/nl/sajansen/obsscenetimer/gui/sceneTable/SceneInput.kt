@@ -49,6 +49,11 @@ class SceneInput(val scene: TScene) : JTextField(), Refreshable {
         refreshDisplayFromScene()
     }
 
+    override fun removeNotify() {
+        super.removeNotify()
+        GUI.unregister(this)
+    }
+
     fun refreshDisplayFromScene() {
         EventQueue.invokeLater {
             text = getTimeAsClock(scene.getFinalTimeLimit().toLong(), looseFormat = true)
