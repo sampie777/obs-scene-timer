@@ -10,6 +10,7 @@ import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.slf4j.LoggerFactory
 import java.awt.EventQueue
 import java.net.MalformedURLException
+import java.net.SocketException
 import java.net.UnknownHostException
 import java.util.prefs.Preferences
 
@@ -121,6 +122,10 @@ class UpdateChecker(private val urlProvider: wURL = wURL()) {
                         "Please inform the developer of this application. More detailed: ${e.localizedMessage}.",
                 "Updater"
             )
+            null
+        } catch (e: SocketException) {
+            logger.error("Failed to retrieve latest application version on url '${ApplicationInfo.latestVersionsUrl}'. ${e.localizedMessage}")
+            e.printStackTrace()
             null
         } catch (e: UnknownHostException) {
             logger.error("Failed to retrieve latest application version. Internet is down?. ${e.localizedMessage}")
