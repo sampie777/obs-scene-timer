@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
+import java.io.FileNotFoundException
 
 object Config {
     private val logger = LoggerFactory.getLogger(Config.toString())
@@ -71,6 +72,7 @@ object Config {
     // Remote Sync
     var remoteSyncServerEnabled: Boolean = false
     var remoteSyncClientEnabled: Boolean = false
+
     @Deprecated("Use remoteSyncClientHost and remoteSyncServerPort instead")
     var remoteSyncClientAddress: String = obsAddress.replace(":4455", ":4050")
     var remoteSyncServerHost: String = obsHost
@@ -101,10 +103,24 @@ object Config {
             if (PropertyLoader.saveConfig(this::class.java)) {
                 PropertyLoader.save()
             }
+        } catch (e: FileNotFoundException) {
+            logger.error("Failed to save Config. ${e.localizedMessage}")
+
+            if (e.message == null || !e.message!!.contains("Operation not permitted")) {
+                Rollbar.error(
+                    e, mapOf("properties" to PropertyLoader.getUserProperties().toString(), "file" to PropertyLoader.getPropertiesFile().absolutePath),
+                    "Failed to save Config"
+                )
+            }
+
+            e.printStackTrace()
+            Notifications.add("Failed to save configuration to file: ${e.localizedMessage}", "Configuration")
         } catch (e: Exception) {
             logger.error("Failed to save Config. ${e.localizedMessage}")
-            Rollbar.error(e, mapOf("properties" to PropertyLoader.getUserProperties().toString(), "file" to PropertyLoader.getPropertiesFile().absolutePath),
-                "Failed to save Config")
+            Rollbar.error(
+                e, mapOf("properties" to PropertyLoader.getUserProperties().toString(), "file" to PropertyLoader.getPropertiesFile().absolutePath),
+                "Failed to save Config"
+            )
             e.printStackTrace()
             Notifications.add("Failed to save configuration to file: ${e.localizedMessage}", "Configuration")
         }
