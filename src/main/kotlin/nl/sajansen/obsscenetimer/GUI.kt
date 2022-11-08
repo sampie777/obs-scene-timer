@@ -2,6 +2,7 @@ package nl.sajansen.obsscenetimer
 
 import nl.sajansen.obsscenetimer.gui.Refreshable
 import nl.sajansen.obsscenetimer.objects.TScene
+import nl.sajansen.obsscenetimer.utils.Rollbar
 import org.slf4j.LoggerFactory
 import runWithCatch
 import java.awt.Component
@@ -78,13 +79,20 @@ object GUI {
         }
     }
 
-    private fun cloneComponentsList(): Array<Refreshable> {
-        return runWithCatch(
-            { components.toTypedArray() }, logger,
-            logMessage = { "Failed to clone ${components.size} Refreshable components" },
-            defaultReturnValue = emptyArray(),
-            rollbarCustomObjects = mapOf("size" to components.size)
-        )!!
+    private fun cloneComponentsList(retries: Int = 6): Array<Refreshable> {
+        return try {
+            components.toTypedArray()
+        } catch (t: Throwable) {
+            if (retries > 0) {
+                logger.info("Retrying clone ($retries)...")
+                return cloneComponentsList(retries - 1)
+            }
+
+            logger.error("Failed to clone ${components.size} Refreshable components" + ((if (t.localizedMessage == null) "" else ". ${t.localizedMessage}")))
+            Rollbar.error(t, mapOf("size" to components.size), "Failed to clone ${components.size} Refreshable components")
+            t.printStackTrace()
+            emptyArray()
+        }
     }
 
     fun register(component: Refreshable) {
