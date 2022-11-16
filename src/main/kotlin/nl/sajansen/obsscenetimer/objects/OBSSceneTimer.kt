@@ -56,6 +56,7 @@ object OBSSceneTimer {
         try {
             logger.info("Trying to cancel timer")
             timer.cancel()
+            timer.purge()
             timer = Timer()
             logger.info("Timer canceled")
             return true
