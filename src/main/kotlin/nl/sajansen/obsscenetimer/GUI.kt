@@ -89,7 +89,7 @@ object GUI {
             }
 
             logger.error("Failed to clone ${components.size} Refreshable components" + ((if (t.localizedMessage == null) "" else ". ${t.localizedMessage}")))
-            Rollbar.error(t, mapOf("size" to components.size), "Failed to clone ${components.size} Refreshable components")
+            Rollbar.error(t, mapOf("size" to components.size), "Failed to clone Refreshable components")
             t.printStackTrace()
             emptyArray()
         }

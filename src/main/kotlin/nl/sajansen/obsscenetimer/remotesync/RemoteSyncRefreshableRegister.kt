@@ -41,7 +41,7 @@ object RemoteSyncRefreshableRegister {
     private fun cloneComponentsList(): Array<RemoteSyncRefreshable> {
         return runWithCatch(
             { components.toTypedArray() }, logger,
-            logMessage = { "Failed to clone ${components.size} RemoteSyncRefreshable components" },
+            logMessage = { "Failed to clone RemoteSyncRefreshable components" },
             defaultReturnValue = emptyArray(),
             rollbarCustomObjects = mapOf("size" to components.size)
         )!!
